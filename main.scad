@@ -9,3 +9,4 @@ include <parts/part0.scad>
 include <parts/part1.scad>
 include <parts/part2.scad>
 include <parts/part3.scad>
+include <parts/motorBlock.scad>

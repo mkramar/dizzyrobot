@@ -82,8 +82,8 @@ module ring(d, h, t)
 {
     difference()
     {
-        cylinder(h = h, d1 = d + t * 2, d2 = d + t * 2, center = true);
-        cylinder(h = h + 2, d1 = d, d2 = d, center = true);
+        cylinder(h = h, d = d + t * 2, center = true);
+        cylinder(h = h + 2, d = d, center = true);
     }
 }
 
@@ -154,5 +154,17 @@ module dCylinder(h, d, x){
 	{
 		cylinder(h = h, d1 = d, d2 = d, center = true);
 		translate([x, 0, 0]) cube([d, d, h + 1], center = true);
+	}
+}
+
+module sphereSector(d, w, a) {
+	intersection()
+	{
+		difference()
+		{
+			sphere(d = d);
+			sphere(d = d - w * 2);
+		}
+		cylinder(h = d + 1, d1 = 0, d2 = d * tan(a));
 	}
 }

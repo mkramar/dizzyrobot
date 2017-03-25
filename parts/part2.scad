@@ -85,13 +85,13 @@ module part2()
 
 		// ball bearing spacing
 		
-		translate([hs/2, 0, -h])
+		translate([hs/2 - 1, 0, -h])
 		rotate([0, 90, 0])
-			torus(d = is - 2, w = 4.1, $fn = 50);
+			torus(d = is - 2, w = 5.5, $fn = 50);
 			
-		translate([-hs/2, 0, -h])
+		translate([-hs/2 + 1, 0, -h])
 		rotate([0, 90, 0])
-			torus(d = is - 2, w = 4.1, $fn = 50);
+			torus(d = is - 2, w = 5.5, $fn = 50);
 			
 		// cable spacing
 		

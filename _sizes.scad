@@ -15,16 +15,16 @@ cd2 = 2;
 //
 
 bodyDistance = 50;
-bodyBearingDiam = o1 - 10;
+bodyBearingDiam = 60;
 
 part0angle1 = -20;
 part0angle2 = 60;
-part1Rot = [0, 10, 10];
-part1RotMinus = [0, -10, -10];
+part1Rot = [0, 10, -20];
+part1RotMinus = [0, -10, 20];
 
 part1angle1 = 0;
 part1angle2 = 135;
-part1Off = [29, 0, 0];
+part1Off = [25, 0, 0];
 
 part2angle1 = 0;
 part2angle2 = 135;

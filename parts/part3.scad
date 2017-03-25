@@ -7,7 +7,7 @@ x2 = 40;
 z1 = 20;
 d1 = 20;
 h1 = hs + 15;
-h2 = hs + 8;
+h2 = hs + 10;
 
 module part3() {
 	difference() {
@@ -41,13 +41,13 @@ module part3() {
 		
 		union()
 		{
-			translate([hs/2, 0, 0])
+			translate([hs/2-1, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 2, w = 4, $fn = 50);
+				torus(d = is - 2, w = 5.5, $fn = 50);
 				
-			translate([-hs/2, 0, 0])
+			translate([-hs/2+1, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 2, w = 4, $fn = 50);	
+				torus(d = is - 2, w = 5.5, $fn = 50);	
 		}
 		
 		// this is the main cavity
@@ -97,7 +97,7 @@ module part3() {
 		
 		rotate([0, 90, 0])
 		{
-			translate([-boardSize/2, -boardSize/2, 12])
+			translate([-boardSize/2, -boardSize/2, 14])
 				cube([boardSize, boardSize, 5]);
 				
 			translate([0, 0, 10])
@@ -117,7 +117,7 @@ module part3() {
 		
 		//
 		
-		//translate([0, -50, -50]) cube([50, 50, 50]);
+		//translate([0, -50, -50]) cube([50, 50, 150]);
 	}
 
 	//#translate([18, 0, 0])

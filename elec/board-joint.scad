@@ -1,4 +1,4 @@
-use <_sizes.scad>
+use <../_sizes.scad>
 use <../lib/sensor.scad>
 
 module boardJoint(){
