@@ -3,7 +3,7 @@ include <main.scad>
 a0 = 10;
 a1 = 0;
 a2 = 20;
-a3 = 10;
+a3 = 60;
 
 //part0(); 
 //part2();
@@ -71,14 +71,14 @@ module half()
 	rotate([-a2, 0, 0])
 		part2();
 	
-	color("red")
-	rotate(part1Rot)
-	rotate([a0, 0, 0])
-	translate(part1Off)
-	rotate([0, -a1, 0])
-	translate([0, 0, -h])
-	rotate([-a2, 0, 0])
-	translate([0, 0, -h])
-	rotate([a3, 0, 0])
-		part3();		
+	//color("red")
+	//rotate(part1Rot)
+	//rotate([a0, 0, 0])
+	//translate(part1Off)
+	//rotate([0, -a1, 0])
+	//translate([0, 0, -h])
+	//rotate([-a2, 0, 0])
+	//translate([0, 0, -h])
+	//rotate([a3, 0, 0])
+	//	part3();		
 }

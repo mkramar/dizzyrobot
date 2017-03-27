@@ -22,7 +22,7 @@ module part1()
         }
         
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
-        //translate([0, -30, -h]) cube ([50, 60, 50]);        
+         translate([0, -30, -h]) cube ([50, 60, 50]);        
 		
 		translate([-12, 4, -110])
 		rotate([0, 90, 0])

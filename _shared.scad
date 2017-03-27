@@ -77,24 +77,6 @@ module bone1Minus(){
     }
 }
 
-module bone2(inflate = 0){
-    translate([0, 0, -h])
-	 resize([15 + inflate, 22 + inflate, h])
-         cylinder(h = h, d1 = 20, d2 = 20);
-}
-module bone2Minus(){
-    hull()
-    {
-        translate([0, 0, 0 /*-(o1 /2 + 5)*/])
-        resize([15-th*2, 22-th*2, 20]) 
-            sphere(d = 20);
-        
-        translate([0, 0, - h/* +(o1 /2 + 10)*/])
-        resize([15-th*2, 22-th*2, 20]) 
-            sphere(d = 20);            
-    }
-}
-
 //module bearingOuter() {
 //	shayba(h = 15, d = is + 8, rd = 5, $fn = 50);
 //}

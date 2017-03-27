@@ -1,5 +1,5 @@
 
-th = 4; // thickness
+th = 3.5; // thickness
 
 h = 150;
 o1 = 55;
@@ -10,7 +10,7 @@ i2 = 22;
 // cable
 
 cd1 = 5;
-cd2 = 2;
+cd2 = 2.5;
 
 //
 
@@ -36,8 +36,8 @@ part3Off = [0, 0, -h];
 cableAngle = 15;
 cableOffset = 15;
 
-is = 30;
-hs = 20;
+is = 30;	// diameter of joint
+hs = 20;	// height of joint
 
 // PCB
 boardSize = 25;

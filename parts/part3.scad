@@ -1,6 +1,7 @@
 use <../lib/shapes.scad>
 include <../_sizes.scad>
 include <../_shared.scad>
+use <common23.scad>
 
 x1 = 30;
 x2 = 40;
@@ -9,127 +10,75 @@ d1 = 20;
 h1 = hs + 15;
 h2 = hs + 10;
 
+h3 = is + th * 2 + 3;
+
 module part3() {
 	difference() {
 		part3plus();
-
-		rotate([0, 90, 0])
-			cylinder(d = is + 1, h = hs + 1, center = true);
-			
-		// empty space for the bone rotation
 		
-		hull()
-		{
-			rotate([70, 0, 0])
-			translate([1, 0, h])
-				bone2();
-				
-			rotate([-70, 0, 0])
-			translate([1, 0, h])
-				bone2();
-
-			rotate([70, 0, 0])
-			translate([-1, 0, h])
-				bone2();
-				
-			rotate([-70, 0, 0])
-			translate([-1, 0, h])
-				bone2();	
-		}
+		rotate([0, 90, 0])	
+			shayba(d = is - th * 2, h = hs - th * 2, rd=8);		
 		
 		// ball bearing spacing
 		
 		union()
 		{
-			translate([hs/2-1, 0, 0])
+			translate([hs/2, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 2, w = 5.5, $fn = 50);
+				torus(d = is - 6, w = 5.5, $fn = 50);
 				
-			translate([-hs/2+1, 0, 0])
+			translate([-hs/2, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 2, w = 5.5, $fn = 50);	
+				torus(d = is - 6, w = 5.5, $fn = 50);	
 		}
 		
-		// this is the main cavity
+		// opening up
 		
-		difference()
+		translate([2, 0, 0])
+		hull()
 		{
-			union()
-			{
-				// rear part
-				
-				hull()
-				{
-					translate([-h1 / 2 + th, -x1, -z1])
-						twoSphere(d = d1 - th * 2, h = h1 - th*2);
-				
-					translate([-h2 / 2 + th, 0, -z1 + 4])
-						twoSphere(d = d1 - th * 2, h = h2 - th * 2);
-				}
+			rotate([-45, 0, 0]) cylinder(d = 5, h = 30);
+			rotate([45, 0, 0]) cylinder(d = 5, h = 30);
+		}
+		
 
-				// front part
-				
-				hull()
-				{
-					translate([-h1 / 2 + th, x2, -z1])
-						twoSphere(d = d1 - th * 2, h = h1 - th*2);
-					
-					translate([-h2 / 2 + th, 0, -z1 + 4])
-						twoSphere(d = d1 - th * 2, h = h2 - th * 2);
-				}
-			}
-			
-			// ball bearing support
-			
-			union()
-			{
-				translate([hs/2, 0, 0])
-				rotate([0, 90, 0])
-					ring(d = is - 1, h = 8, t = 5);
-					
-				translate([-hs/2, 0, 0])
-				rotate([0, 90, 0])
-					ring(d = is - 1, h = 8, t = 5);
-			}			
-		}
+		com23openingDownMinus();
 		
-		// board spacing
-		
+		translate([-3, 0, 0])
 		rotate([0, 90, 0])
-		{
-			translate([-boardSize/2, -boardSize/2, 14])
-				cube([boardSize, boardSize, 5]);
-				
-			translate([0, 0, 10])
-				cylinder(d = 22, h = 10, center = true);
-		}
-		
-		union()
-		{
-			translate([0, cableOffset, 0])
-			rotate([cableAngle, 0, 0])
-				cylinder(h = 35, d = 2, center = true, $fn = 8);
-			
-			translate([0, -cableOffset, 0])
-			rotate([-cableAngle, 0, 0])
-				cylinder(h = 35, d = 2, center = true, $fn = 8);			
-		}
+		ring(d = is - 2, h = 2, t = 2);
 		
 		//
 		
 		//translate([0, -50, -50]) cube([50, 50, 150]);
 	}
-
-	//#translate([18, 0, 0])
-	//color("white")
-	//rotate([0, -90, 0])
-	//	boardJoint();
 }
 
 module part3plus() {
 	rotate([0, 90, 0])	
-		shayba(d = is + 8 + 1, h = h2, rd = 6);
+		shayba(d = is, h = hs, rd=5, $fn = 50);
 
+	difference()
+	{
+		footPlus();
+		footMinus();
+				
+		rotate([0, 90, 0])
+			cylinder(d = h3, h = 50, center = true);
+	}
+	
+	intersection()
+	{
+		footPlus();
+		
+		rotate([0, 90, 0])
+			ring(d = h3, h = 50, t = th);
+	}
+	
+	com23openingDownPlus	();
+}
+
+module footPlus() {
 	// rear part
 	
 	hull()
@@ -150,6 +99,30 @@ module part3plus() {
 		
 		translate([-h2 / 2, 0, -z1 + 4])
 			twoSphere(d = d1, h = h2);
+	}
+}
+
+module footMinus() {
+	// rear part
+	
+	hull()
+	{
+		translate([-h1 / 2 + th, -x1, -z1])
+			twoSphere(d = d1 - th * 2, h = h1 - th*2);
+	
+		translate([-h2 / 2 + th, 0, -z1 + 4])
+			twoSphere(d = d1 - th * 2, h = h2 - th * 2);
+	}
+
+	// front part
+	
+	hull()
+	{
+		translate([-h1 / 2 + th, x2, -z1])
+			twoSphere(d = d1 - th * 2, h = h1 - th*2);
+		
+		translate([-h2 / 2 + th, 0, -z1 + 4])
+			twoSphere(d = d1 - th * 2, h = h2 - th * 2);
 	}
 }
 
