@@ -17,16 +17,16 @@ module smallBallMinus1(){
 }
 module smallBallMinus2(){
 	rotate([0, 90, 0])
-		shayba(h = i2 - 8, d = i1 - 8, rd = 8, $fn = 50);
+		shayba(h = i2 - 10, d = i1 - 8, rd = 8, $fn = 50);
 }
 module smallBallMinus3(){
     translate([i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-5, w = 5.5, $fn = 50);
+        torus(d = i1-5, w = 6, $fn = 50);
     
     translate([-i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-5, w = 5.5, $fn = 50);
+        torus(d = i1-5, w = 6, $fn = 50);
 }
 module smallBallMinus4a(half = false){
     rotate([0, 90, 0])
@@ -48,33 +48,7 @@ module smallBallMinus4b(){
 	cylinder(h = o2 + 2, d = 30);  
 }
 
-module bone1(inflate = 0){
-	xUp = 0.35;
-	xDown = 0.5;
-	
-	hull()
-	{
-		translate([0, -1, 0])
-		scale([1, xUp, 1])
-			cylinder(h = 1, d1 = 23 + inflate/xUp, d2 = 26 + inflate);
-			
-		translate([0, 5, -h])
-		 scale([xDown, 1, 1])
-			 cylinder(h = 1, d1 = 35 + inflate/xDown, d2 = 35 + inflate);			
-	}
-}
-module bone1Minus(){
-    hull()
-    {
-        translate([0, 0, 0 /*-(o1 /2 + 5)*/])
-        resize([21, 4, 12]) 
-            sphere(d = 20);
-        
-        translate([0, 4, - h +(o1 /2 + 10)])
-        resize([15, 21, 18]) 
-            sphere(d = 20);            
-    }
-}
+
 
 //module bearingOuter() {
 //	shayba(h = 15, d = is + 8, rd = 5, $fn = 50);

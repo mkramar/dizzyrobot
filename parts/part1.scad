@@ -1,6 +1,11 @@
 use <../lib/shapes.scad>
+include <common01.scad>
+include <common12.scad>
 include <../_sizes.scad>
 include <../_shared.scad>
+
+part1BoltHolder1 = [0, -4, 31 - h];
+part1BoltHolder2 = [0, 22, -h-19];
 
 module part1()
 {    
@@ -12,21 +17,18 @@ module part1()
             difference()
             {
                 smallBall();
-                smallBallMinus1();
+                translate([-com01CableOffset, 0, 0])
+				smallBallMinus1();
             }
             
-            bone1();
+            com01BonePlus();
 
             translate([0, 0, -h])
                 bigBall();
         }
         
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
-        translate([0, -30, -h]) cube ([50, 60, 50]);        
-		
-		translate([-12, 4, -110])
-		rotate([0, 90, 0])
-			cylinder(h = 10, d1 = 18, d2 = 18);
+        //translate([0, -30, -h]) cube ([50, 60, 50]);        
 		
 		rotate([0, 0, 90])
 		{
@@ -35,11 +37,12 @@ module part1()
 			smallBallMinus4a();
 			smallBallMinus4b();
 		}
-        bone1Minus();
 		
-		translate([0, 0, -i1/2 + 2.5])
+        com01BoneMinus();
+		
+		translate([0, -com01CableOffset, -i1/2 + 2.5])
 		rotate([0, 90, 0])
-			cylinder(h = 30, d1 = 2, d2 = 2, center = true, $fn = 10);
+			cylinder(h = 40, d1 = 2, d2 = 2, center = true, $fn = 10);
         
         translate([0, 0, -h])
         {
@@ -48,44 +51,97 @@ module part1()
 			//smallBallMinus4a();
 			smallBallMinus4b();
         
+			// opening for part 2 bone
+			
             hull()
             {
                 rotate([-part1angle1, 0, 0])
                     com12BonePlus(inflate = 2);
                 
-                rotate([-part1angle2, 0, 0])
+                rotate([(-part1angle1-part1angle2)/2, 0, 0])
                     com12BonePlus(inflate = 2);
             }
+			
+            hull()
+            {
+                rotate([(-part1angle1-part1angle2)/2, 0, 0])
+                    com12BonePlus(inflate = 2);
+                
+                rotate([-part1angle2, 0, 0])
+                    com12BonePlus(inflate = 2);
+            }			
         }
 		
-		// board
+		// opening to part 0
 		
-		translate([0, 0, -h])
-		rotate([0, 90, 0])
+		translate([0, 2, 0])
+		hull()
 		{
-			translate([-boardSize/2, -boardSize/2, 14])
-				cube([boardSize, boardSize, 5]);
-				
-			translate([0, 0, 10])
-				cylinder(d = 22, h = 10, center = true);
-		}		
-		
-		// pull
-		
-		translate([0, 0, -h])
-		rotate([20, 0, 0])
-		translate([0, i1/2, 0])
-		{
-			cylinder(h = 35, d = cd2, $fn = 10);
-			translate([0, 0, 20]) cylinder(h = 8, d = cd1, $fn = 10);
-		}
+			rotate([0, 20, 0])
+				cylinder(d = 5, h = 30);
 
-		translate([0, 0, -h])
-		rotate([-30, 0, 0])
-		translate([0, -i1/2, 0])
-		{
-			cylinder(h = 35, d = cd2, $fn = 10);
-			translate([0, 0, 24]) cylinder(h = 8, d = cd1, $fn = 10);
+			rotate([0, -60, 0])
+				cylinder(d = 5, h = 30);
 		}
     }
+	
+	// cable holders
+	
+	difference()
+	{
+		part1CableHolderPlus();
+		part1CableHolderMinus();
+	}
+	
+	// bolt holder
+	
+	translate(part1BoltHolder2)
+	rotate([0, 90, 0])
+		cylinder(h = 16, d = 10, center = true);		
+}
+
+module part1CableHolderPlus() {
+	intersection()
+	{
+		com01BoneMinus();
+		
+		union()
+		{
+			translate([0, 0, -h])
+			{
+				rotate([12, 0, 0])
+				translate([0, i1/2, 33])
+					cube([30, 8, 10], center = true);
+				
+				rotate([-30, 0, 0])
+				translate([0, -i1/2, 33])
+					cube([30, 8, 10], center = true);
+			}		
+
+			// bolt holder
+			
+			translate(part1BoltHolder1)
+			rotate([0, 90, 0])
+				cylinder(h = 30, d = 10, center = true);	
+		}
+	}	
+}
+
+module part1CableHolderMinus() {
+	translate([0, 0, -h])
+	{
+		rotate([12, 0, 0])
+		translate([-com12CableOffset, i1/2, 0])
+		{
+			cylinder(h = 40, d = cd2, $fn = 8);
+			translate([0, 0, 32]) cylinder(h = 18, d = cd1, $fn = 15);
+		}
+		
+		rotate([-30, 0, 0])
+		translate([-com12CableOffset, -i1/2, 0])
+		{
+			cylinder(h = 40, d = cd2, $fn = 8);
+			translate([0, 0, 32]) cylinder(h = 18, d = cd1, $fn = 15);
+		}
+	}
 }

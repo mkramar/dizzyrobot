@@ -6,7 +6,8 @@ a2 = 20;
 a3 = 40;
 
 //part0(); 
-part2();
+part1();
+//part2();
 //part3();
 
 //half();

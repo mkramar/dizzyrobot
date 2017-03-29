@@ -5,7 +5,7 @@ include <../_sizes.scad>
 include <../_shared.scad>
 include <../elec/board-joint.scad>
 
-cableAngle = 10;
+part1CableAngle = 10;
 
 module part2()
 {    
@@ -22,7 +22,7 @@ module part2()
 				shayba(d = is + th * 2, h = hs + th * 3, rd=6, $fn = 50);
 		}
 		
-		translate([-com23CableOffset, 0, 0]) smallBallMinus1();
+		translate([-com12CableOffset, 0, 0]) smallBallMinus1();
 		smallBallMinus2();
 		smallBallMinus3();
 		smallBallMinus4a();
@@ -84,12 +84,12 @@ module part2()
 	
 	difference()
 	{
-		cableHolderPlus();
-		cableHolderMinus();
+		part2CableHolderPlus();
+		part2CableHolderMinus();
 	}
 }
 
-module cableHolderPlus() {
+module part2CableHolderPlus() {
 	intersection()
 	{
 		com12BoneMinus();
@@ -97,30 +97,30 @@ module cableHolderPlus() {
 		translate([0, 0, -h])
 		{
 			translate([0, is/2, 0])
-			rotate([cableAngle, 0, 0])
+			rotate([part1CableAngle, 0, 0])
 			translate([0, 0, 30])
 				cube([20, 8, 10], center = true);
 			
 			translate([0, -is/2, 0])
-			rotate([-cableAngle, 0, 0])
+			rotate([-part1CableAngle, 0, 0])
 			translate([0, 0, 30])
 				cube([20, 8, 10], center = true);
 		}
 	}	
 }
 
-module cableHolderMinus() {
+module part2CableHolderMinus() {
 	translate([0, 0, -h])
 	{
+		rotate([part1CableAngle, 0, 0])
 		translate([-com23CableOffset, is/2 - 0.6, 0])
-		rotate([cableAngle, 0, 0])
 		{
 			cylinder(h = 40, d = cd2, $fn = 8);
 			translate([0, 0, 32]) cylinder(h = 18, d = cd1, $fn = 15);
 		}
 		
+		rotate([-part1CableAngle, 0, 0])
 		translate([-com23CableOffset, -is/2 + 0.6, 0])
-		rotate([-cableAngle, 0, 0])
 		{
 			cylinder(h = 40, d = cd2, $fn = 8);
 			translate([0, 0, 32]) cylinder(h = 18, d = cd1, $fn = 15);

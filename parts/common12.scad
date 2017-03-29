@@ -1,6 +1,8 @@
 use <../lib/shapes.scad>
 include <../_sizes.scad>
 
+com12CableOffset = 3; // offset from center to the cable ring
+
 module com12BonePlus(inflate = 0){
 	hull()
 	{
