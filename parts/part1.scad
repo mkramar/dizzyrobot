@@ -22,7 +22,7 @@ module part1()
         }
         
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
-         translate([0, -30, -h]) cube ([50, 60, 50]);        
+        translate([0, -30, -h]) cube ([50, 60, 50]);        
 		
 		translate([-12, 4, -110])
 		rotate([0, 90, 0])
@@ -50,13 +50,11 @@ module part1()
         
             hull()
             {
-                rotate([180-part1angle1, 0, 0])
-                translate([0, 0, h])
-                    bone2(inflate = 2);
+                rotate([-part1angle1, 0, 0])
+                    com12BonePlus(inflate = 2);
                 
-                rotate([180-part1angle2, 0, 0])
-                translate([0, 0, h])
-                    bone2(inflate = 2);
+                rotate([-part1angle2, 0, 0])
+                    com12BonePlus(inflate = 2);
             }
         }
 		

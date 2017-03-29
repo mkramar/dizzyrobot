@@ -4,19 +4,19 @@ include <../_sizes.scad>
 module com12BonePlus(inflate = 0){
 	hull()
 	{
-		translate([4, 10 ,0]) sphere(d = 6);
-		translate([-4, 10 ,0]) sphere(d = 6);
+		translate([3, 10 ,0]) sphere(d = 6 + inflate);
+		translate([-3, 10 ,0]) sphere(d = 6 + inflate);
 		
-		translate([4, -10 ,0]) sphere(d = 6);
-		translate([-4, -10 ,0]) sphere(d = 6);		
+		translate([3, -10 ,0]) sphere(d = 6 + inflate);
+		translate([-3, -10 ,0]) sphere(d = 6 + inflate);		
 	
 		translate([0, 0, -h])
 		{
-			translate([6, 12 ,0]) sphere(d = 10);
-			translate([-6, 12 ,0]) sphere(d = 10);
+			translate([6, 12 ,0]) sphere(d = 10 + inflate);
+			translate([-6, 12 ,0]) sphere(d = 10 + inflate);
 			
-			translate([6, -12 ,0]) sphere(d = 10);
-			translate([-6, -12 ,0]) sphere(d = 10);		
+			translate([6, -12 ,0]) sphere(d = 10 + inflate);
+			translate([-6, -12 ,0]) sphere(d = 10 + inflate);		
 		}
 	}
 }

@@ -2,9 +2,11 @@
 th = 3.5; // thickness
 
 h = 150;
+
 o1 = 55;
 o2 = 30;
-i1 = 45;
+
+i1 = 45; // inner
 i2 = 22;
 
 // cable
@@ -31,13 +33,8 @@ part2angle2 = 135;
 
 part3Off = [0, 0, -h];
 
-// parts 2 & 30
-
-cableAngle = 15;
-cableOffset = 15;
-
-is = 30;	// diameter of joint
-hs = 20;	// height of joint
+is = 30;	// diameter of small joint
+hs = 20;	// height of small joint
 
 // PCB
 boardSize = 25;

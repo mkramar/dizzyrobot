@@ -44,9 +44,9 @@ module part3() {
 
 		com23openingDownMinus();
 		
-		translate([-3, 0, 0])
+		translate([-com23CableOffset, 0, 0])
 		rotate([0, 90, 0])
-		ring(d = is - 2, h = 2, t = 2);
+			ring(d = is - 2, h = 2, t = 2);
 		
 		//
 		

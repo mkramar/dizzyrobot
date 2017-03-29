@@ -1,38 +1,7 @@
 include <../../main.scad>
 
 boltPositions = [[0, 38, -15], /*[0, 10, -19], [0, -10, -19],*/ [0, -31, -15]];
-/*
-translate([-45, 0, 0])
-rotate([0, 90, 0])
-difference()
-{
-	union()
-	{
-		intersection() 
-		{
-			part3();
-			cutA();
-		}
-		boltsAplus();
-	}
-	
-	boltsAminus();
-}
 
-rotate([0, -90, 0])
-difference() {
-	union()
-	{
-		difference()
-		{
-			part3();
-			cutA();
-		}
-		boltsBplus();
-	}
-	boltsBminus();
-}
-*/
 module cutA() {
 	translate([0, -50, -50])
 		cube([100, 100, 100]);

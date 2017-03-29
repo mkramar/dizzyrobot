@@ -8,26 +8,25 @@ module bigBall(){
 
 module smallBall(inflate = 0){
 	rotate([0, 90, 0])
-		shayba(h = i2 + inflate, d = i1 + inflate, rd = 10, $fn = 50);
+		shayba(h = i2 + inflate, d = i1 + inflate, rd = 5, $fn = 50);
+		//cylinder(h = i2 + inflate, d = i1 + inflate, center = true, $fn = 50);
 }
 module smallBallMinus1(){
     rotate([0, 90, 0])
-		torus(d = i1 + 2, w = 4, $fn = 50);
+		torus(d = i1 + 1, w = 3, $fn = 50);
 }
 module smallBallMinus2(){
 	rotate([0, 90, 0])
 		shayba(h = i2 - 8, d = i1 - 8, rd = 8, $fn = 50);
 }
 module smallBallMinus3(){
-	x = 1.5;
-	
-    translate([i2/2 - x, 0, 0])
+    translate([i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-x, w = 4.5, $fn = 50);
+        torus(d = i1-5, w = 5.5, $fn = 50);
     
-    translate([-i2/2 + x, 0, 0])
+    translate([-i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-x, w = 4.5, $fn = 50);
+        torus(d = i1-5, w = 5.5, $fn = 50);
 }
 module smallBallMinus4a(half = false){
     rotate([0, 90, 0])

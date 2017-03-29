@@ -3,6 +3,7 @@ include <../_sizes.scad>
 
 com23MaxAngle = 45;
 com23MinAngle = -20;
+com23CableOffset = 3; // offset from center to the cable ring
 
 h3 = is + th * 2 + 3;
 
