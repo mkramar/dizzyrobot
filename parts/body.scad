@@ -8,7 +8,7 @@ module body() {
 	rotate(part1Rot)
 		body1();
 	
-	body2();
+	//body2();
 }
 
 module body1(side = "a"){
@@ -30,7 +30,7 @@ module body1(side = "a"){
 					cylinder(d = db - 5, h = 16, center = true, $fn = 50);
 					
 					// bearing balls
-					torus(d = db + 1, w = 5, $fn = 50);
+					torus(d = db + 1, w = ball, $fn = 50);
 				}
 				
 				// this holds the board-joint

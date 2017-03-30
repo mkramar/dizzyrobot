@@ -13,7 +13,7 @@ module part2()
 	{
 		union()
 		{
-			smallBall();
+			com12JointInner();
 			
 			com12BonePlus();
 			
@@ -22,11 +22,11 @@ module part2()
 				shayba(d = is + th * 2, h = hs + th * 3, rd=6, $fn = 50);
 		}
 		
-		translate([-com12CableOffset, 0, 0]) smallBallMinus1();
-		smallBallMinus2();
-		smallBallMinus3();
-		smallBallMinus4a();
-		smallBallMinus4b();
+		translate([-com12CableOffset, 0, 0]) com12JointInnerMinus1();
+		com12JointInnerMinus2();
+		com12JointInnerMinus3();
+		com12JointInnerMinus4a();
+		com12JointInnerMinus4b();
 		com12BoneMinus();
 
 		cableHolderMinus();		

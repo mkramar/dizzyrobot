@@ -16,15 +16,15 @@ module part1()
 			rotate([0, 0, 90])
             difference()
             {
-                smallBall();
+                com01JointInner();
                 translate([-com01CableOffset, 0, 0])
-				smallBallMinus1();
+					com01JointInnerMinus1();
             }
             
             com01BonePlus();
 
             translate([0, 0, -h])
-                bigBall();
+                com12JointOuter();
         }
         
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
@@ -32,10 +32,10 @@ module part1()
 		
 		rotate([0, 0, 90])
 		{
-			smallBallMinus2();
-			smallBallMinus3();
-			smallBallMinus4a();
-			smallBallMinus4b();
+			com01JointInnerMinus2();
+			com01JointInnerMinus3();
+			com01JointInnerMinus4a();
+			com01JointInnerMinus4b();
 		}
 		
         com01BoneMinus();
@@ -46,10 +46,10 @@ module part1()
         
         translate([0, 0, -h])
         {
-            smallBall(inflate = 2);
-            smallBallMinus3();
-			//smallBallMinus4a();
-			smallBallMinus4b();
+            com12JointInner(inflate = 2);
+            com12JointInnerMinus3();
+			//com12JointInnerMinus4a();
+			com12JointInnerMinus4b();
         
 			// opening for part 2 bone
 			
@@ -72,17 +72,27 @@ module part1()
             }			
         }
 		
-		// opening to part 0
+		// communication opening into part 0
 		
-		translate([0, 2, 0])
+		translate([0, 6, 0])
 		hull()
 		{
-			rotate([0, 20, 0])
-				cylinder(d = 5, h = 30);
+			rotate([0, -45, 0])
+				cylinder(d = 5, h = 50);
 
-			rotate([0, -60, 0])
-				cylinder(d = 5, h = 30);
+			rotate([0, -120, 0])
+				cylinder(d = 5, h = 50);
 		}
+		
+		translate([0, -6, 0])
+		hull()
+		{
+			rotate([0, -45, 0])
+				cylinder(d = 5, h = 50);
+
+			rotate([0, -120, 0])
+				cylinder(d = 5, h = 50);
+		}		
     }
 	
 	// cable holders

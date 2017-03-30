@@ -13,11 +13,11 @@ module com23BearingSpacing()
 	{
 		translate([hs/2, 0, 0])
 		rotate([0, 90, 0])
-			torus(d = is - 6, w = 5.5, $fn = 50);
+			torus(d = is - 6, w = ball, $fn = 50);
 			
 		translate([-hs/2, 0, 0])
 		rotate([0, 90, 0])
-			torus(d = is - 6, w = 5.5, $fn = 50);	
+			torus(d = is - 6, w = ball, $fn = 50);	
 	}
 }
 

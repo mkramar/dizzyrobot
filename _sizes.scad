@@ -1,18 +1,19 @@
 
 th = 3.5; // thickness
+ball = 6; // this is spacing for the balls, actual ball size is 5mm
 
 h = 130;
-
-o1 = 55;
-o2 = 30;
 
 i1 = 45; // inner
 i2 = 22;
 
+o1 = i1 + 10;
+o2 = i2 + 10;
+
 // cable
 
-cd1 = 5;
-cd2 = 2.5;
+cd1 = 5;	// diameter of the cable enclosure
+cd2 = 2.5;	// diameter of the cable
 
 //
 

@@ -22,11 +22,11 @@ module smallBallMinus2(){
 module smallBallMinus3(){
     translate([i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-5, w = 6, $fn = 50);
+        torus(d = i1-5, w = ball, $fn = 50);
     
     translate([-i2/2, 0, 0])
     rotate([0, 90, 0])
-        torus(d = i1-5, w = 6, $fn = 50);
+        torus(d = i1-5, w = ball, $fn = 50);
 }
 module smallBallMinus4a(half = false){
     rotate([0, 90, 0])

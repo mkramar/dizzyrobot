@@ -6,11 +6,11 @@ a2 = 20;
 a3 = 40;
 
 //part0(); 
-part1();
+//part1();
 //part2();
 //part3();
 
-//half();
+half();
 //mirror([1, 0, 0]) translate([bodyDistance, 0, 0]) half();
 
 // translate([0, 100, -20])
@@ -51,10 +51,10 @@ module half()
 	//color("green")
 	//	body();
 
-	//color("pink")
-	//rotate(part1Rot)
-	//rotate([a0, 0, 0])
-	//	part0();
+	color("pink")
+	rotate(part1Rot)
+	rotate([a0, 0, 0])
+		part0();
 
 	color("orange")
 	rotate(part1Rot)
@@ -64,13 +64,13 @@ module half()
 		part1();
 
 	//color("green")
-	rotate(part1Rot)
-	rotate([a0, 0, 0])
-	translate(part1Off)
-	rotate([0, -a1, 0])
-	translate([0, 0, -h])
-	rotate([-a2, 0, 0])
-		part2();
+	//rotate(part1Rot)
+	//rotate([a0, 0, 0])
+	//translate(part1Off)
+	//rotate([0, -a1, 0])
+	//translate([0, 0, -h])
+	//rotate([-a2, 0, 0])
+	//	part2();
 	
 	//color("red")
 	//rotate(part1Rot)
