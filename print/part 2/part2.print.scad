@@ -1,6 +1,6 @@
 include <../../main.scad>
 
-boltPositions = [[0, 10, -30], [0, -10, -40], [0, 10, -80], [0, -10, -90]];
+boltPositions = [[0, -7, -40], [0, 8, -110], [0, -8, -110]];
 
 module cutA() {
 	translate([-com23CableOffset, 0, 0])
@@ -41,7 +41,7 @@ module boltsAplus(){
 	{
 		intersection()
 		{
-			com12BonePlus();
+			bone2Plus();
 			
 			translate([-com23CableOffset, 0, 0])
 			translate(x)
@@ -66,7 +66,7 @@ module boltsBplus() {
 	{
 		intersection()
 		{
-			com12BonePlus();
+			bone2Plus();
 			
 			translate([-com23CableOffset, 0, 0])
 			translate(x)

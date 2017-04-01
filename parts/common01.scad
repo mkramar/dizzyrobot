@@ -14,10 +14,10 @@ yDown = 38;
 
 // bone -----------------------------------------------------------------------
 
-module com01BonePlus(inflate = 0){
+module bone1Plus(inflate = 0){
 	hull()
 	{
-		translate([0, -1, 0])
+		translate([0, -2, 0])
 		resize([xUp + inflate, yUp + inflate, 1])
 			sphere(d = 20);
 			
@@ -26,10 +26,10 @@ module com01BonePlus(inflate = 0){
 			 sphere(d = 20);			
 	}
 }
-module com01BoneMinus(){
+module bone1Minus(){
     hull()
     {
-        translate([0, 0, 0])
+        translate([0, -2, 0])
         resize([xUp - th*2, yUp - th*2, 1])
             sphere(d = 20);
         

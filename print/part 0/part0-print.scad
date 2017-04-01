@@ -31,7 +31,7 @@ module boltsAplus(){
 	{
 		//intersection()
 		//{
-		//	com01BonePlus();
+		//	bone1Plus();
 			
 			translate(x)
 			rotate([0, 90, 0])				
@@ -54,7 +54,7 @@ module boltsBplus() {
 	{
 		//intersection()
 		//{
-		//	com01BonePlus();
+		//	bone1Plus();
 			
 			translate(x)
 			rotate([0, -90, 0])				

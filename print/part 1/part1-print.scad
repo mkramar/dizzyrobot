@@ -8,6 +8,10 @@ module cutA() {
 		translate([0, -50, -200])
 			cube([30, 100, 250]);
 
+		translate([0.5, 3, 10])
+		rotate([90, 0, -90])
+			tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+			
 		translate([0.5, -20, -40])
 		rotate([0, -90, 0])
 			tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
@@ -28,7 +32,7 @@ module boltsAplus(){
 	{
 		intersection()
 		{
-			com01BonePlus();
+			bone1Plus();
 			
 			translate([-com12CableOffset, 0, 0])
 			translate(x)
@@ -53,7 +57,7 @@ module boltsBplus() {
 	{
 		intersection()
 		{
-			com01BonePlus();
+			bone1Plus();
 			
 			translate([-com12CableOffset, 0, 0])
 			translate(x)

@@ -3,21 +3,24 @@ include <../_sizes.scad>
 
 com23MaxAngle = 45;
 com23MinAngle = -20;
-com23CableOffset = 3; // offset from center to the cable ring
+com23CableOffset = 0; // offset from center to the cable ring
 
-h3 = is + th * 2 + 3;
+com23JointD = 30;
+com23JointH = 20;
+
+h3 = com23JointD + th * 2 + 3;
 
 module com23BearingSpacing()
 {
 	union()
 	{
-		translate([hs/2, 0, 0])
+		translate([com23JointH/2, 0, 0])
 		rotate([0, 90, 0])
-			torus(d = is - 6, w = ball, $fn = 50);
+			torus(d = com23JointD - 6, w = ball, $fn = 50);
 			
-		translate([-hs/2, 0, 0])
+		translate([-com23JointH/2, 0, 0])
 		rotate([0, 90, 0])
-			torus(d = is - 6, w = ball, $fn = 50);	
+			torus(d = com23JointD - 6, w = ball, $fn = 50);	
 	}
 }
 
@@ -26,7 +29,7 @@ module com23openingDownPlus(inflate = false) {
 	intersection()
 	{
 		rotate([0, 90, 0])
-			cylinder(d = is + th * 3, h = 50, center = true);
+			cylinder(d = com23JointD + th * 3, h = 50, center = true);
 		
 		hull()
 		{

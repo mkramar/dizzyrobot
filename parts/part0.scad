@@ -48,19 +48,19 @@ module part0_1(){
 				hull()
 				{
 					rotate([0, -part0angle1, 0])
-						com01BonePlus(inflate = 2);
+						bone1Plus(inflate = 2);
 					
 					rotate([0, (-part0angle1-part0angle2)/2, 0])
-						com01BonePlus(inflate = 2);
+						bone1Plus(inflate = 2);
 				}
 
 				hull()
 				{
 					rotate([0, (-part0angle1-part0angle2)/2, 0])
-						com01BonePlus(inflate = 2);
+						bone1Plus(inflate = 2);
 					
 					rotate([0, -part0angle2, 0])
-						com01BonePlus(inflate = 2);
+						bone1Plus(inflate = 2);
 				}
 			}
 		}
@@ -138,7 +138,7 @@ module part0_1(){
 	translate([0, com01JointH/2, 0])
 	translate(part1Off)
 	rotate([90, 0, 0])
-	dCylinder(h = 5, d = 4, x = 1, $fn = 20);
+		dCylinder(h = 5, d = 4, x = 1, $fn = 20);
 }
 
 module part0_2() {

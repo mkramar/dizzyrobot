@@ -34,8 +34,5 @@ part2angle2 = 135;
 
 part3Off = [0, 0, -h];
 
-is = 30;	// diameter of small joint
-hs = 20;	// height of small joint
-
 // PCB
 boardSize = 25;

@@ -87,6 +87,14 @@ module ring(d, h, t)
     }
 }
 
+module ringDiamond(d, h)
+{
+	rotate_extrude(convexity = 10)
+	translate([d/2, 0, 0])
+	rotate([0, 0, 45])
+		square(size = [h, h], center = true);
+}
+
 module ringSector(d, h, t, a1, a2)
 {
     intersection()

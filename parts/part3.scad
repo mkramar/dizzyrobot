@@ -7,56 +7,71 @@ x1 = 30;
 x2 = 40;
 z1 = 20;
 d1 = 20;
-h1 = hs + 15;
-h2 = hs + 10;
+h1 = com23JointH + 15;
+h2 = com23JointH + 10;
 
-h3 = is + th * 2 + 3;
+h3 = com23JointD + th * 2 + 3;
 
 module part3() {
 	difference() {
 		part3plus();
 		
 		rotate([0, 90, 0])	
-			shayba(d = is - th * 2, h = hs - th * 2, rd=8);		
+			shayba(d = com23JointD - th * 2, h = com23JointH - th * 2, rd=8);		
 		
+		rotate([0, 90, 0])
+		cylinder(h = 10, d = 15);
+		
+		// space for rotation sensor
+		
+		translate([-com12JointH / 2, 0, 0])
+		rotate([0, 90, 0])		
+			rotationSensorSpacing();
+			
+			
+		//translate([com12JointH / 2, 0, 0])
+		//rotate([180, 0, 0])
+		//rotate([0, -90, 0])
+		//	rotationSensorSpacing();			
+			
+/*		
 		// ball bearing spacing
 		
 		union()
 		{
-			translate([hs/2, 0, 0])
+			translate([com23JointH/2, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 6, w = 5.5, $fn = 50);
+				torus(d = com23JointD - 6, w = 5.5, $fn = 50);
 				
-			translate([-hs/2, 0, 0])
+			translate([-com23JointH/2, 0, 0])
 			rotate([0, 90, 0])
-				torus(d = is - 6, w = 5.5, $fn = 50);	
+				torus(d = com23JointD - 6, w = 5.5, $fn = 50);	
 		}
-		
+*/
 		// opening up
 		
-		translate([2, 0, 0])
+		translate([-4, 0, 0])
 		hull()
 		{
-			rotate([-45, 0, 0]) cylinder(d = 5, h = 30);
-			rotate([45, 0, 0]) cylinder(d = 5, h = 30);
+			rotate([-45, 0, 0]) cylinder(d = 4, h = 30, $fn = 15);
+			rotate([45, 0, 0]) cylinder(d = 4, h = 30, $fn = 15);
 		}
 		
-
 		com23openingDownMinus();
 		
 		translate([-com23CableOffset, 0, 0])
 		rotate([0, 90, 0])
-			ring(d = is - 2, h = 2, t = 2);
+			ringDiamond(d = com23JointD, h = 2);
 		
 		//
 		
-		//translate([0, -50, -50]) cube([50, 50, 150]);
+		translate([0, -50, -50]) cube([50, 50, 150]);
 	}
 }
 
 module part3plus() {
 	rotate([0, 90, 0])	
-		shayba(d = is, h = hs, rd=5, $fn = 50);
+		shayba(d = com23JointD, h = com23JointH, rd=5, $fn = 50);
 
 	difference()
 	{
