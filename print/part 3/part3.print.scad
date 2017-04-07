@@ -5,6 +5,11 @@ boltPositions = [[0, 38, -15], /*[0, 10, -19], [0, -10, -19],*/ [0, -31, -15]];
 module cutA() {
 	translate([0, -50, -50])
 		cube([100, 100, 100]);
+	
+	translate([-4, 0, 0])
+	rotate([47.5, 0, 0])
+	rotate([0, 90, 0])
+	cylinderSector(d = com23JointD + 0.2, h = 4, angle = 260);
 		
 	// vert
 	
@@ -33,7 +38,7 @@ module cutA() {
 	rotate([0, -90, 0])
 		tapered_cuboid(w = 6, l = 20, h = 2, taper = 2);
 		
-	translate([0.5, -20, -3])
+	translate([0.5 - 4, -20, -3])
 	rotate([0, -90, 0])
 		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
 }

@@ -1,4 +1,5 @@
-rotationSensor();
+//rotationSensor();
+//rotationSensorSpacing();
 
 module rotationSensor(){
 	//Digi-Key Part Number: 490-2400-ND
@@ -34,21 +35,21 @@ module roatationSensorBody(inflate = false) {
 			translate([3, 0, 0]) cube([4, 4, 4], center = true);
 		}
 		
-		translate([7.5 + x2, 7.5 + x2, 0])
+		translate([8 + x2, 7.5 + x2, 0])
 		rotate([0, 0, 45]) 
 			cube([10, 10, 5], center = true);
 		
-		translate([7.5 + x2, -7.5 - x2, 0])
+		translate([8 + x2, -7.5 - x2, 0])
 		rotate([0, 0, -45]) 
 			cube([10, 10, 5], center = true);
 		
-		translate([-8.7 - x2, 8.7 + x2, 0])
-		rotate([0, 0, 45]) 
-			cube([10, 10, 5], center = true);
+		//translate([-8.7 - x2, 8.7 + x2, 0])
+		//rotate([0, 0, 45]) 
+		//	cube([10, 10, 5], center = true);
 		
-		translate([-8.7 - x2, -8.7 - x2, 0])
-		rotate([0, 0, -45]) 
-			cube([10, 10, 5], center = true);				
+		//translate([-8.7 - x2, -8.7 - x2, 0])
+		//rotate([0, 0, -45]) 
+		//	cube([10, 10, 5], center = true);				
 	}
 }
 
@@ -58,6 +59,12 @@ module rotationSensorSpacing() {
 	
 	cylinder(h = 10, d = 6, $fn = 15);
 	
-	translate([-7, 0, 0])
-		cube ([1.5, 7, 15], center = true);
+	translate([-7.5, 0, 0])
+		cube ([2, 8.5, 15], center = true);
+
+	translate([-5.5, 5, 2.5])
+		cube ([2, 2, 1], center = true);
+		
+	translate([-5.5, -5, 2.5])
+		cube ([2, 2, 1], center = true);
 }

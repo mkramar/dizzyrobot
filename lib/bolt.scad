@@ -39,6 +39,6 @@ module boltbMinus()
             cylinder(h = 7, d = 3.5, $fn = 10);
 
         translate([0, 0, 4.5])
-            cylinder(h = 15, d = 7, $fn = 6);    
+            cylinder(h = 35, d = 7, $fn = 6);    
     }
 }

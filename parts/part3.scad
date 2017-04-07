@@ -65,7 +65,7 @@ module part3() {
 		
 		//
 		
-		translate([0, -50, -50]) cube([50, 50, 150]);
+		//translate([0, -50, -50]) cube([50, 50, 150]);
 	}
 }
 

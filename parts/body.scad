@@ -5,10 +5,18 @@ include <../_shared.scad>
 use <../elec/board-joint.scad>
 
 module body() {
-	rotate(part1Rot)
-		body1();
-	
-	//body2();
+	difference()
+	{
+		union()
+		{
+			rotate(part1Rot)
+				body1();
+		
+			body2();
+		}
+		
+		//translate([-25, 0, 0]) cube([50, 50, 50]);		
+	}
 }
 
 module body1(side = "a"){
@@ -33,24 +41,14 @@ module body1(side = "a"){
 					torus(d = db + 1, w = ball, $fn = 50);
 				}
 				
-				// this holds the board-joint
-				union()
+				// rotation sensor holder
+				
+				translate([0, 0, 8])
 				{
-					translate([0, 0, 10])
-					{
-						difference()
-						{
-							union()
-							{
-								ring(d = boardSize * 1.42 - 10, h = 4, t = 5, $fn = 50);
-								rotate([0, 0, 45])
-									cube([8, db, 4], center = true);
-							}		
-							
-							translate([0, 0, -2])
-								cube([boardSize, boardSize, 5], center = true);
-						}
-					}
+					translate([-9, 0, 0])
+						cube([18, db / 2, 4]);
+						
+					cylinder(h = 4, d = 18);
 				}
 			}
 			
@@ -59,7 +57,14 @@ module body1(side = "a"){
 			//	boardJoint();
 		}
 		
-		translate([-25, 0, 0]) cube([50, 50, 50]);
+		//translate([-25, 0, 0]) cube([50, 50, 50]);
+		
+		// rotation holder spacing
+		
+		translate([-8, 0, 0])
+		rotate([90, 0, 0])
+		rotate([0, -90, 0])
+			rotationSensorSpacing();
 	}
 	
 	//#rotate([0, 90, 0])
@@ -80,14 +85,25 @@ module body2() {
 			rotate([0, 90, 0])
 			difference()
 			{
-				cylinder(d = 180, h = 5);
+				#cylinder(d = 180, h = 5);
 				
-				cylinder(d = db - 5, h = 16, center = true, $fn = 50);
+				cylinder(d = db, h = 16, center = true, $fn = 50);
 				// bearing balls
-				torus(d = db + 1, w = 5, $fn = 50);
+				torus(d = db + 1, w = ball, $fn = 50);
 			}
 		}
-
+		
+		// holes
+		
+		for (a = [-45, 0, 45, 90])
+		{
+			rotate(part1Rot)
+			rotate([a, 0, 0])
+			translate([0, 60, 0])
+			rotate([0, 90, 0])
+				cylinder(d = 30, h = 20, center = true);
+		}
+		
 		//translate([-25, 0, 0]) cube([50, 50, 50]);		
 	}
 	

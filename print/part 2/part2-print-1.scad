@@ -1,4 +1,4 @@
-use <part2.print.scad>
+use <part2-print.scad>
 
 rotate([0, 90, 0])
 difference()

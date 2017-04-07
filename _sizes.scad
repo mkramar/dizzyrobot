@@ -1,6 +1,6 @@
 
 th = 3.5; // thickness
-ball = 6; // this is spacing for the balls, actual ball size is 5mm
+ball = 5.5; // this is spacing for the balls, actual ball size is 5mm
 
 h = 130;
 

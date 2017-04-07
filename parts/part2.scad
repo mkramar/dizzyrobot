@@ -63,7 +63,7 @@ module part2()
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
         //translate([0, -25, -h]) cube ([50, 50, 50]);
 		//translate([-25, 0, -h]) cube ([50, 50, 50]);
-		//translate([0, -50, -h-25]) cube ([50, 50, 100]);
+		translate([0, -50, -h-25]) cube ([50, 50, 100]);
 		
 
 		// opening into part1
@@ -91,7 +91,7 @@ module part2()
 	difference()
 	{
 		part2CableHolderPlus();
-		#part2CableHolderMinus();
+		part2CableHolderMinus();
 	}
 	
 	// rotation sensor axis

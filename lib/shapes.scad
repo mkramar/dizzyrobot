@@ -1,4 +1,3 @@
-
 //Draw a prism based on a 
 //right angled triangle
 //l - length of prism
@@ -175,4 +174,9 @@ module sphereSector(d, w, a) {
 		}
 		cylinder(h = d + 1, d1 = 0, d2 = d * tan(a));
 	}
+}
+
+module cylinderSector(d, h, angle) {
+	rotate_extrude(angle=angle, convexity=10)
+		square(size = [d/2, h]);
 }

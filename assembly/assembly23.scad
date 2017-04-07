@@ -1,6 +1,6 @@
 include <../main.scad>
 
-angle = 30;
+angle = 0;
 
 color("green")
 	part2();
