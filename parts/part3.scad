@@ -3,12 +3,12 @@ include <../_sizes.scad>
 include <../_shared.scad>
 use <common23.scad>
 
-x1 = 30;
-x2 = 40;
-z1 = 20;
+x1 = 35;
+x2 = 45;
+z1 = 25;
 d1 = 20;
-h1 = com23JointH + 15;
-h2 = com23JointH + 10;
+h1 = com23JointH + 20;
+h2 = com23JointH + 15;
 
 h3 = com23JointD + th * 2 + 3;
 
@@ -20,7 +20,9 @@ module part3() {
 			shayba(d = com23JointD - th * 2, h = com23JointH - th * 2, rd=8);		
 		
 		rotate([0, 90, 0])
-		cylinder(h = 10, d = 15);
+			cylinder(h = 10, d = 15);
+			
+		com23BearingSpacing();
 		
 		// space for rotation sensor
 		

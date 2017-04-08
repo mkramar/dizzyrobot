@@ -39,11 +39,11 @@ module part2()
 		{
 			rotate([0, 90, 0])
 			{
-				shayba(d = com23JointD + 1, h = com23JointH + 1, rd=5, $fn = 50);
-				cylinder(d = com23JointD - 16, h = com23JointH + 20);
+				shayba(d = com23JointD + 2, h = com23JointH + 2, rd=5, $fn = 50);
+				cylinder(d = com23JointD - 18, h = com23JointH + 20);
 			}
 			
-			//com23BearingSpacing();
+			com23BearingSpacing();
 		}	
 
 /*

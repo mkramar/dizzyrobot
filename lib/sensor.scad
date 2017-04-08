@@ -23,10 +23,11 @@ module rotationSensor(){
 module roatationSensorBody(inflate = false) {
 	x1 = inflate ? 1 : 0;
 	x2 = inflate ? 0.25 : 0;
+	x3 = inflate ? 0.5 : 0;
 
 	difference()
 	{
-		cube ([12 + x1, 11 + x1, 2 + x2], center = true);
+		cube ([12 + x1, 11 + x1, 2 + x3], center = true);
 		
 		//translate([0.5, 0, 0]) 
 		difference() 

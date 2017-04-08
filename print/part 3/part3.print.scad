@@ -1,15 +1,15 @@
 include <../../main.scad>
 
-boltPositions = [[0, 38, -15], /*[0, 10, -19], [0, -10, -19],*/ [0, -31, -15]];
+boltPositions = [[0, 38, -20], /*[0, 10, -19], [0, -10, -19],*/ [0, -31, -20]];
 
 module cutA() {
-	translate([0, -50, -50])
-		cube([100, 100, 100]);
+	translate([0, -75, -75])
+		cube([50, 150, 150]);
 	
 	translate([-4, 0, 0])
 	rotate([47.5, 0, 0])
 	rotate([0, 90, 0])
-	cylinderSector(d = com23JointD + 0.2, h = 4, angle = 260);
+		cylinderSector(d = com23JointD + 0.2, h = 4, angle = 260);
 		
 	// vert
 	
@@ -30,11 +30,11 @@ module cutA() {
 	
 	// horiz
 	
-	translate([0.5, -45, -23])
+	translate([0.5, -56, -28])
 	rotate([0, -90, 0])
 		tapered_cuboid(w = 6, l = 20, h = 2, taper = 2);
 		
-	translate([0.5, 40, -23])
+	translate([0.5, 45, -28])
 	rotate([0, -90, 0])
 		tapered_cuboid(w = 6, l = 20, h = 2, taper = 2);
 		

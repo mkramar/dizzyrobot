@@ -8,8 +8,8 @@ a3 = 40;
 //part0(); 
 //part1();
 //part2();
-//part3();
-body();
+part3();
+//body();
 
 //half();
 //mirror([1, 0, 0]) translate([bodyDistance, 0, 0]) half();
