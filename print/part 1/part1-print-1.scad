@@ -14,4 +14,5 @@ difference()
 	}
 	
 	boltsAminus();
+	part1CableHolderMinus();
 }

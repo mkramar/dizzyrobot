@@ -5,10 +5,10 @@ a1 = 0;
 a2 = 20;
 a3 = 40;
 
-//part0(); 
+part0(); 
 //part1();
 //part2();
-part3();
+//part3();
 //body();
 
 //half();

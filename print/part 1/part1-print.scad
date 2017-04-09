@@ -1,6 +1,6 @@
 include <../../main.scad>
 
-boltPositions = [part1BoltHolder1, part1BoltHolder2, [0, 9, -50]];
+boltPositions = [part1BoltHolder1, part1BoltHolder2, [0, 9, -45]];
 
 module cutA() {
 	translate([-com12CableOffset, 0, 0])
@@ -16,11 +16,11 @@ module cutA() {
 		rotate([0, -90, 0])
 			tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
 
-		translate([0.5, -20, -80])
+		translate([0.5, -20, -76])
 		rotate([0, -90, 0])
-			tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+			tapered_cuboid(w = 6, l = 45, h = 2, taper = 2);
 			
-		translate([0.5, -20, -h])
+		translate([0.5, -10, -h])
 		rotate([0, -90, 0])
 			tapered_cuboid(w = 6, l = 60, h = 2, taper = 2);			
 	}

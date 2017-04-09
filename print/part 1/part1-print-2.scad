@@ -12,4 +12,5 @@ difference() {
 		boltsBplus();
 	}
 	boltsBminus();
+	part1CableHolderMinus();
 }

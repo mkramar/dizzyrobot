@@ -2,7 +2,7 @@
 th = 3.5; // thickness
 ball = 5.5; // this is spacing for the balls, actual ball size is 5mm
 
-h = 130;
+h = 150;
 
 i1 = 45; // inner
 i2 = 22;

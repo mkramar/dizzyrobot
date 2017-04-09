@@ -3,12 +3,12 @@ include <../_sizes.scad>
 
 com12CableOffset = 0; // offset from center to the cable ring
 
-com12JointD = 40;
-com12JointH = 22;
+com12JointD = 50;
+com12JointH = 24;
 
 // bone -----------------------------------------------------------------------
 
-bone2xUp = 13;
+bone2xUp = 15;
 bone2yUp = 17;
 
 bone2xDown = 28;
