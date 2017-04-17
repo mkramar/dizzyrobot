@@ -12,4 +12,5 @@ difference() {
 		boltsBplus();
 	}
 	boltsBminus();
+	rotate([0, 0, 90]) part2PullMinus();
 }

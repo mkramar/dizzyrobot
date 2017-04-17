@@ -1,6 +1,6 @@
 include <../main.scad>
 
-angle = -10;
+angle = 0;
 
 color("orange")
 rotate(part1Rot)

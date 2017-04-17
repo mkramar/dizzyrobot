@@ -42,6 +42,7 @@ module part1()
         
         //translate([0, 0, -h/2]) cube([50, 50, h + 50]);
         //translate([0, -50, -h]) cube ([50, 100, 50]);
+		translate([0, -50, 0]) cube ([50, 100, 50]);
 		//translate([0, -50, -h-50]) cube ([50, 100, 150]);
 	
 		// cable entry from part0
@@ -54,9 +55,9 @@ module part1()
 			rotate([0, -90, 0])
 				cylinder(h = 50, d = cd2, $fn = 10);
 
-			// centered
+			// centred
 			
-			translate([0, -com01CableOffset, -i1/2 + 3])
+			//translate([0, -com01CableOffset, -i1/2 + 3])
 			rotate([0, 90, 0])
 				cylinder(h = 40, d1 = 2, d2 = cd2, $fn = 10);
 		}
@@ -77,7 +78,6 @@ module part1()
 		
         bone1Minus();
 
-        
 		// opening into the bone
 		
 		hull()

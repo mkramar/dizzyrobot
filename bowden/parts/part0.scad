@@ -25,7 +25,7 @@ module part0_1(){
 				}
 				
 				translate([0, 0, 5])
-					ring(h = 5, d = com01JointD - (cd1 + 4), t = cd1 + 4);
+					ring(h = 5, d = com01JointD - (cd1 + 6), t = cd1 + 4, $fn = 50);
 			}
 
 			translate(part1Off)
@@ -71,7 +71,7 @@ module part0_1(){
 		rotate([0, 0, 90])
 		union()
 		{
-			com01JointInner(inflate = 2);
+			com01JointInner(inflate = true);
 			com01JointInnerMinus3();
 			//com01JointInnerMinus4a();
 			com01JointInnerMinus4b();
@@ -110,27 +110,7 @@ module part0_1(){
 		translate([0, 0, 5])
 			torus(d = com01JointD + (cd1 + 4), w = cd2, $fn = 50);
 			
-		// pull spacing
-		
-		translate(part1Off)
-		rotate([0, -90, 0])
-		{
-			translate([com01JointD / 2, 0, 0])
-				cylinder(h = 55, d = cd2, $fn = 10);
-				
-			translate([com01JointD / 2, 0, 28])
-				cylinder(h = 10, d = cd1, $fn = 10);		
-		}
-			
-		translate(part1Off)
-		rotate([0, -90, 0])
-		{
-			translate([-com01JointD / 2, 0, 28])
-				cylinder(h = 10, d = cd1, $fn = 10);	
-		
-			translate([-com01JointD / 2, 0, 0])
-				cylinder(h = 35, d = cd2, $fn = 10);		
-		}
+		part2PullMinus();
 	}
 	
 	// rotation sensor axis
@@ -139,6 +119,28 @@ module part0_1(){
 	translate(part1Off)
 	rotate([90, 0, 0])
 		dCylinder(h = 5, d = 4, x = 1, $fn = 20);
+}
+
+module part2PullMinus() {
+	translate(part1Off)
+	rotate([0, -90, 0])
+	{
+		translate([com01JointD / 2, 0, 0])
+			cylinder(h = 55, d = cd2, $fn = 10);
+			
+		translate([com01JointD / 2, 0, 28])
+			cylinder(h = 10, d = cd1, $fn = 10);		
+	}
+		
+	translate(part1Off)
+	rotate([0, -90, 0])
+	{
+		translate([-com01JointD / 2, 0, 28])
+			cylinder(h = 10, d = cd1, $fn = 10);	
+	
+		translate([-com01JointD / 2, 0, 0])
+			cylinder(h = 35, d = cd2, $fn = 10);		
+	}
 }
 
 module part0_2() {

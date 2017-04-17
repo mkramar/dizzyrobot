@@ -1,19 +1,48 @@
 
-ballBearingHolder(28, 8, 4);
+//ballBearingHolder(28, 8, 4);
 
-module ball_bearing(type) {
+module ballBearing6707(){
+	//35x44x5
+	ballBearing(inner = 35, outer = 44, height = 5);
+}
 
-    rim = type[1] / 10;
+module ballBearing6706(){
+	//30x37x4
+	ballBearing(inner = 30, outer = 37, height = 4);
+}
 
-    render() difference() {
-        cylinder(r = type[1] / 2, h = type[2], center = true, $fn = 50);
-        cylinder(r = type[0] / 2, h = type[2] + 1, center = true, $fn = 50);
-        for(z = [-type[2] / 2, type[2] / 2])
-            translate([0,0,z]) difference() {
-                cylinder(r = (type[1] - rim) / 2, h = 2, center = true, $fn = 50);
-                cylinder(r = (type[0] + rim) / 2, h = 3, center = true, $fn = 50);
-            }
-    }
+module ballBearing6705() {
+	// 25x32x4
+	ballBearing(inner = 25, outer = 32, height = 4);
+}
+
+
+module ballBearing8607() {
+	// 35x47x7
+	ballBearing(inner = 35, outer = 47, height = 7);
+}
+
+module ballBearing6806(){
+	// 30x42x7
+	ballBearing(inner = 30, outer = 42, height = 7);
+}
+
+module ballBearing6805() {
+	// 25x37x7
+	ballBearing(inner = 25, outer = 37, height = 7);
+}
+
+module ballBearing6804() {
+	//20x32x7
+	ballBearing(inner = 20, outer = 32, height = 7);
+}
+
+module ballBearing(inner, outer, height) {
+	difference()
+	{
+		cylinder(d = outer, h = height, center = true, $fn = 50);
+		cylinder(d = inner, h = height + 2, center = true, $fn = 50);
+	}
 }
 
 module ballBearingHolder(outer, h, thickness) {

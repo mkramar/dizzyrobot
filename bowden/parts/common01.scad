@@ -1,8 +1,6 @@
 use <../lib/shapes.scad>
 include <../_sizes.scad>
 
-com01CableOffset = 0; // offset from centre to the cable ring
-
 com01JointD = 45;
 com01JointH = 28;
 
@@ -46,9 +44,12 @@ module com01JointOuter(){
 		shayba(h = com01JointH + 10, d = com01JointD + 10, rd = 15, $fn = 50);
 }
 
-module com01JointInner(inflate = 0){
+module com01JointInner(inflate = false){
+	dh = inflate ? 3 : 0;
+	dd = inflate ? 2 : 0;
+	
 	rotate([0, 90, 0])
-		shayba(h = com01JointH + inflate, d = com01JointD + inflate, rd = 5, $fn = 50);
+		shayba(h = com01JointH + dh, d = com01JointD + dd, rd = 5, $fn = 50);
 		//cylinder(h = com01JointH + inflate, d = com01JointD + inflate, center = true, $fn = 50);
 }
 module com01JointInnerMinus1(){
@@ -85,5 +86,5 @@ module com01JointInnerMinus4a(half = false){
 module com01JointInnerMinus4b(){
     rotate([0, -90, 0])
     //cylinder(h = com01JointH + 12, d1 = 15, d2 = 55);    
-	cylinder(h = com01JointH + 12, d = 30);  
+		cylinder(h = com01JointH + 12, d = 30);  
 }

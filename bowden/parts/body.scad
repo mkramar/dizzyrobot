@@ -33,7 +33,7 @@ module body1(side = "a"){
 					halfShayba(d = db + 15, h = 8, rd = 6, $fn=50);
 					
 					// this is part0
-					shayba(h = 7, d = db + 1, rd=3, $fn = 50);
+					cylinder(h = 9, d = db + 1, $fn = 50, center = true);
 					
 					cylinder(d = db - 5, h = 16, center = true, $fn = 50);
 					
@@ -57,7 +57,7 @@ module body1(side = "a"){
 			//	boardJoint();
 		}
 		
-		//translate([-25, 0, 0]) cube([50, 50, 50]);
+		translate([-25, 0, 0]) cube([50, 50, 50]);
 		
 		// rotation holder spacing
 		
@@ -85,9 +85,10 @@ module body2() {
 			rotate([0, 90, 0])
 			difference()
 			{
-				#cylinder(d = 180, h = 5);
+				cylinder(d = 180, h = 5);
 				
-				cylinder(d = db, h = 16, center = true, $fn = 50);
+				cylinder(d = db + 2, h = 16, center = true, $fn = 50);
+				
 				// bearing balls
 				torus(d = db + 1, w = ball, $fn = 50);
 			}

@@ -77,12 +77,13 @@ module tapered_cuboid(w, l, h, taper) {
 	] );
 }
 
-module ring(d, h, t)
+module ring(d, h, t, center = true)
 {
     difference()
     {
-        cylinder(h = h, d = d + t * 2, center = true);
-        cylinder(h = h + 2, d = d, center = true);
+        cylinder(h = h, d = d + t * 2, center = center);
+		translate([0, 0, center ? 0 : -1])
+			cylinder(h = h + 2, d = d, center = center);
     }
 }
 

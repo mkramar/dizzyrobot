@@ -14,4 +14,5 @@ difference()
 	}
 	
 	boltsAminus();
+	rotate([0, 0, 90]) part2PullMinus();
 }
