@@ -1,20 +1,12 @@
 use <../lib/ballBearing.scad>
 use <../lib/shapes.scad>
 use <../_temp/gimbal.scad>
+include <_sizes.scad>
 
-h1 = 200;
-h2 = 150;
-
-th = 3.5;
-thEdge = 2; // ball bearing holder
-
-bbi = 25;
-bbo = 37;
-bbh = 7;
 
 half();
 
-#mirror([1, 0, 0]) translate([80, 0, 0]) half();
+#mirror([1, 0, 0]) translate([90, 0, 0]) half();
 
 module half()
 {

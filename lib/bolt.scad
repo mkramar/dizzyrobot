@@ -16,13 +16,13 @@ module bolta()
     cylinder(h = 4.5, d = 7);
 }
 
-module boltaMinus()
+module boltaMinus(h = 15)
 {
     translate([0, 0, -1])
     cylinder(h = 7, d = 3.5, $fn = 10);
     
     translate([0, 0, 4.5])
-		cylinder(h = 15, d = 7);
+		cylinder(h = h, d = 7);
 }
 
 module boltb()
