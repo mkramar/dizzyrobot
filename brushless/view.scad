@@ -1,6 +1,10 @@
 use <../lib/ballBearing.scad>
 use <../lib/shapes.scad>
 use <../_temp/gimbal.scad>
+use <parts/heap.scad>
+use <parts/bone1.scad>
+use <parts/bone2.scad>
+use <_shared.scad>
 include <_sizes.scad>
 
 
@@ -12,91 +16,42 @@ module half()
 {
 	// heap motor
 	
-	translate([15, -50, h1 + 35])
+	translate([15, -50, 35])
 	rotate([0, -90, 0])
 		tyiPower5008();
 
 	// bearing joint to body
 	
-	translate([-30, 0, 0])
-	translate([0, 0, h1]) 
-	rotate([0, 0, 180])
-		bearingWithHolders(innerColor = "Violet", outerColor = "YellowGreen");
+	//translate([-30, 0, 0])
+	//rotate([0, 0, 180])
+	//	bearingWithHolders(innerColor = "Violet", outerColor = "YellowGreen");
 
-	// heap bearing
+	// heap
 	
-	translate([0, 0, h1]) 
-	rotate([0, 0, -90])	
-		bearingWithHolders(innerColor = "turquoise", outerColor = "YellowGreen");
+	rotate([0, 180, 0])
+		heap(preview = true);
 
 	// knee joint bearing
 
-	translate([4, 0, 0])
-		bearingWithHolders(innerColor = "turquoise", outerColor = "teal");	
-		
-	// heap motor
-
-	translate([0, -42, h1 -60])
-	rotate([-90, 0, 0])
-		//tyiPower5008();	
-		bgm3608();
+	rotate([0, 0, 90])
+		bearingInner(showBearing = true, color = "turquoise");	
 		
 	// bone 1
 	
 	color("turquoise")
+		bone1();
+		
+	bone1Motors();
+		
+	translate(bone1KneeOffset)
 	{
-		translate([0, -10, 0])
-		hull()
-		{
-			translate([0, 0, h1])
-			rotate([90, 9, 0])
-				cylinder(d = 30, h = th);
-				
-			translate([0, 0, h1/2])
-			rotate([90, 9, 0])
-				cylinder(d = 40, h = th);		
-		}
-		
-		translate([10, 0, 0])
-		hull()
-		{
-			translate([0, 0, h1/2])
-			rotate([0, 90, 0])
-				cylinder(d = 40, h = th);
-
-			rotate([0, 90, 0])
-				cylinder(d = 30, h = th);	
-		}
-	}
-
-	// knee motor
-	translate([42, 0, 45])
-	rotate([0, -90, 0])
-		tyiPower5008();
-		
-	// bone 2
+		bearingInner(color="teal");
 	
-	color("teal")
-	translate([0, 0, 0])
-	hull()
-	{
-		rotate([0, 90, 0])
-			cylinder(d = 50, h = th);	
+		color("teal")
+			bone2(preview = true);
 			
-		translate([0, 0, -h2])
-		rotate([0, 90, 0])
-			cylinder(d = 40, h = th);
+		bone2Motors();
 	}
-	
-	translate([30, 0, -h2 + 40])
-	rotate([0, -90, 0])
-		//tyiPower5008();	
-		bgm3608();	
-	
-	// ankle joint
-	
-	translate([-7, 0, -h2])
-		bearingWithHolders(innerColor = "teal");
 }
 
 module bearingWithHolders(innerColor, outColor) {

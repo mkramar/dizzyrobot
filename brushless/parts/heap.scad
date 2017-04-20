@@ -7,16 +7,16 @@ heapWidth = 36;
 
 //heap();
 
-module heap() {
+module heap(preview = false) {
 	rotate([0, 0, 90])
-		heap1();
+		heap1(preview);
 	
 	translate([heapWidth, -heapOffset, 0])
-		heap2();
+		heap2(preview);
 }
 
-module heap1() {
-	bearingOuter();
+module heap1(preview) {
+	bearingOuter(withPulley = !preview);
 	
 	intersection()
 	{
@@ -33,8 +33,8 @@ module heap1() {
 	}
 }
 
-module heap2() {
-	bearingOuter();
+module heap2(preview) {
+	bearingOuter(withPulley = !preview);
 	
 	intersection()
 	{
