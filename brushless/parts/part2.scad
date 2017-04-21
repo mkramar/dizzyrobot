@@ -30,5 +30,5 @@ module bone2(preview = false) {
 module bone2Motors() {
 	translate(bone2MotorOffset)
 	rotate([0, -90, 0])
-		bgm3608();	
+		motor4();	
 }

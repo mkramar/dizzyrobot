@@ -2,8 +2,8 @@ use <../lib/ballBearing.scad>
 use <../lib/shapes.scad>
 use <../_temp/gimbal.scad>
 use <parts/heap.scad>
-use <parts/bone1.scad>
-use <parts/bone2.scad>
+use <parts/part1.scad>
+use <parts/part2.scad>
 use <_shared.scad>
 include <_sizes.scad>
 
@@ -18,7 +18,7 @@ module half()
 	
 	translate([15, -50, 35])
 	rotate([0, -90, 0])
-		tyiPower5008();
+		motor5();
 
 	// bearing joint to body
 	
@@ -28,30 +28,30 @@ module half()
 
 	// heap
 	
-	rotate([0, 180, 0])
+	#rotate([0, 180, 0])
 		heap(preview = true);
 
 	// knee joint bearing
 
-	rotate([0, 0, 90])
+	#rotate([0, 0, 90])
 		bearingInner(showBearing = true, color = "turquoise");	
 		
-	// bone 1
+	// part 1
 	
 	color("turquoise")
-		bone1();
+		part1();
 		
-	bone1Motors();
+	part1Motors();
 		
-	translate(bone1KneeOffset)
-	{
-		bearingInner(color="teal");
+	// translate(part1KneeOffset)
+	// {
+		// bearingInner(color="teal");
 	
-		color("teal")
-			bone2(preview = true);
+		// color("teal")
+			// part2(preview = true);
 			
-		bone2Motors();
-	}
+		// part2Motors();
+	// }
 }
 
 module bearingWithHolders(innerColor, outColor) {

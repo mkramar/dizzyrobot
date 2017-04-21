@@ -82,3 +82,13 @@ module bearingInner(showBearing = true, color) {
 		}
 	}
 }
+
+module motor4(){
+	cylinder(d = motor4D, h = motor4H);
+	cylinder(d = 14, h = motor4H + 15);
+}
+
+module motor5() {
+	cylinder(d = motor5D, h = motor5H);
+	cylinder(d = 14, h = motor5H + 15);
+}
