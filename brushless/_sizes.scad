@@ -1,13 +1,15 @@
 h1 = 200;
 h2 = 150;
 
-belt = 10;
+belt = 7; // 6 mm wide belt
 
 th = 3.5;
 thEdge = 2; // ball bearing holder
 
-bbi = 25;
-bbo = 37;
+// plastic: between 0.25 and 0.5. try 0.4
+
+bbi = 25; // -0.25 looks close, try -0.2
+bbo = 37; // +0.5 is not enough, +1 is too much. try + 0.7
 bbh = 7;
 bbMargin = 0.2; // one side
 

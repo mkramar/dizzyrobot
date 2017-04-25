@@ -1,8 +1,9 @@
 use <../../parts/part1.scad>
 use <../../../lib/shapes.scad>
 use <../../../lib/bolt.scad>
+include <../../_sizes.scad>
 
-boltPositions = [[-20, 0, 0], [-13, 11, 0], [-13, -11, 0]];
+boltPositions = [[8, 20, 14], [-20, 90, 14]];
 
 module cutA() {
 	difference()
@@ -10,9 +11,9 @@ module cutA() {
 		translate([-50, 0, -250])
 			cube([100, 60, 300]);
 
-		translate([100, -1, -70])
+		translate([100, -1, -6])
 		rotate([-90, 90, 0])
-			tapered_cuboid(w = 40, l = 200, h = 10, taper = 10);
+			tapered_cuboid(w = 100, l = 200, h = 15, taper = 10);
 	}
 	
 	// translate([0.5, 3, 10])
@@ -21,23 +22,27 @@ module cutA() {
 		
 }
 
+
 module boltsAplus(){
+	rotate([-90, 0, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
-			cylinder(h = 16, d = 10);
+			cylinder(h = 36, d = 10);
 	}
 }
 
 module boltsAminus(){
+	rotate([-90, 0, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
-			boltaMinus();
+			boltaMinus(h = 40);
 	}
 }
 
 module boltsBplus() {
+	rotate([-90, 0, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
@@ -47,6 +52,7 @@ module boltsBplus() {
 }
 
 module boltsBminus() {
+	rotate([-90, 0, 0])
 	for (x = boltPositions)
 	{
 		translate(x)

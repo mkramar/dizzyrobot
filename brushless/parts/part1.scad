@@ -198,4 +198,17 @@ module part1MotorOpening() {
 	rotate([0, -90, 0])
 	translate(lowerAttachmentCentre)
 		cylinder(d = bbi - th * 2, h = part1LowerAttachment + (bbh + thEdge) * 2 + 1, center = true);
+		
+	//
+	
+	translate(part1HeapMotorOffset)
+	rotate([-90, 0, 0])
+	translate([0, 0, 10])
+		motor5BoltSpace();
+		
+	translate(part1KneeMotorOffset)
+	rotate([90, 0, 0])
+	rotate([0, 90, 0])
+	translate([0, 0, 10])
+		motor5BoltSpace();		
 }

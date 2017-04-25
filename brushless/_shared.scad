@@ -92,3 +92,27 @@ module motor5() {
 	cylinder(d = motor5D, h = motor5H);
 	cylinder(d = 14, h = motor5H + 15);
 }
+module motor5BoltSpace(){
+	d = 25 / sqrt(2) / 2;
+	
+	for (x = [-d, d])
+	for (y = [-d, d])
+		translate([x, y, 0])
+		hull()
+		{
+			translate([0, motorAdjustment, 0])
+				cylinder(d = 4, h = 10);
+				
+			translate([0, -motorAdjustment, 0])
+				cylinder(d = 4, h = 10);
+		}
+		
+	hull()
+	{
+		translate([0, motorAdjustment, 0])
+			cylinder(d = 10, h = 10);
+			
+		translate([0, -motorAdjustment, 0])
+			cylinder(d = 10, h = 10);			
+	}
+}
