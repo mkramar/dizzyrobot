@@ -181,3 +181,13 @@ module cylinderSector(d, h, angle) {
 	rotate_extrude(angle=angle, convexity=10)
 		square(size = [d/2, h]);
 }
+
+module coneCup(d1, d2, h, th) {
+	difference()
+	{
+		cylinder(d1 = d1, d2 = d2, h = h);
+		
+		translate([0, 0, -th])
+			cylinder(d1 = d1 - th * 2, d2 = d2 - th * 2, h = h);
+	}
+}

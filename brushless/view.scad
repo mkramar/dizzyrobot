@@ -1,6 +1,5 @@
 use <../lib/ballBearing.scad>
 use <../lib/shapes.scad>
-use <../_temp/gimbal.scad>
 use <parts/heap.scad>
 use <parts/part1.scad>
 use <parts/part2.scad>
@@ -45,6 +44,11 @@ module half()
 		
 	translate(part1KneeOffset)
 	{
+		color("white")
+		rotate([0, -90, 0])
+			ballBearing6805();
+		
+	
 		color("teal")
 			part2(preview = true);
 			

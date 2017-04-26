@@ -126,23 +126,27 @@ module part1Base(inner = false) {
 			// sphere(d = 10+ wall);					
 	// }
 	
-	translate(part1KneeOffset)
+	
 	hull()
 	{
+		l = 30;
+
+		translate(part1KneeOffset)
+		rotate([0,90, 0])
+		translate([0, 0, l/2 + pulleyH / 2])
+			shayba(d = bbi - th*2 + wall, h = l, rd = 10);
+
+
+		translate(part1KneeMotorOffset)
 		rotate([0, -90, 0])
-			cylinder(d = bbi - th*2 + wall, h = part1LowerAttachment + wall, center = true);
-			
-		
-		translate([1, 0, 40])
-		rotate([0, -90, 0])
-			cube([1, 30 + wall, 6 + wall], center = true);					
+			sphere(d = 20+ wall);					
 	}
 	
-	if (!inner)
+	#if (!inner)
 	{
 		translate(part1KneeOffset)
 		rotate([0, -90, 0])
-			cylinder(d = bbi, h = part1LowerAttachment + (bbh + thEdge) * 2, center = true);	
+			cylinder(d = bbi, h = (bbh)  + thEdge* 2, center = true);	
 	}
 }
 
@@ -192,8 +196,7 @@ module part1MotorOpening() {
 	
 	translate(part1KneeOffset)
 	rotate([0, -90, 0])
-	translate(lowerAttachmentCentre)
-		cylinder(d = bbi - th * 2, h = part1LowerAttachment + (bbh + thEdge) * 2 + 1, center = true);
+		cylinder(d = bbi - th * 2, h = (bbh + thEdge) * 2 + 1, center = true);
 		
 	//
 	

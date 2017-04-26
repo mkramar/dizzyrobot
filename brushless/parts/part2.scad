@@ -21,66 +21,77 @@ module part2(preview = false) {
 
 module part2Base(inner = false, preview = false) {
 	wall = inner ? 0 : th * 2;
-	upperHolderOffset = part1LowerAttachment / 2 + th + (bbh + th)/2 + 1;
 	crossCilinder = 50;
-
+	
+	translate([-pulleyH/2 - 5, 10, -45])
+		cylinder(d =10, h = 60);
+	
+	translate([-pulleyH/2 - 5, -10, -45])
+		cylinder(d =10, h = 60);	
+	{
+		l = 15;
+		
+		#translate([-pulleyH/2 - l/2 + 3, 0, 0])
+		rotate([0, 90, 0])
+			shayba(d = bbo + th * 2, h = l, rd = 6);
+	}
+	
 	// to joint - inner side
 	
 	rotate([0, 90, 0])
 	if (preview)
 	{
-		translate([0, 0, -upperHolderOffset])
-			cylinder(h = bbh + th, d = bbo + th, center = true);
+			cylinder(h = pulleyH, d = bbo + th * 2, center = true);
 	}
 	else
 	{
 		pulley(teeth=70, height = belt, center = true);
 	}
 	
-	hull()
-	{
-		rotate([0, 90, 0])
-		translate([0, 0, -upperHolderOffset - 5])
-			cylinder(h = 1, d = bbo + th, center = true);		
-	
-		translate([-upperHolderOffset - 10, 0, -bbo / 2])
-			cube ([8, 10, 40], center = true);
-	}
+	//hull()
+	//{
+	//	rotate([0, 90, 0])
+	//	translate([0, 0, - 5])
+	//		cylinder(h = 1, d = bbo + th, center = true);		
+	//
+	//	translate([- 10, 0, -bbo / 2])
+	//		cube ([8, 10, 40], center = true);
+	//}
 	
 	// to joint - outer side
 	
-	hull()
-	{
-		rotate([0, 90, 0])
-		translate([0, 0, upperHolderOffset])
-			cylinder(h = bbh + th, d = bbo + th, center = true);
+	// hull()
+	// {
+		// rotate([0, 90, 0])
+		// translate([0, 0, upperHolderOffset])
+			// cylinder(h = bbh + th, d = bbo + th, center = true);
 			
-		translate([0, 0, -crossCilinder])
-		rotate([0, 90, 0])	
-		translate([0, 0, upperHolderOffset])
-			cylinder(h = bbh + th, d = 30, center = true);		
-	}
+		// translate([0, 0, -crossCilinder])
+		// rotate([0, 90, 0])	
+		// translate([0, 0, upperHolderOffset])
+			// cylinder(h = bbh + th, d = 30, center = true);		
+	// }
 	
-	translate([0, 0, -crossCilinder])
-	rotate([0, 90, 0])	
-		cylinder(h = part1LowerAttachment + th* 4 + bbh*2 + 2, d = 30, center = true);
+	// translate([0, 0, -crossCilinder])
+	// rotate([0, 90, 0])	
+		// cylinder(h = part1LowerAttachment + th* 4 + bbh*2 + 2, d = 30, center = true);
 
 	// joint to motor
 	
-	hull()
-	{
-		translate([0, 0, -crossCilinder])
-		rotate([0, 90, 0])	
-			cylinder(h = part1LowerAttachment + th* 4 + bbh*2 + 2, d = 30, center = true);
-			
-		translate(part2MotorOffset)
-			sphere(d = 10);
-	}
+	//hull()
+	//{
+	//	translate([0, 0, -crossCilinder])
+	//	rotate([0, 90, 0])	
+	//		cylinder(h = part2LowerAttachment + th* 4 + bbh*2 + 2, d = 30, center = true);
+	//		
+	//	translate(part2MotorOffset)
+	//		sphere(d = 10);
+	//}
 
 	hull()
 	{
-		translate([0, 0, -crossCilinder])
-			sphere(d = 10);
+		//translate([0, 0, -crossCilinder])
+		//	sphere(d = 10);
 	
 		translate(part2MotorOffset)
 		rotate([0, 90, 0])

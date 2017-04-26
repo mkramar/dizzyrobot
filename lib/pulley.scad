@@ -3,7 +3,7 @@ additionalToothHeight = 0; //mm
 
 //pulley (teeth = 100, height = 10);
 
-module pulley(teeth, height, type="GT2", center = false) {
+module pulley(teeth, height, type="GT2", center = false, upperBorder = true, lowerBorder = true) {
 	toothDepth = type=="MXL" ? 0.508 : 0.764;
 	toothWidth =  type=="MXL" ? 1.321 : 1.494;
 	toothPitch = type=="MXL" ? 2.032 : 2.00;
@@ -20,11 +20,13 @@ module pulley(teeth, height, type="GT2", center = false) {
 		{
 			cylinder(d=pulleyD,h=height, $fn=teeth*4, center = center);
 			
-			translate([0, 0, height/2])
-				cylinder(d=pulleyD + 1,h=1.5, $fn=teeth*4);
+			if (upperBorder)
+				translate([0, 0, height/2])
+					cylinder(d=pulleyD + 1,h=1.5, $fn=teeth*4);
 				
-			translate([0, 0, -height/2 - 1.5])
-				cylinder(d=pulleyD + 1,h=1.5, $fn=teeth*4);				
+			if (lowerBorder)
+				translate([0, 0, -height/2 - 1.5])
+					cylinder(d=pulleyD + 1,h=1.5, $fn=teeth*4);				
 		}
 			
 		for(i=[1:teeth])
