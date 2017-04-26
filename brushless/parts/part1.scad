@@ -3,7 +3,6 @@ use <../../lib/shapes.scad>
 use <../_shared.scad>
 
 upperAttachmentCentre = [0, 0, -part1UpperAttachment/2 - bbh/2 - th];
-lowerAttachmentCentre = [0, 0, -part1LowerAttachment/2 - bbh/2 - th];
 
 module part1(preview = false) {
 	difference()
@@ -38,7 +37,7 @@ module part1Base(inner = false) {
 	{
 		rotate([90, 0, 0])
 		translate(upperAttachmentCentre)
-			cylinder(d = bbi + wall, h = part1UpperAttachment+ wall, center = true);
+			cylinder(d = bbiPlastic + wall, h = part1UpperAttachment+ wall, center = true);
 			
 		translate([0, 0, motorAdjustment])
 		translate(part1HeapMotorOffset)
@@ -50,7 +49,7 @@ module part1Base(inner = false) {
 		translate([0, 0, motorAdjustment])
 		translate(part1HeapMotorOffset)
 		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 5);
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
 
 		rotate([90, 0, 0])
 		translate(upperAttachmentCentre)
@@ -64,13 +63,13 @@ module part1Base(inner = false) {
 		translate([0, 0, motorAdjustment])
 		translate(part1HeapMotorOffset)
 		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 5);
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
 
 		translate([0, 0, -motorAdjustment])
 		translate(part1HeapMotorOffset)
 		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 5);
-	}	
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+	}
 	
 	// heap motor to knee motor
 	
@@ -79,7 +78,7 @@ module part1Base(inner = false) {
 		translate([0, 0, -motorAdjustment])
 		translate(part1HeapMotorOffset)
 		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 5);
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
 			
 		translate(part1KneeMotorOffset)
 			sphere(d = 10+ wall);
@@ -90,7 +89,7 @@ module part1Base(inner = false) {
 		translate([0, 0, +motorAdjustment])
 		translate(part1KneeMotorOffset)
 		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 10);
+			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
 			
 		translate(part1HeapMotorOffset)
 			sphere(d = 10+ wall);			
@@ -103,12 +102,12 @@ module part1Base(inner = false) {
 		translate([0, 0, +motorAdjustment])
 		translate(part1KneeMotorOffset)
 		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 10);
+			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
 			
 		translate([0, 0, -motorAdjustment])
 		translate(part1KneeMotorOffset)
 		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 10);
+			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
 	}
 			
 	// knee motor to joint
@@ -118,7 +117,7 @@ module part1Base(inner = false) {
 		// translate([0, 0, -motorAdjustment])
 		// translate(part1KneeMotorOffset)
 		// rotate([0, -90, 0])
-			// shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 10);
+			// shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
 			
 		// translate(part1KneeOffset)
 		// translate([0, 0, 20])
@@ -131,13 +130,11 @@ module part1Base(inner = false) {
 	hull()
 	{
 		rotate([0, -90, 0])
-		translate(lowerAttachmentCentre)
-			cylinder(d = bbi + wall, h = part1LowerAttachment+ wall, center = true);
+			cylinder(d = bbi - th*2 + wall, h = part1LowerAttachment + wall, center = true);
 			
 		
 		translate([1, 0, 40])
 		rotate([0, -90, 0])
-		translate(lowerAttachmentCentre)
 			cube([1, 30 + wall, 6 + wall], center = true);					
 	}
 	
@@ -145,8 +142,7 @@ module part1Base(inner = false) {
 	{
 		translate(part1KneeOffset)
 		rotate([0, -90, 0])
-		translate(lowerAttachmentCentre)		
-			cylinder(d = bbi - bbMargin * 2, h = part1LowerAttachment + (bbh + thEdge) * 2, center = true);	
+			cylinder(d = bbi, h = part1LowerAttachment + (bbh + thEdge) * 2, center = true);	
 	}
 }
 
@@ -166,7 +162,7 @@ module part1Motors(){
 module part1MotorOpening() {
 	rotate([90, 0, 0])
 	translate([0, 0, -5 - bbh/2])
-		cylinder(d = bbi - bbMargin * 2, h = 10);
+		cylinder(d = bbiPlastic, h = 10);
 	
 	hull() 
 	{

@@ -19,12 +19,12 @@ module bearingOuter(withPulley = true) {
 			difference()
 			{
 				pulley(teeth=70, height = belt, center = true);
-				cylinder(d = bbo + bbMargin * 2, h = belt + 5, $fn = 70, center = true);
+				cylinder(d = bbo, h = belt + 5, $fn = 70, center = true);
 			}
 		}
 		else
 		{
-			ring(d = bbo + bbMargin * 2, t = th, h = bbh + thEdge, $fn = 70);
+			ring(d = bbo, t = th, h = bbh + thEdge, $fn = 70);
 		}
 
 	// this stops the bearing
@@ -67,12 +67,12 @@ module bearingInner(showBearing = true, color) {
 	{
 		translate([(outside - thEdge) / 2, 0, 0])
 		rotate([0, 90, 0])
-			ring(d = bbi - (th + bbMargin) * 2, t = th, h = bbh + outside + thEdge, $fn = 70);
+			ring(d = bbi - th * 2, t = th, h = bbh + outside + thEdge, $fn = 70);
 			
 		translate([(-bbh - thEdge) / 2, 0, 0])
 		rotate([0, 90, 0])
 		{
-			ring(d = bbi - bbMargin * 2, t = thEdge, h = thEdge, $fn = 70);
+			ring(d = bbi, t = thEdge, h = thEdge, $fn = 70);
 			
 			translate([0, 0, (th - thEdge) / 2])
 				cube([6, bbi - 2, th], center = true);
@@ -114,5 +114,16 @@ module motor5BoltSpace(){
 			
 		translate([0, -motorAdjustment, 0])
 			cylinder(d = 10, h = 10);			
+	}
+}
+
+module motor4Block(wall = 0) {
+	hull() 
+	{
+		translate([motorAdjustment, 0, 0])
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+
+		translate([-motorAdjustment, 0, 0])
+			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
 	}
 }

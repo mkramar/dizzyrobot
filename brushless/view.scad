@@ -39,19 +39,17 @@ module half()
 	// part 1
 	
 	color("turquoise")
-		part1();
+		part1(preview = true);
 		
 	part1Motors();
 		
-	// translate(part1KneeOffset)
-	// {
-		// bearingInner(color="teal");
-	
-		// color("teal")
-			// part2(preview = true);
+	translate(part1KneeOffset)
+	{
+		color("teal")
+			part2(preview = true);
 			
-		// part2Motors();
-	// }
+		part2Motors();
+	}
 }
 
 module bearingWithHolders(innerColor, outColor) {
