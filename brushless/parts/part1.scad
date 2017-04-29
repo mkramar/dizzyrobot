@@ -12,10 +12,11 @@ module part1(preview = false) {
 		if (!preview)
 		{
 			part1Base(inner = true);
-			part1MotorOpening();
 		}
-		
-		// translate([0, 0, -200])
+
+		part1MotorOpening();
+			
+		// translate([-50, 0, -200])
 			// cube ([100, 100, 300]);
 	}
 
@@ -46,10 +47,9 @@ module part1Base(inner = false) {
 	
 	hull() 
 	{
-		translate([0, 0, motorAdjustment])
 		translate(part1HeapMotorOffset)
-		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+		rotate([-90, 90, 0])
+			motor4Block(inner);
 
 		rotate([90, 0, 0])
 		translate(upperAttachmentCentre)
@@ -58,27 +58,17 @@ module part1Base(inner = false) {
 	
 	// heap motor
 	
-	hull() 
-	{
-		translate([0, 0, motorAdjustment])
-		translate(part1HeapMotorOffset)
-		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
-
-		translate([0, 0, -motorAdjustment])
-		translate(part1HeapMotorOffset)
-		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
-	}
+	translate(part1HeapMotorOffset)
+	rotate([-90, 90, 0])
+		motor4Block(inner);
 	
 	// heap motor to knee motor
 	
 	hull() 
 	{
-		translate([0, 0, -motorAdjustment])
 		translate(part1HeapMotorOffset)
-		rotate([90, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+		rotate([-90, 90, 0])
+			motor4Block(inner);
 			
 		translate(part1KneeMotorOffset)
 			sphere(d = 10+ wall);
@@ -86,68 +76,57 @@ module part1Base(inner = false) {
 
 	hull()
 	{
-		translate([0, 0, +motorAdjustment])
 		translate(part1KneeMotorOffset)
-		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
+		rotate([0, 90, 0])
+			motor5Block(inner);
 			
 		translate(part1HeapMotorOffset)
 			sphere(d = 10+ wall);			
 	}
 	
 	// knee motor
-		
-	hull()
-	{
-		translate([0, 0, +motorAdjustment])
-		translate(part1KneeMotorOffset)
-		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
-			
-		translate([0, 0, -motorAdjustment])
-		translate(part1KneeMotorOffset)
-		rotate([0, -90, 0])
-			shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
-	}
+	
+	translate(part1KneeMotorOffset)
+	rotate([0, 90, 0])
+		motor5Block(inner);
 			
 	// knee motor to joint
 	
+	//hull()
+	//{
+	//	translate(part1KneeMotorOffset)
+	//	rotate([0, 90, 0])
+	//		motor5Block(inner);
+	//		
+	//	translate(part1KneeOffset)
+	//	translate([0, 0, 20])
+	//	rotate([0, -90, 0])
+	//	translate(lowerAttachmentCentre)
+	//		sphere(d = 10+ wall);					
+	//}
+	
+
+	{
+		translate([part1LowerAttachment/2 + bbh/2, 0, 0])
+		translate(part1KneeOffset)
+		rotate([0, 90, 0])	
+			cylinder(d = bbiPlastic + th*2, h = part1LowerAttachment, center = true);
+	}
+	
 	// hull()
 	// {
-		// translate([0, 0, -motorAdjustment])
+		// l = 30;
+
+		// translate(part1KneeOffset)
+		// rotate([0,90, 0])
+		// translate([0, 0, l/2 + pulleyH / 2])
+			// shayba(d = bbiPlastic + wall, h = l, rd = 10);
+
+		// translate([5, 0, 0])
 		// translate(part1KneeMotorOffset)
 		// rotate([0, -90, 0])
-			// shayba(d = motor5SpaceD+ wall, h = motor5SpaceH+ wall, rd = 15);
-			
-		// translate(part1KneeOffset)
-		// translate([0, 0, 20])
-		// rotate([0, -90, 0])
-		// translate(lowerAttachmentCentre)
-			// sphere(d = 10+ wall);					
+			// sphere(d = 16 + wall);					
 	// }
-	
-	
-	hull()
-	{
-		l = 30;
-
-		translate(part1KneeOffset)
-		rotate([0,90, 0])
-		translate([0, 0, l/2 + pulleyH / 2])
-			shayba(d = bbi - th*2 + wall, h = l, rd = 10);
-
-
-		translate(part1KneeMotorOffset)
-		rotate([0, -90, 0])
-			sphere(d = 20+ wall);					
-	}
-	
-	#if (!inner)
-	{
-		translate(part1KneeOffset)
-		rotate([0, -90, 0])
-			cylinder(d = bbi, h = (bbh)  + thEdge* 2, center = true);	
-	}
 }
 
 module part1Motors(){

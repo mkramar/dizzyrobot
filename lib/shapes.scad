@@ -150,6 +150,7 @@ module shayba(h, d, rd){
 }
 
 module halfShayba(h, d, rd){
+	translate([0, 0, -h/2])
 	intersection()
 	{
 		shayba(h = h * 2, d = d, rd = rd);

@@ -85,12 +85,12 @@ module bearingInner(showBearing = true, color) {
 
 module motor4(){
 	cylinder(d = motor4D, h = motor4H);
-	cylinder(d = 14, h = motor4H + 15);
+	cylinder(d = 25, h = motor4H + pulleyH);
 }
 
 module motor5() {
 	cylinder(d = motor5D, h = motor5H);
-	cylinder(d = 14, h = motor5H + 15);
+	cylinder(d = 25, h = motor5H + pulleyH);
 }
 module motor5BoltSpace(){
 	d = 25 / sqrt(2) / 2;
@@ -117,13 +117,28 @@ module motor5BoltSpace(){
 	}
 }
 
-module motor4Block(wall = 0) {
+module motor4Block(inner = false) {
+	wall = inner ? 0 : th ;
+	
 	hull() 
 	{
-		translate([motorAdjustment, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+		translate([motorAdjustment, 0, wall/2])
+			halfShayba(d = motor4SpaceD + wall * 2, h = motor4SpaceH + wall, rd = 15);
 
-		translate([-motorAdjustment, 0, 0])
-			shayba(d = motor4SpaceD+ wall, h = motor4SpaceH+ wall, rd = 15);
+		translate([-motorAdjustment, 0, wall/2])
+			halfShayba(d = motor4SpaceD + wall * 2, h = motor4SpaceH + wall, rd = 15);
+	}
+}
+
+module motor5Block(inner = false) {
+	wall = inner ? 0 : th;
+	
+	hull() 
+	{
+		translate([motorAdjustment, 0, wall/2])
+			halfShayba(d = motor5SpaceD + wall * 2, h = motor5SpaceH + wall, rd = 15);
+
+		translate([-motorAdjustment, 0, wall/2])
+			halfShayba(d = motor5SpaceD + wall * 2, h = motor5SpaceH + wall, rd = 15);
 	}
 }

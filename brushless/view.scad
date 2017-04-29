@@ -3,6 +3,7 @@ use <../lib/shapes.scad>
 use <parts/heap.scad>
 use <parts/part1.scad>
 use <parts/part2.scad>
+use <parts/knee-joint.scad>
 use <_shared.scad>
 include <_sizes.scad>
 
@@ -44,14 +45,20 @@ module half()
 		
 	translate(part1KneeOffset)
 	{
-		color("white")
+		rotate([-90, 0, 0])
 		rotate([0, -90, 0])
-			ballBearing6805();
+		{
+			#kneeJoint(preview = true);	
+			sideOuterMinusRods();
+		}
 		
-	
-		color("teal")
-			part2(preview = true);
-			
+		//color("white")
+		//rotate([0, -90, 0])
+		//	ballBearing6805();
+		//
+		//color("teal")
+		//	part2(preview = true);
+		//	
 		part2Motors();
 	}
 }

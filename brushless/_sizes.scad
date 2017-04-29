@@ -1,4 +1,4 @@
-h1 = 200;
+h1 = 190;
 h2 = 170;
 
 belt = 7; // 6 mm wide belt
@@ -39,10 +39,10 @@ motor4SpaceH = motor4H;
 // part 1 ---------------------------------------------------------------------
 
 part1UpperAttachment = 15;
-//part1LowerAttachment = 8;
+part1LowerAttachment = 20;
 part1HeapMotorOffset = [-5, 23, -55];
-part1KneeMotorOffset = [5, 0, -h1 + 65];
-part1KneeOffset = [-18, 0, -h1];
+part1KneeMotorOffset = [5, 0, -h1 + 55];
+part1KneeOffset = [-14, 0, -h1];
 
 // part 2 ---------------------------------------------------------------------
 
