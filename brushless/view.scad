@@ -10,15 +10,15 @@ include <_sizes.scad>
 
 half();
 
-#mirror([1, 0, 0]) translate([90, 0, 0]) half();
+#mirror([1, 0, 0]) translate([heapWidth, 0, 0]) half();
 
 module half()
 {
 	// heap motor
 	
-	translate([15, -50, 35])
-	rotate([0, -90, 0])
-		motor5();
+	//translate([15, -50, 35])
+	//rotate([0, -90, 0])
+	//	motor5();
 
 	// bearing joint to body
 	
@@ -28,18 +28,33 @@ module half()
 
 	// heap
 	
-	#rotate([0, 180, 0])
-		heap(preview = true);
+	//rotate([0, 180, 0])
+	//	heap(preview = true);
 
 	// knee joint bearing
 
-	#rotate([0, 0, 90])
-		bearingInner(showBearing = true, color = "turquoise");	
+	//#rotate([0, 0, 90])
+	//	bearingInner(showBearing = true, color = "turquoise");	
+
+	translate([-15, 35, 0])
+	rotate([0, 0, 90])
+	color("white")
+	rotate([0, -90, 0])
+		ballBearing(inner = bbi, outer = bbo, height = bbh);	
 		
+	translate([-15, -35, 0])
+	rotate([0, 0, 90])
+	color("white")
+	rotate([0, -90, 0])
+		ballBearing(inner = bbi, outer = bbo, height = bbh);			
+		
+	#rotate([0, -90, 0])
+		kneeJoint(preview = true);	
+	
 	// part 1
 	
 	color("turquoise")
-		part1(preview = true);
+		part1(preview = false);
 		
 	part1Motors();
 		

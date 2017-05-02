@@ -4,7 +4,7 @@ h2 = 170;
 belt = 7; // 6 mm wide belt
 pulleyH = belt + 3;
 
-th = 3.5;
+th = 3;
 thEdge = 1.5; // ball bearing holder
 
 bbi = 25 - 0.2;
@@ -36,13 +36,17 @@ motor4H = 30;
 motor4SpaceD = motor4D + 5;
 motor4SpaceH = motor4H;
 
+// heap -----------------------------------------------------------------------
+
+heapWidth = 70;
+
 // part 1 ---------------------------------------------------------------------
 
-part1UpperAttachment = 15;
-part1LowerAttachment = 20;
-part1HeapMotorOffset = [-5, 23, -55];
-part1KneeMotorOffset = [5, 0, -h1 + 55];
-part1KneeOffset = [-14, 0, -h1];
+part1UpperAttachment = 25;
+part1LowerAttachment = 25;
+part1HeapMotorOffset = [20, 0, -55];
+part1KneeMotorOffset = [20, 0, -h1 + 55];
+part1KneeOffset = [0, 0, -h1];
 
 // part 2 ---------------------------------------------------------------------
 

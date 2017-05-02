@@ -117,7 +117,7 @@ module motor5BoltSpace(){
 	}
 }
 
-module motor4Block(inner = false) {
+module motor4BlockA(inner = false) {
 	wall = inner ? 0 : th ;
 	
 	hull() 
@@ -130,7 +130,7 @@ module motor4Block(inner = false) {
 	}
 }
 
-module motor5Block(inner = false) {
+module motor5BlockA(inner = false) {
 	wall = inner ? 0 : th;
 	
 	hull() 
@@ -140,5 +140,21 @@ module motor5Block(inner = false) {
 
 		translate([-motorAdjustment, 0, wall/2])
 			halfShayba(d = motor5SpaceD + wall * 2, h = motor5SpaceH + wall, rd = 15);
+	}
+}
+
+module motor5BlockB(inner = false) {
+	wall = inner ? 0 : th;
+	h = 13;
+	
+	translate([0, 0, -motor5SpaceH / 2 - h/2])
+	rotate([180, 0, 0])
+	hull() 
+	{
+		translate([motorAdjustment, 0, wall/2])
+			halfShayba(d = motor5SpaceD + wall * 2, h = h + wall, rd = 15);
+
+		translate([-motorAdjustment, 0, wall/2])
+			halfShayba(d = motor5SpaceD + wall * 2, h = h + wall, rd = 15);
 	}
 }

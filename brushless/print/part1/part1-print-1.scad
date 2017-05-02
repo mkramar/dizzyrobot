@@ -1,16 +1,14 @@
 include <../../parts/part1.scad>
 use <part1-print.scad>
 
-rotate([90, 0, 0])
+rotate([90, -90, 0])
 difference()
 {
 	union()
 	{
-		intersection() 
-		{
-			part1();
-			cutA();
-		}
+		part1A();
+		//#part1Motors();
+		
 		intersection() 
 		{
 			part1Base();		

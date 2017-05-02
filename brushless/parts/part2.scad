@@ -104,7 +104,7 @@ module part2Base(inner = false, preview = false) {
 	
 	translate(part2MotorOffset)
 	rotate([0, 90, 0])
-		motor4Block(wall);
+		motor4BlockA(wall);
 	
 	translate(part2AnkleOffset)
 	hull()

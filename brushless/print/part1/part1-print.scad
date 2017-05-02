@@ -1,9 +1,10 @@
-use <../../parts/part1.scad>
+include <../../parts/part1.scad>
 use <../../../lib/shapes.scad>
 use <../../../lib/bolt.scad>
 include <../../_sizes.scad>
 
-boltPositions = [[8, 20, 14], [-20, 90, 14]];
+boltPositions = [[h1/2 - 12, 29, part1TopCut], [h1/2 - 12, -29, part1TopCut],
+				 [h1/2 + 12, 29, part1TopCut], [h1/2 + 12, -29, part1TopCut]];
 
 module cutA() {
 	difference()
@@ -24,7 +25,7 @@ module cutA() {
 
 
 module boltsAplus(){
-	rotate([-90, 0, 0])
+	rotate([0, 90, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
@@ -33,7 +34,7 @@ module boltsAplus(){
 }
 
 module boltsAminus(){
-	rotate([-90, 0, 0])
+	rotate([0, 90, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
@@ -42,7 +43,7 @@ module boltsAminus(){
 }
 
 module boltsBplus() {
-	rotate([-90, 0, 0])
+	rotate([0, 90, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
@@ -52,7 +53,7 @@ module boltsBplus() {
 }
 
 module boltsBminus() {
-	rotate([-90, 0, 0])
+	rotate([0, 90, 0])
 	for (x = boltPositions)
 	{
 		translate(x)
