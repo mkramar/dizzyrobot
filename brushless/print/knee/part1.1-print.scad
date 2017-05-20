@@ -1,17 +1,28 @@
-include <../../parts/part1.scad>
+include <../../parts/part1.1.scad>
 use <../../../lib/shapes.scad>
 use <../../../lib/bolt.scad>
 include <../../_sizes.scad>
 
-boltPositions = [[h1/2 - 12, 29, 0], [h1/2 - 12, -29, 0],
-				 [h1/2 + 12, 29, 0], [h1/2 + 12, -29, 0],
-				 [27, 29, 0], [27, -29, 0],
-				 [h1 - 27, 29, 0], [h1 - 27, -29, 0]];
+boltPositions = [[h1/2 - 12, 29, part1TopCut], [h1/2 - 12, -29, part1TopCut],
+				 [h1/2 + 12, 29, part1TopCut], [h1/2 + 12, -29, part1TopCut]];
 
 module cutA() {
-	translate([0, -50, -250])
-		cube([100, 100, 300]);
+	difference()
+	{
+		translate([-50, 0, -250])
+			cube([100, 60, 300]);
+
+		translate([100, -1, -6])
+		rotate([-90, 90, 0])
+			tapered_cuboid(w = 100, l = 200, h = 15, taper = 10);
+	}
+	
+	// translate([0.5, 3, 10])
+	// rotate([90, 0, -90])
+		// tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
 }
+
 
 module boltsAplus(){
 	rotate([0, 90, 0])

@@ -135,7 +135,7 @@ module sideOuterMinusRods(preview = false) {
 }
 
 module sideInner(preview = false) {
-	outside = 20;
+	outside = 30;
 	
 	translate([0, 0, -(outside - thEdge) / 2])
 		ring(d = bbi - th * 2, t = th, h = bbh + outside + thEdge, $fn = 70);
@@ -145,23 +145,6 @@ module sideInner(preview = false) {
 		
 	translate([0, 0, 5])
 		coneCup(d1 = bbi - 2, d2 = bbi - 10, h = 5.5, th = 2);
-
-	// difference()
-	// {
-		// coneCup(d1 = bbi, d2 = 8, h = 10, th = 2);
-		
-		// difference()
-		// {
-			// ring(d = bbi - th* 2 - 10, t =10, h = 20);
-			// cube([30, 30, 30]);
-		// }
-		
-		// difference()
-		// {
-			// cylinder(d = bbi - th* 2, h = 8);
-			// cube([30, 30, 30]);
-		// }		
-	// }
 		
 	translate([0, 0, 11])
 		dCylinder(h = 5, d = 4, x = 1, $fn = 20);	

@@ -4,17 +4,28 @@ use <part1-print.scad>
 rotate([90, -90, 0])
 difference()
 {
-	union()
+	difference()
 	{
-		part1A();
-		//#part1Motors();
-		
-		intersection() 
+		union()
 		{
-			part1Base();		
-			boltsAplus();
+			intersection()
+			{
+				part1();
+				cutA();
+			}
+			
+			intersection() 
+			{
+				part1Base();		
+				boltsAplus();
+			}
+			
+			//part1Motors();
 		}
+		
+		boltsAminus();
 	}
 	
-	boltsAminus();
+	translate([-100, -100, -h1/2])
+		cube([200, 200, 200]);	
 }

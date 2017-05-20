@@ -42,10 +42,11 @@ heapWidth = 70;
 
 // part 1 ---------------------------------------------------------------------
 
+part1MotorX = 20;
 part1UpperAttachment = 25;
 part1LowerAttachment = 25;
-part1HeapMotorOffset = [20, 0, -55];
-part1KneeMotorOffset = [20, 0, -h1 + 55];
+part1HeapMotorOffset = [part1MotorX, 0, -50];
+part1KneeMotorOffset = [part1MotorX, 0, -h1 + 50];
 part1KneeOffset = [0, 0, -h1];
 
 // part 2 ---------------------------------------------------------------------
