@@ -28,7 +28,7 @@ module boltaMinus(h = 15)
 module boltb()
 {
     translate([0, 0, -4.5])
-		cylinder(h = 4.5, d = 7);
+		cylinder(h = 4.5, d = 15);
 }
 
 module boltbMinus()
