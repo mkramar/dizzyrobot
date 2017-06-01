@@ -5,7 +5,7 @@ include <../sizes.scad>
 use <../parts/motor.scad>
 use <../parts/_shared.scad>
 
-axisOffset = 40;
+axisOffset = 60;
 
 //gearOffset = 28;
 //gearAngle = 45;
@@ -20,7 +20,7 @@ mm_per_tooth = 6;
 n1 = 10;
 n2 = 22;
 n3 = 13;
-n4 = 22;
+n4 = 24;
 
 r1 = pitch_radius(mm_per_tooth,n1);
 r2 = pitch_radius(mm_per_tooth,n2);

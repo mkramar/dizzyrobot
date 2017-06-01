@@ -6,7 +6,24 @@ use <../parts/knee-joint.scad>
 use <../_shared.scad>
 include <../_sizes.scad>
 
-knee();
+difference()
+{
+	union()
+	{
+		knee();
+		kneeAxisAssembly();
+		kneePulley();
+		kneeRods();
+		kneeRodsDown();
+	}
+		
+	translate([-70, 20, -20])
+		cube([200, 100, 150]);
+		
+	translate([-100, -50, 0])
+		cube([100, 100, 100]);
+	
+}
 
 //kneeRods();
 
@@ -18,6 +35,6 @@ rotate([0, -90, 0])
 rotate([-90, 0, 0])
 rotate([0, -90, 0])
 {
-	#kneeJoint(preview = true);	
-	sideOuterMinusRods();
+	//#kneeJoint(preview = true);	
+	//sideOuterMinusRods();
 }

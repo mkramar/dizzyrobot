@@ -84,8 +84,13 @@ module bearingInner(showBearing = true, color) {
 }
 
 module motor4(){
-	cylinder(d = motor4D, h = motor4H);
-	cylinder(d = 25, h = motor4H + pulleyH);
+	z = 3;
+	
+	cylinder(d1 = 30, d2 = motor4D, h = z);
+	translate([0, 0, z]) cylinder(d1 = motor4D, d2 = motor4D, h = motor4H - z * 2);
+	translate([0, 0, motor4H - z]) cylinder(d1 = motor4D, d2 = 30, h = z);
+	
+	cylinder(d = 25, h = motor4H + pulleyH);	
 }
 
 module motor5() {
@@ -163,4 +168,28 @@ module motor5BlockB(inner = false) {
 		translate([-motorAdjustment, 0, wall/2])
 			halfShayba(d = motor5SpaceD + wall * 2, h = h + wall, rd = 15);
 	}
+}
+
+module bb6000(){
+	bbi = 10;
+	bbo = 26;
+	bbh = 8;
+
+	ring(d = bbi, h = bbh, t = (bbo-bbi)/2);
+}
+
+module bb6800(){
+	bbi = 10;
+	bbo = 19;
+	bbh = 5;
+
+	ring(d = bbi, h = bbh, t = (bbo-bbi)/2);
+}
+
+module bb6805(){
+	bbi = 25;
+	bbo = 37;
+	bbh = 7;
+
+	ring(d = bbi, h = bbh, t = (bbo-bbi)/2);
 }

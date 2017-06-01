@@ -3,6 +3,7 @@ use <../lib/shapes.scad>
 use <parts/heap.scad>
 use <parts/part1.scad>
 use <parts/part2.scad>
+use <parts/knee.scad>
 use <parts/knee-joint.scad>
 use <_shared.scad>
 include <_sizes.scad>
@@ -14,67 +15,18 @@ half();
 
 module half()
 {
-	// heap motor
-	
-	//translate([15, -50, 35])
-	//rotate([0, -90, 0])
-	//	motor5();
-
-	// bearing joint to body
-	
-	//translate([-30, 0, 0])
-	//rotate([0, 0, 180])
-	//	bearingWithHolders(innerColor = "Violet", outerColor = "YellowGreen");
-
-	// heap
-	
-	//rotate([0, 180, 0])
-	//	heap(preview = true);
-
-	// knee joint bearing
-
-	//#rotate([0, 0, 90])
-	//	bearingInner(showBearing = true, color = "turquoise");	
-
-	translate([-15, 35, 0])
-	rotate([0, 0, 90])
-	color("white")
-	rotate([0, -90, 0])
-		ballBearing(inner = bbi, outer = bbo, height = bbh);	
-		
-	translate([-15, -35, 0])
-	rotate([0, 0, 90])
-	color("white")
-	rotate([0, -90, 0])
-		ballBearing(inner = bbi, outer = bbo, height = bbh);			
-		
-	#rotate([0, -90, 0])
-		kneeJoint(preview = true);	
+	heap(preview = true);
 	
 	// part 1
 	
-	color("turquoise")
-		part1(preview = false);
-		
-	part1Motors();
-		
 	translate(part1KneeOffset)
 	{
-		rotate([-90, 0, 0])
-		rotate([0, -90, 0])
-		{
-			#kneeJoint(preview = true);	
-			sideOuterMinusRods();
-		}
+		knee(preview = true);
 		
-		//color("white")
-		//rotate([0, -90, 0])
-		//	ballBearing6805();
-		//
-		//color("teal")
-		//	part2(preview = true);
-		//	
-		part2Motors();
+		//kneeAxisAssembly();
+		//kneePulley();
+		kneeRods();
+		kneeRodsDown();
 	}
 }
 

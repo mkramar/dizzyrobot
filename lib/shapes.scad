@@ -1,3 +1,56 @@
+module cylinderSector(d, h, start_angle, end_angle) {
+    R = d * sqrt(2) / 2;// + 1;
+    a0 = (4 * start_angle + 0 * end_angle) / 4;
+    a1 = (3 * start_angle + 1 * end_angle) / 4;
+    a2 = (2 * start_angle + 2 * end_angle) / 4;
+    a3 = (1 * start_angle + 3 * end_angle) / 4;
+    a4 = (0 * start_angle + 4 * end_angle) / 4;
+    if(end_angle > start_angle)
+		linear_extrude(height = h)
+        intersection() {
+			circle(d = d);
+			polygon([
+				[0,0],
+				[R * cos(a0), R * sin(a0)],
+				[R * cos(a1), R * sin(a1)],
+				[R * cos(a2), R * sin(a2)],
+				[R * cos(a3), R * sin(a3)],
+				[R * cos(a4), R * sin(a4)],
+				[0,0]
+		   ]);
+		}
+}
+
+module ringSector(d, h, t, start_angle, end_angle)
+{
+    R = d * sqrt(2) / 2;// + 1;
+    a0 = (4 * start_angle + 0 * end_angle) / 4;
+    a1 = (3 * start_angle + 1 * end_angle) / 4;
+    a2 = (2 * start_angle + 2 * end_angle) / 4;
+    a3 = (1 * start_angle + 3 * end_angle) / 4;
+    a4 = (0 * start_angle + 4 * end_angle) / 4;
+    if(end_angle > start_angle)
+		difference()
+		{
+			linear_extrude(height = h)
+			intersection() {
+				circle(d = d + t * 2);
+				polygon([
+					[0,0],
+					[R * cos(a0), R * sin(a0)],
+					[R * cos(a1), R * sin(a1)],
+					[R * cos(a2), R * sin(a2)],
+					[R * cos(a3), R * sin(a3)],
+					[R * cos(a4), R * sin(a4)],
+					[0,0]
+			   ]);
+			}
+			
+			translate([0, 0, -0.5])
+			cylinder(d = d, h = h + 1);
+		}
+}
+
 //Draw a prism based on a 
 //right angled triangle
 //l - length of prism
@@ -95,17 +148,6 @@ module ringDiamond(d, h)
 		square(size = [h, h], center = true);
 }
 
-module ringSector(d, h, t, a1, a2)
-{
-    intersection()
-    {
-        $fn=100;
-        ring(d, h, t);
-        translate([0, 0, -1]) rotate([0, 0, 90+a1]) cube([d, d, h + 2]);
-        translate([0, 0, -1])rotate([0, 0, a2]) cube([d, d, h + 2]);
-    }
-}
-
 module torus(d, w)
 {
     rotate_extrude(convexity = 1)
@@ -158,11 +200,11 @@ module halfShayba(h, d, rd){
 	}
 }
 
-module dCylinder(h, d, x){
+module dCylinder(h, d, x, center = true){
 	intersection() 
 	{
-		cylinder(h = h, d1 = d, d2 = d, center = true);
-		translate([x, 0, 0]) cube([d, d, h + 1], center = true);
+		cylinder(h = h, d = d, center = center);
+		translate([x, 0, 0]) cube([d, d, h*2 + 1], center = true);
 	}
 }
 
@@ -178,10 +220,10 @@ module sphereSector(d, w, a) {
 	}
 }
 
-module cylinderSector(d, h, angle) {
-	rotate_extrude(angle=angle, convexity=10)
-		square(size = [d/2, h]);
-}
+// module cylinderSector(d, h, angle) {
+	// rotate_extrude(angle=angle, convexity=10)
+		// square(size = [d/2, h]);
+// }
 
 module coneCup(d1, d2, h, th) {
 	difference()
