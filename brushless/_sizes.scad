@@ -30,6 +30,15 @@ bb6800h = 5;
 
 //
 
+bb6805i = 25 - 0.2;
+bb6805o = 37 + 0.7;
+bb6805h = 7;
+
+//
+
+rod25o = 25;
+rod25i = rod25o - 1 * 2;
+
 rod = 10 + 0.2;
 
 motorAdjustment = 5; // one side

@@ -23,32 +23,13 @@ module cylinderSector(d, h, start_angle, end_angle) {
 
 module ringSector(d, h, t, start_angle, end_angle)
 {
-    R = d * sqrt(2) / 2;// + 1;
-    a0 = (4 * start_angle + 0 * end_angle) / 4;
-    a1 = (3 * start_angle + 1 * end_angle) / 4;
-    a2 = (2 * start_angle + 2 * end_angle) / 4;
-    a3 = (1 * start_angle + 3 * end_angle) / 4;
-    a4 = (0 * start_angle + 4 * end_angle) / 4;
-    if(end_angle > start_angle)
-		difference()
-		{
-			linear_extrude(height = h)
-			intersection() {
-				circle(d = d + t * 2);
-				polygon([
-					[0,0],
-					[R * cos(a0), R * sin(a0)],
-					[R * cos(a1), R * sin(a1)],
-					[R * cos(a2), R * sin(a2)],
-					[R * cos(a3), R * sin(a3)],
-					[R * cos(a4), R * sin(a4)],
-					[0,0]
-			   ]);
-			}
-			
-			translate([0, 0, -0.5])
+	difference()
+	{
+		cylinderSector(d = d + t*2, h = h, start_angle=start_angle, end_angle=end_angle) ;
+		
+		translate([0, 0, -0.5])
 			cylinder(d = d, h = h + 1);
-		}
+	}
 }
 
 //Draw a prism based on a 
