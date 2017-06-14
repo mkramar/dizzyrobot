@@ -1,6 +1,7 @@
-include <axis.scad>
-use <../lib/shapes.scad>
-use <../lib/bolt.scad>
+include <../../sizes.scad>
+include <../../parts/part1.scad>
+use <../../../lib/shapes.scad>
+use <../../../lib/bolt.scad>
 
 boltPositions = [[28, 0, -80], [-28, 0, -80]];
 

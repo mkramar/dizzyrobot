@@ -101,7 +101,7 @@ module motor5() {
 	translate([0, 0, motor5H - z]) cylinder(d1 = motor5D, d2 = 30, h = z);
 	
 	cylinder(d = 25, h = motor5H + pulleyH);	
-}	
+}
 
 module motor5BoltSpace(){
 	d = 25 / sqrt(2) / 2;

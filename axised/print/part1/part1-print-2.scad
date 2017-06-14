@@ -1,4 +1,4 @@
-include <axis-print.scad>
+include <part1-print.scad>
 
 $fn = 100;
 
