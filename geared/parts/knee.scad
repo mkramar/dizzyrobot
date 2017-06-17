@@ -5,7 +5,7 @@ include <../sizes.scad>
 use <../parts/motor.scad>
 use <../parts/_shared.scad>
 
-axisOffset = 60;
+axisOffset = 73;
 
 //gearOffset = 28;
 //gearAngle = 45;
@@ -17,8 +17,8 @@ gth = 4;
 
 mm_per_tooth = 6;
 
-n1 = 10;
-n2 = 22;
+n1 = 12;
+n2 = 28;
 n3 = 13;
 n4 = 24;
 

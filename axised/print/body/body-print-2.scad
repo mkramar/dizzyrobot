@@ -1,6 +1,6 @@
 include <body-print.scad>
 
-//$fn = 100;
+$fn = 100;
 
 difference()
 {
