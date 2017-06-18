@@ -7,7 +7,7 @@ include <parts/motor.scad>
 assembly();
 
 
-kneeAngle = 0;
+kneeAngle = 00;
 
 module assembly(){
 	// part1
@@ -15,10 +15,8 @@ module assembly(){
 	color("pink")
 	difference()
 	{
-		part1();
-		
-		//translate([0, -50, 0])
-		//	cube([100, 100, 100]);		
+		//part1();		
+		//translate([0, -50, 0]) cube([100, 100, 100]);		
 	}
 
 	// motor
@@ -36,37 +34,40 @@ module assembly(){
 	translate([0, 0, -(r1 - rm)])
 	{
 		rotate([0, -kneeAngle, 0])
-		difference()
 		{
-			#part2();
-
-			translate([0, -100, 0])
-				cube([100, 100, 100]);
-
-			//translate([0, -motorGearOffset - gh/2, -100 + 0.01])
-			//mirror([0, 1, 0])
-			//	cube([100, 100, 100]);
-		}
-		color ("white") 
-			part2Metal();
-
-		// foot
-		
-		translate([0, -footOffset, -part2Length])
-		{		
-			translate([0, ankleMotorOffset, 0])
-			rotate([90, 0, 0])
-				motor4Gear();
-				
-			translate([0, 0, -(rf - rm)])
 			difference()
 			{
-				%foot();
-				
-				translate([0, -50, 0]) cube([100, 100, 100]);
+				%part2();
+				translate([0, -100, 0]) cube([100, 100, 100]);
+
+				//translate([0, -motorGearOffset - gh/2, -100 + 0.01])
+				//mirror([0, 1, 0])
+				//	cube([100, 100, 100]);
 			}
+			color ("white") kneeMetal();
+
+			// foot
 			
-			#ankleMarkers();
+			translate([0, -footOffset, -part2Length])
+			{		
+				translate([0, ankleMotorOffset, 0])
+				rotate([90, 0, 0])
+					motor4Gear();
+					
+				translate([0, 0, -(rf - rm)])
+				{
+					color("pink")
+					difference()
+					{
+						foot();
+						translate([0, -50, -50]) cube([100, 100, 100]);
+					}
+					
+					color ("white") footMetal();
+				}
+				
+				#ankleMarkers();
+			}
 		}
 	}
 }

@@ -7,6 +7,9 @@ use <part1.scad>
 // public ---------------------------------------------------------------------
 
 module part2(){
+	z = -(rf - rm);
+	h1 = th + gap + th;
+	
 	difference()
 	{
 		union()
@@ -15,6 +18,16 @@ module part2(){
 			{
 				part2Base("outer");
 				part2Base("inner");
+				
+				translate([0, 0, -part2Length])
+				intersection()
+				{
+					part2Base("outer");
+				
+					translate([0, toY(h1, ankleY5), z])
+					rotate([90, 0, 0])
+						cylinder(d = footShellOuter + gap * 2, h = h1 + 0.01);
+				}
 			}
 			
 			translate([0, motorOffset - motor5H - th - gap - 0.01, 0])
@@ -102,7 +115,7 @@ module part2Base(mode = "outer"){
 	}
 }
 
-module part2Metal(){
+module kneeMetal(){
 	translate([0, -part2Offset, 0])
 	rotate([90, 0, 0])
 	{
