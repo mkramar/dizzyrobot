@@ -1,6 +1,6 @@
 include <foot-print.scad>
 
-$fn = 100;
+$fn = 70;
 
 rotate([-90, 0, 0])
 difference()
@@ -9,7 +9,7 @@ difference()
 	{
 		intersection()
 		{
-			foot();
+			foot("render");
 			cutA();
 		}
 		

@@ -6,6 +6,34 @@ boltPositions = [[47, 0, -10], [-71, 0, -10]];
 module cutA(){
 	translate([-100, 0, -100])
 		cube([200, 200, 200]);
+		
+	translate([0, 0.5, -40])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
+	translate([-40, 0.5, -40])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
+	translate([-90, 0.5, -40])
+	rotate([0, 45, 0])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
+	translate([-50, 0.5, -20])
+	rotate([0, -45, 0])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
+	translate([60, 0.5, -40])
+	rotate([0, -45, 0])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
+		
+	translate([20, 0.5, -20])
+	rotate([0, 45, 0])
+	rotate([90, 0, 0])
+		tapered_cuboid(w = 6, l = 40, h = 2, taper = 2);
 }
 
 module boltsAplus(){

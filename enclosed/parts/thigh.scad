@@ -2,7 +2,7 @@ include <../sizes.scad>
 use <../../lib/shapes.scad>
 use <../../lib/sensor.scad>
 
-module part1(){
+module thigh(){
 	z = -(r1 - rm);
 	h1 = th + gap + th;
 	h2 = kneeY3 - kneeY6;
@@ -16,7 +16,7 @@ module part1(){
 			{
 				union()
 				{
-					part1Base("outer");
+					thighBase("outer");
 
 					translate([0, toY(axis, kneeY2), z])
 					rotate([90, 0, 0])
@@ -27,7 +27,7 @@ module part1(){
 				{
 					intersection()
 					{
-						part1Base("outer");
+						thighBase("outer");
 					
 						translate([0, toY(h1, kneeY5), z])
 						rotate([90, 0, 0])
@@ -45,7 +45,7 @@ module part1(){
 				ring(d = kneeShellInner - (th + gap) * 2, h = h2, t = th);
 		}
 			
-		part1Base("inner");
+		thighBase("inner");
 		
 		// space so that bearing fits in
 		
@@ -59,7 +59,6 @@ module part1(){
 		rotate([-90, 0, 0])
 			motor5BoltSpace();
 	}
-	
 	
 	// ring that holds bearing
 	
@@ -79,12 +78,12 @@ module part1(){
 	}
 }
 
-module part1Base(mode = "outer"){
-	d = (mode == "outer" ? part1Outer :
-	     mode == "inner" ? part1Inner :
-		 mode == "spacing" ? part1Outer : 0);
+module thighBase(mode = "outer"){
+	d = (mode == "outer" ? thighOuter :
+	     mode == "inner" ? thighInner :
+		 mode == "spacing" ? thighOuter : 0);
 
-	h = part1H + (mode == "outer" ? 0 : 
+	h = thighH + (mode == "outer" ? 0 : 
 	              mode == "inner" ? -th*2 :
 				  mode == "spacing" ? gap*2 : 0);
 

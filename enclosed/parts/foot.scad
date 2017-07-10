@@ -2,17 +2,24 @@ include <../sizes.scad>
 use <../../lib/shapes.scad>
 use <../../lib/gear.scad>
 use <bearings.scad>
-use <part2.scad>
+use <shin.scad>
 
 // public ---------------------------------------------------------------------
 
-module foot() {
+module foot(mode = "preview") {
 	difference()
 	{
 		footBase("outer");
 		footBase("inner");
 		
-		render() footOpeningUp();
+		if (mode == "render")
+		{
+			footOpeningUp();
+		}
+		else
+		{
+			render() footOpeningUp();
+		}
 		
 		// around bearings
 		
@@ -24,7 +31,7 @@ module foot() {
 		rotate([90, 0, 0])
 			ring(d = bb6701o, h = bb6701h, t = th + 2, center = false);
 	}
-	
+
 	// gear
 	
 	translate([0, ankleMotorOffset - motor5H - th*2 - gap, 0])
@@ -125,15 +132,14 @@ module footBase(mode = "outer"){
 module footOpeningUp(){
 	h1 = 30;
 
-	render()
 	difference()
 	{
 		translate([0, footOffset, 0])	
 		for (a = [ankleAngle1:10:ankleAngle2])
 		{
 			rotate([0, a, 0])
-			translate([0, 0, part2Length + (rf - rm)])
-			part2Base("spacing");
+			translate([0, 0, shinLength + (rf - rm)])
+			shinBase("spacing");
 		}
 		
 		translate([0, ankleY6, 0])

@@ -61,10 +61,19 @@ module motor5BoltSpace(adjustment = 0){
 	}
 }
 
+module motor5BoltSpace2(){
+	d = 25 / sqrt(2) / 2;
+	
+	for (x = [-d, d])
+	for (y = [-d, d])
+		translate([x, y, 0])
+			oneBolt();
+		
+	cylinder(d = 10, h = 10, center = true);
+}
+
 module motorGearA() {
-	sd = 3.2;
 	sw = 6.5;
-	sh = 2.5;
 	
 	difference()
 	{
@@ -84,16 +93,10 @@ module motorGearA() {
 		for (x = [-dx, dx])
 		for (y = [-dx, dx])
 			translate([x, y, 0])
-			{
-				translate([0, 0, -0.01])
-					cylinder(d = sd, h = 10);
+				oneBolt();
 				
-				translate([0, 0, th - sh])
-					cylinder(d1 = sd, d2 = sw, h = sh);
-					
-				translate([0, 0, th-0.01])
-					cylinder(d = sw, h = 15);
-			}
+		// translate([0, 0, th-0.01])
+			// cylinder(d = sw, h = 15);
 	}
 }
 
@@ -105,4 +108,20 @@ module motorGearB() {
 		rotate([0, 0, 45])
 			cube([motorGearW + 0.2, motorGearW + 0.2, 30], center = true);
 	}
+}
+
+// private --------------------------------------------------------------------
+
+module oneBolt() {
+	sd = 3.2;
+	sw = 6.5;
+	sh = 2.5;
+
+	cylinder(d = sd, h = 20, center = true);
+	
+	translate([0, 0, th - sh])
+		cylinder(d1 = sd, d2 = sw, h = sh);
+		
+	translate([0, 0, th])
+		cylinder(d = sw, h = 10);	
 }

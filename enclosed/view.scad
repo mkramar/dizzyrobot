@@ -1,22 +1,21 @@
 include <sizes.scad>
-include <parts/part1.scad>
-include <parts/part2.scad>
+include <parts/thigh.scad>
+include <parts/shin.scad>
 include <parts/foot.scad>
 include <parts/motor.scad>
 
 assembly();
 
-
-kneeAngle = 00;
+kneeAngle = 0;
 
 module assembly(){
-	// part1
+	// thigh
 	
 	color("pink")
 	difference()
 	{
-		//part1();		
-		//translate([0, -50, 0]) cube([100, 100, 100]);		
+		thigh();		
+		translate([0, -50, 0]) cube([100, 100, 100]);		
 	}
 
 	// motor
@@ -29,28 +28,20 @@ module assembly(){
 
 	#kneeMarkers();
 
-	// part2
+	// shin
 		
 	translate([0, 0, -(r1 - rm)])
 	{
 		rotate([0, -kneeAngle, 0])
 		{
-			difference()
-			{
-				%part2();
-				translate([0, -100, 0]) cube([100, 100, 100]);
-
-				//translate([0, -motorGearOffset - gh/2, -100 + 0.01])
-				//mirror([0, 1, 0])
-				//	cube([100, 100, 100]);
-			}
-			color ("white") kneeMetal();
+			%shinCutup();
+			color("white") kneeMetal();
 
 			// foot
 			
-			translate([0, -footOffset, -part2Length])
+			*translate([0, -footOffset, -shinLength])
 			{		
-				translate([0, ankleMotorOffset, 0])
+				%translate([0, ankleMotorOffset, 0])
 				rotate([90, 0, 0])
 					motor4Gear();
 					
@@ -63,7 +54,7 @@ module assembly(){
 						translate([0, -50, -50]) cube([100, 100, 100]);
 					}
 					
-					color ("white") footMetal();
+					//color("white") footMetal();
 				}
 				
 				#ankleMarkers();
@@ -73,33 +64,33 @@ module assembly(){
 }
 
 module kneeMarkers(){
-	translate([-5, 0, 0])
+	translate([-5, 0, -50])
 	{
-		translate([0, kneeY1, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY2, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY3, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY4, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY5, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY6, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY7, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY8, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY9, 0]) cube([10, 0.01, 30]);
-		translate([0, kneeY0, 0]) cube([10, 0.01, 30]);
+		translate([0, kneeY1, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY2, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY3, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY4, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY5, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY6, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY7, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY8, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY9, 0]) cube([10, 0.01, 80]);
+		translate([0, kneeY0, 0]) cube([10, 0.01, 80]);
 	}
 }
 
 module ankleMarkers(){
-	translate([-5, 0, 0])
+	translate([-5, 0, -50])
 	{
-		translate([0, ankleY1, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY2, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY3, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY4, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY5, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY6, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY7, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY8, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY9, 0]) cube([10, 0.01, 30]);
-		translate([0, ankleY0, 0]) cube([10, 0.01, 30]);
+		translate([0, ankleY1, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY2, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY3, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY4, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY5, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY6, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY7, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY8, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY9, 0]) cube([10, 0.01, 80]);
+		translate([0, ankleY0, 0]) cube([10, 0.01, 80]);
 	}
 }

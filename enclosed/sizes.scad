@@ -52,7 +52,7 @@ bb6805h = 7;
 // custom ---------------------------------------------------------------------
 
 gap = 3; // distance between moving parts that should not touch
-th = 3;
+th = 2.5;
 gh = 10;
 
 // gears
@@ -77,32 +77,32 @@ d1 = r1 * 2;
 kneeShellInner = d1 + 6 + gap * 2;
 kneeShellOuter = kneeShellInner + th*2;
 
-part1Inner = motor5D + gap* 2;
-part1Outer = motor5D + gap* 2 + th*2;
+thighInner = motor5D + gap* 2;
+thighOuter = motor5D + gap* 2 + th*2;
 
-part1H = th + motor5H + th*2 + gap;
+thighH = th + motor5H + th*2 + gap;
 kneeH = th + gap + th + motor5H + th + gh + gap + th;
-part2H = th + motor4H + gap + th;
-part2Offset = (kneeH - part1H)/2 - gap - th;
+shinH = th + motor4H + gap + th;
+shinOffset = (kneeH - thighH)/2 - gap - th;
 
 kneeMaxAngle = 160;
 
-kneeY1 = part1H/2 + gap + th;	// part2 begin outer
-kneeY2 = kneeY1 - th;			// part2 begin inner
-kneeY3 = kneeY2 - gap;			// part1 begin outer
-kneeY4 = kneeY3 - th;			// part1 begin inner, begin motor
+kneeY1 = thighH/2 + gap + th;	// shin begin outer
+kneeY2 = kneeY1 - th;			// shin begin inner
+kneeY3 = kneeY2 - gap;			// thigh begin outer
+kneeY4 = kneeY3 - th;			// thigh begin inner, begin motor
 kneeY5 = kneeY4 - motor5H;		// left end of motor
 kneeY6 = kneeY5 - th;			// end motor gear holder
-kneeY7 = kneeY6 - gap;			// begin gear on part2
+kneeY7 = kneeY6 - gap;			// begin gear on shin
 kneeY8 = kneeY6 - gh;			// end motor gear
-kneeY9 = kneeY8 - gap;			// end part2 inner
-kneeY0 = kneeY9 - th;			// end part2 outer
+kneeY9 = kneeY8 - gap;			// end shin inner
+kneeY0 = kneeY9 - th;			// end shin outer
 
 function toY(h, y) = y - h/2;
 
 motorOffset = motor5H/2 + toY(motor5H, kneeY4);
 
-part2Length = 230;
+shinLength = 230;
 
 // ankle ----------------------------------------------------------------------
 
@@ -117,7 +117,7 @@ footShellInner = df + 6 + gap * 2;
 footShellOuter = footShellInner + th*2;
 
 ankleH = th + gap + th + motor4H + th + gh + gap + th;
-footOffset = (ankleH - part2H)/2 - gap - th;
+footOffset = (ankleH - shinH)/2 - gap - th;
 
 ankleY1 = ankleH/2;	// foot begin outer
 ankleY2 = ankleY1 - th;			// foot begin inner
