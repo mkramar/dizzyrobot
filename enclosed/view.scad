@@ -3,24 +3,37 @@ include <parts/thigh.scad>
 include <parts/shin.scad>
 include <parts/foot.scad>
 include <parts/motor.scad>
+include <parts/heap.scad>
+include <parts/body.scad>
 
 assembly();
 
 kneeAngle = 0;
 
 module assembly(){
+	
+	// heap
+		
+	translate([0, 0, thighLength])
+	{	
+		#heap();
+		heapMarkers();
+		heapMotors();
+		color("white") heapMetal();
+	}
+	
 	// thigh
 	
 	color("pink")
 	difference()
 	{
-		thigh();		
+		thigh();
 		translate([0, -50, 0]) cube([100, 100, 100]);		
 	}
 
 	// motor
 
-	translate([0, motorOffset, 0])
+	translate([0, kneeMotorOffset, 0])
 	rotate([90, 0, 0])
 		motor5Gear();
 
@@ -30,12 +43,12 @@ module assembly(){
 
 	// shin
 		
-	translate([0, 0, -(r1 - rm)])
+	*translate([0, 0, -(r1 - rm)])
 	{
 		rotate([0, -kneeAngle, 0])
 		{
-			%shinCutup();
-			color("white") kneeMetal();
+			shinCutup();
+			#color("white") kneeMetal();
 
 			// foot
 			
@@ -60,6 +73,22 @@ module assembly(){
 				#ankleMarkers();
 			}
 		}
+	}
+}
+
+module heapMarkers() {
+	translate([-5, 0, -50])
+	{
+		translate([0, heapY1, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY2, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY3, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY4, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY5, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY6, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY7, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY8, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY9, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY0, 0]) cube([10, 0.01, 80]);
 	}
 }
 

@@ -65,22 +65,54 @@ nm = 10;
 rm = pitch_radius(mm_per_tooth,nm);
 dm = rm * 2;
 
-// knee gear
+// common ---------------------------------------------------------------------
+
+thighH = th + motor5H + th*2 + gap;
+thighLength = 200;
+
+// heap -----------------------------------------------------------------------
+
+//  gear 1
+
+gn2 = 45;
+gr2 = pitch_radius(mm_per_tooth, gn2);
+gd2 = gr2 * 2;
+
+// gear 2
+
+gn3 = 40;
+gr3 = pitch_radius(mm_per_tooth, gn3);
+gd3 = gr3 * 2;
+
+//
+
+heapY1 = -thighH/2 - gap - th;
+heapY2 = heapY1 + th;
+heapY3 = heapY2 + gap;
+heapY4 = heapY3 + th;
+heapY5 = heapY4 + motor5H;		// left end of motor
+heapY6 = heapY5 + th;			// end motor gear holder
+heapY7 = heapY6 + gap;			// begin gear
+heapY8 = heapY6 + gh;			// end motor gear
+heapY9 = heapY8 + gap;			// end heap inner
+heapY0 = heapY9 + th;			// end heap outer
+
+// knee -----------------------------------------------------------------------
+
+// gear
 
 n1 = 45;
 r1 = pitch_radius(mm_per_tooth,n1);
 d1 = r1 * 2;
 
-
-// knee -----------------------------------------------------------------------
+//
 
 kneeShellInner = d1 + 6 + gap * 2;
 kneeShellOuter = kneeShellInner + th*2;
 
-thighInner = motor5D + gap* 2;
-thighOuter = motor5D + gap* 2 + th*2;
+motor5DInner = motor5D + gap* 2;
+motor5DOuter = motor5D + gap* 2 + th*2;
 
-thighH = th + motor5H + th*2 + gap;
 kneeH = th + gap + th + motor5H + th + gh + gap + th;
 shinH = th + motor4H + gap + th;
 shinOffset = (kneeH - thighH)/2 - gap - th;
@@ -100,7 +132,7 @@ kneeY0 = kneeY9 - th;			// end shin outer
 
 function toY(h, y) = y - h/2;
 
-motorOffset = motor5H/2 + toY(motor5H, kneeY4);
+kneeMotorOffset = motor5H/2 + toY(motor5H, kneeY4);
 
 shinLength = 230;
 

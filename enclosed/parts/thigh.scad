@@ -79,9 +79,9 @@ module thigh(){
 }
 
 module thighBase(mode = "outer"){
-	d = (mode == "outer" ? thighOuter :
-	     mode == "inner" ? thighInner :
-		 mode == "spacing" ? thighOuter : 0);
+	d = (mode == "outer" ? motor5DOuter :
+	     mode == "inner" ? motor5DInner :
+		 mode == "spacing" ? motor5DOuter : 0);
 
 	h = thighH + (mode == "outer" ? 0 : 
 	              mode == "inner" ? -th*2 :
@@ -101,7 +101,7 @@ module thighBase(mode = "outer"){
 		rotate([90, 0, 0])
 			shayba(d = d - x*2, h = h, rd = rd);
 
-		translate([0, 0, 200])
+		translate([0, 0, thighLength])
 		rotate([90, 0, 0])
 			shayba(d = d - x*2, h = h, rd = rd);		
 	}

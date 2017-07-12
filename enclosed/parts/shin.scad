@@ -41,12 +41,12 @@ module shin(){
 				}
 			}
 			
-			translate([0, motorOffset - motor5H - th - gap - 0.01, 0])
+			translate([0, kneeMotorOffset - motor5H - th - gap - 0.01, 0])
 			rotate([90, 0, 0])
 				ringSector(d = d1 - 3, h = gh, t = 8, start_angle=-kneeMaxAngle+90-20, end_angle=0+90+20, center = false);
 		}
 		
-		translate([0, motorOffset - motor5H - th - gap, 0])
+		translate([0, kneeMotorOffset - motor5H - th - gap, 0])
 		rotate([90, 0, 0])
 		intersection()
 		{
@@ -88,7 +88,7 @@ module shin(){
 	rotate([-90, 0, 0])
 		cylinder(d = bb6701i, h = bb6701h);
 		
-	translate([0, kneeY1, 0])
+	translate([0, kneeY2, 0])
 	rotate([90, 0, 0])
 		cylinder(d = bb6701i, h = bb6701h);
 		

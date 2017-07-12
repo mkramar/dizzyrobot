@@ -172,6 +172,23 @@ module shayba(h, d, rd){
 	}
 }
 
+module shayba2(h, d, x, rd) {
+    d = d - rd;
+    h = h - rd;
+    
+    minkowski()
+    {
+        union()
+        {
+            cylinder(h=h, d=d, center=true);
+            translate([0, 0, h/2]) cylinder(d1=d, d2=d/2, h=x);
+            translate([0, 0, -h/2-x]) cylinder(d1=d/2, d2=d, h=x);
+        }
+        
+        sphere(d = rd);
+    }
+}
+
 module halfShayba(h, d, rd){
 	translate([0, 0, -h/2])
 	intersection()
