@@ -70,6 +70,9 @@ dm = rm * 2;
 thighH = th + motor5H + th*2 + gap;
 thighLength = 200;
 
+heapAngle1Min = -20;
+heapAngle1Max = 150;
+
 // heap -----------------------------------------------------------------------
 
 //  gear 1
@@ -86,6 +89,13 @@ gd3 = gr3 * 2;
 
 //
 
+heapShellInner1 = (gd2 + 6 + gap * 2);
+heapShellOuter1 = heapShellInner1 + th*2;
+
+heapShellInner2 = (gd3 + 6 + gap * 2);
+
+//
+
 heapY1 = -thighH/2 - gap - th;
 heapY2 = heapY1 + th;
 heapY3 = heapY2 + gap;
@@ -96,6 +106,11 @@ heapY7 = heapY6 + gap;			// begin gear
 heapY8 = heapY6 + gh;			// end motor gear
 heapY9 = heapY8 + gap;			// end heap inner
 heapY0 = heapY9 + th;			// end heap outer
+
+// thigh ----------------------------------------------------------------------
+
+thighMotorUpperYOffset = thighH/2 - th;
+thighMotorToAxisUpperAngle = 70;
 
 // knee -----------------------------------------------------------------------
 
