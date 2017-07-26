@@ -129,7 +129,7 @@ module shin(){
 
 module shinBase(mode = "outer"){
 	dk = (mode == "outer" ? kneeShellOuter :  kneeShellInner);
-	hk = kneeH + (mode == "outer" ? 0 : -th*2);
+	hk = (mode == "outer" ? motor5HOuter : motor5HInner);
 	rdk = (mode == "outer" ? 15 : 10);
 
 	translate([0, -shinOffset, 0])
@@ -192,8 +192,8 @@ module kneeMetal(){
 	translate([0, -shinOffset, 0])
 	rotate([90, 0, 0])
 	{
-		translate([0, 0, +kneeH/2 - th - bb6701h/2]) bb6701();
-		translate([0, 0, -kneeH/2 + th + bb6701h/2]) bb6701();
+		translate([0, 0, +motor5HOuter/2 - th - bb6701h/2]) bb6701();
+		translate([0, 0, -motor5HOuter/2 + th + bb6701h/2]) bb6701();
 	}
 }
 

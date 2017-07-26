@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP BS107
+D PSMN3R3-40YS
+K N-Channel MOSFET
+F http://www.vishay.com/docs/70215/70215.pdf
+$ENDCMP
+#
+$CMP PSMN3R3-40YS
+D 50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23
+K N-Channel MOSFET Logic Level
+F http://www.fairchildsemi.com/ds/BS/BSS138.pdf
+$ENDCMP
+#
+#End Doc Library

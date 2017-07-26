@@ -5,27 +5,20 @@ use <thigh.scad>
 
 // public ---------------------------------------------------------------------
 
-axis1Xoffset = 60;
-axis1Yoffset = 40;
-axis1Zoffset = 0;
-
-bearing1Offset = -5;
-bearing2Offset = 35;
-
-holderHeight = 50;
+heapAxis1Yoffset = 45;
+heapAxis1Zoffset = 10;
 
 module heapAssembly(){
 	difference()
 	{
-		//color("tan") 
-		%heap();
+		color("tan") 
+			heap();
 		
-		//translate([0, 0, -100]) cube([100, 100, 200]);
+		translate([0, 0, -100]) cube([100, 100, 200]);
 		//translate([-200, -100, -100]) cube([200, 200, 200]);
 	}
 	
 	#heapMarkers();
-	heapMotors();
 	color("white") heapMetal();
 }
 
@@ -43,23 +36,29 @@ module heap(){
 			holder();
 		}
 		
+		translate([heapX4, -heapAxis1Yoffset, heapAxis1Zoffset])
+		rotate([0, 90, 0])
+			cylinder(d = heapShellInner2 + 10, h = 50);
+		
 		render()
-			thighOpening();		
+			thighOpening();
 	}
 }
 
 module heapBase(mode = "outer"){
-	d1 = heapShellInner1 + (mode == "outer" ? th * 2 : 0);
-	d2 = heapShellInner2 + (mode == "outer" ? th * 2 : 0);
-	h1 = kneeH + (mode == "outer" ? 0 : -th*2);
+	h = (heapX1 - heapX9);
+	
+	d1 = (mode == "outer" ? heapShellOuter1 : heapShellInner1);
+	d2 = (mode == "outer" ? heapShellOuter2 : heapShellInner2);
+	h1 = h - (mode == "outer" ? 0 : 2*th);
 	rd = (mode == "outer" ? 15 : 10);
 	
 	// axis 1
 	
-	translate([axis1Xoffset, -axis1Yoffset, axis1Zoffset])
+	translate([heapX1 - h/2, -heapAxis1Yoffset, heapAxis1Zoffset])
 	rotate([0, 90, 0])
 	{
-		shayba2(d = d2, h = h1, x = 5, rd = rd);
+		shayba(d = d2, h = h1, x = 5, rd = rd);
 		#cylinder(d = 1, h = 200, center = true);
 	}
 
@@ -75,11 +74,11 @@ module heapBase(mode = "outer"){
 module heapMetal() {
 	// axis 1
 	
-	translate([bearing2Offset, -axis1Yoffset, axis1Zoffset])
+	translate([bodyHeapBearing2Offset, -heapAxis1Yoffset, heapAxis1Zoffset])
 	rotate([0, 90, 0])
 		bb6800();
 		
-	translate([bearing1Offset, -axis1Yoffset, axis1Zoffset])
+	translate([bodyHeapBearing1Offset, -heapAxis1Yoffset, heapAxis1Zoffset])
 	rotate([0, 90, 0])
 		bb6800();
 
@@ -99,17 +98,9 @@ module heapMetal() {
 	
 }
 
-module heapMotors() {
-	translate([80, -axis1Yoffset, axis1Zoffset])
-	{
-		rotate([-10, 0, 0])
-		translate([0, 0, -(gr3 - rm)])
-		rotate([0, -90, 0])
-			motor4Gear();
-	}
-}
-
 // private --------------------------------------------------------------------
+
+holderHeight = 50;
 
 module thighOpening() {
 	h1 = 30;
@@ -152,16 +143,16 @@ module holder(){
 		{
 			hull()
 			{		
-				translate([bearing1Offset - d/2, heapY1, axis1Zoffset - d/2])
+				translate([bodyHeapBearing1Offset - d/2, heapY1, heapAxis1Zoffset - d/2])
 					cube([1, 1, d]);
 					
-				translate([bearing2Offset + d/2 - 1, heapY1, axis1Zoffset - holderHeight/2])
+				translate([bodyHeapBearing2Offset + d/2 - 1, heapY1, heapAxis1Zoffset - holderHeight/2])
 					cube([1, 1, holderHeight]);
 					
-				translate([bearing1Offset, -axis1Yoffset, axis1Zoffset])
+				translate([bodyHeapBearing1Offset, -heapAxis1Yoffset, heapAxis1Zoffset])
 					sphere(d = d);
 					
-				translate([bearing2Offset, -axis1Yoffset, axis1Zoffset])
+				translate([bodyHeapBearing2Offset, -heapAxis1Yoffset, heapAxis1Zoffset])
 					sphere(d = d);
 			}
 			
@@ -173,10 +164,10 @@ module holder(){
 					
 					hull()
 					{
-						translate([bearing1Offset - d/2, -50, axis1Zoffset - d/2])
+						translate([bodyHeapBearing1Offset - d/2, -50, heapAxis1Zoffset - d/2])
 							cube([1, 100, d]);
 							
-						translate([bearing2Offset + d/2 - 1, -50, axis1Zoffset - holderHeight/2])
+						translate([bodyHeapBearing2Offset + d/2 - 1, -50, heapAxis1Zoffset - holderHeight/2])
 							cube([1, 100, holderHeight]);
 					}
 				}
@@ -187,5 +178,35 @@ module holder(){
 					cylinder(d = bb6701o + (th + gap)*2, h = 150, center = true);
 			}
 		}
+	}
+}
+
+module heapMarkers() {
+	translate([-5, 0, -50])
+	{
+		translate([0, heapY1, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY2, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY3, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY4, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY5, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY6, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY7, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY8, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY9, 0]) cube([10, 0.01, 80]);
+		translate([0, heapY0, 0]) cube([10, 0.01, 80]);
+	}
+	
+	translate([0, -heapAxis1Yoffset - 5, heapAxis1Zoffset - 60])
+	{
+		translate([heapX1,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX2,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX3,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX4,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX5,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX6,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX7,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX8,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX9,0, 0]) cube([0.01, 10, 120]);
+		translate([heapX0,0, 0]) cube([0.01, 10, 120]);
 	}
 }

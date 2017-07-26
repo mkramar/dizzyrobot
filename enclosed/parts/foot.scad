@@ -84,8 +84,8 @@ module foot(mode = "preview") {
 module footMetal(){
 	rotate([90, 0, 0])
 	{
-		translate([0, 0, +ankleH/2 - th - bb6701h/2]) bb6701();
-		translate([0, 0, -ankleH/2 + th + bb6701h/2]) bb6701();
+		translate([0, 0, +motor4HOuter/2 - th - bb6701h/2]) bb6701();
+		translate([0, 0, -motor4HOuter/2 + th + bb6701h/2]) bb6701();
 	}
 }
 
@@ -93,7 +93,7 @@ module footMetal(){
 
 module footBase(mode = "outer"){
 	d = (mode == "outer" ? footShellOuter : footShellInner);
-	h = ankleH + (mode == "outer" ? 0 : -th*2);
+	h = mode == "outer" ? motor4HOuter : motor4HInner;
 	rd = (mode == "outer" ? 10 : 5);
 	
 	intersection()

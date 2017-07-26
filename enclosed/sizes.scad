@@ -1,5 +1,9 @@
 use <../lib/gear.scad>
 
+gap = 3; // distance between moving parts that should not touch
+th = 2.5;
+gh = 10;
+
 // motors ---------------------------------------------------------------------
 
 // 50XX
@@ -17,6 +21,20 @@ motor4H = 30;
 
 motor4SpaceD = motor4D + 5;
 motor4SpaceH = motor4H;
+
+//
+
+motor5DInner = motor5D + gap* 2;
+motor5DOuter = motor5D + gap* 2 + th*2;
+
+motor5HInner = gap + th + motor5H + th + gh + gap;
+motor5HOuter = motor5HInner + th*2;
+
+motor4DInner = motor4D + gap* 2;
+motor4DOuter = motor4D + gap* 2 + th*2;
+
+motor4HInner = gap + th + motor4H + th + gh + gap;
+motor4HOuter = motor4HInner + th*2;
 
 // rods -----------------------------------------------------------------------
 
@@ -51,10 +69,6 @@ bb6805h = 7;
 
 // custom ---------------------------------------------------------------------
 
-gap = 3; // distance between moving parts that should not touch
-th = 2.5;
-gh = 10;
-
 // gears
 
 mm_per_tooth = 6;
@@ -73,6 +87,11 @@ thighLength = 200;
 heapAngle1Min = -20;
 heapAngle1Max = 150;
 
+// body -----------------------------------------------------------------------
+
+bodyHeapBearing1Offset = -20;
+bodyHeapBearing2Offset = 35;
+
 // heap -----------------------------------------------------------------------
 
 //  gear 1
@@ -89,10 +108,27 @@ gd3 = gr3 * 2;
 
 //
 
+heapWidth = 95;
+heapMotorAngle = -45;
+
+heapH2 = th + gap + th + motor4H + th + gh + gap + th;
+ 
 heapShellInner1 = (gd2 + 6 + gap * 2);
 heapShellOuter1 = heapShellInner1 + th*2;
 
 heapShellInner2 = (gd3 + 6 + gap * 2);
+heapShellOuter2 = heapShellInner2 + th*2;
+
+heapX1 = 80;
+heapX2 = heapX1 - th;
+heapX3 = heapX2 - 15;
+heapX4 = heapX3 - gap;
+heapX5 = heapX2 - motor4H;
+heapX6 = heapX5 - th;
+heapX7 = heapX6 - gh;
+heapX8 = heapX7 - gap;
+heapX9 = heapX8 - th;
+heapX0 = heapX9 - gap;
 
 //
 
@@ -125,12 +161,8 @@ d1 = r1 * 2;
 kneeShellInner = d1 + 6 + gap * 2;
 kneeShellOuter = kneeShellInner + th*2;
 
-motor5DInner = motor5D + gap* 2;
-motor5DOuter = motor5D + gap* 2 + th*2;
-
-kneeH = th + gap + th + motor5H + th + gh + gap + th;
 shinH = th + motor4H + gap + th;
-shinOffset = (kneeH - thighH)/2 - gap - th;
+shinOffset = (motor5HOuter - thighH)/2 - gap - th;
 
 kneeMaxAngle = 160;
 
@@ -163,10 +195,9 @@ ankleAngle2 = 40;
 footShellInner = df + 6 + gap * 2;
 footShellOuter = footShellInner + th*2;
 
-ankleH = th + gap + th + motor4H + th + gh + gap + th;
-footOffset = (ankleH - shinH)/2 - gap - th;
+footOffset = (motor4HOuter - shinH)/2 - gap - th;
 
-ankleY1 = ankleH/2;	// foot begin outer
+ankleY1 = motor4HOuter/2;	// foot begin outer
 ankleY2 = ankleY1 - th;			// foot begin inner
 ankleY3 = ankleY2 - gap;		// foot begin outer
 ankleY4 = ankleY3 - th;			// foot begin inner, begin motor

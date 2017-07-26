@@ -8,69 +8,70 @@ include <parts/body.scad>
 
 assembly();
 
-heapAngle = 10;
+
 kneeAngle = 0;
 
 module assembly(){
-	heapAssembly();
-	
-	rotate([0, heapAngle, 0])
-	rotate([0, -thighMotorToAxisUpperAngle, 0])
-	translate([rm - gr2, 0, 0])
-	rotate([0, thighMotorToAxisUpperAngle, 0])
+	bodyAssembly();
+
+	bodyToHeap(10)
 	{
-		thighAssembly();
-
-		// shin
-			
-		*translate([0, 0, -(r1 - rm)])
+		heapAssembly();
+		
+		heapToThigh(30)
 		{
-			rotate([0, -kneeAngle, 0])
-			{
-				shinCutup();
-				#color("white") kneeMetal();
+			thighAssembly();
 
-				// foot
+			// shin
 				
-				*translate([0, -footOffset, -shinLength])
-				{		
-					%translate([0, ankleMotorOffset, 0])
-					rotate([90, 0, 0])
-						motor4Gear();
-						
-					translate([0, 0, -(rf - rm)])
-					{
-						color("pink")
-						difference()
+			*translate([0, 0, -(r1 - rm)])
+			{
+				rotate([0, -kneeAngle, 0])
+				{
+					shinCutup();
+					#color("white") kneeMetal();
+
+					// foot
+					
+					*translate([0, -footOffset, -shinLength])
+					{		
+						%translate([0, ankleMotorOffset, 0])
+						rotate([90, 0, 0])
+							motor4Gear();
+							
+						translate([0, 0, -(rf - rm)])
 						{
-							foot();
-							translate([0, -50, -50]) cube([100, 100, 100]);
+							color("pink")
+							difference()
+							{
+								foot();
+								translate([0, -50, -50]) cube([100, 100, 100]);
+							}
+							
+							//color("white") footMetal();
 						}
 						
-						//color("white") footMetal();
+						#ankleMarkers();
 					}
-					
-					#ankleMarkers();
 				}
 			}
 		}
 	}
 }
 
-module heapMarkers() {
-	translate([-5, 0, -50])
-	{
-		translate([0, heapY1, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY2, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY3, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY4, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY5, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY6, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY7, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY8, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY9, 0]) cube([10, 0.01, 80]);
-		translate([0, heapY0, 0]) cube([10, 0.01, 80]);
-	}
+module bodyToHeap(angle){
+	translate([0, -heapAxis1Yoffset, heapAxis1Zoffset])
+	rotate([angle, 0, 0])
+	translate([0, heapAxis1Yoffset, -heapAxis1Zoffset])
+		children();
+}
+
+module heapToThigh(angle){
+	rotate([0, angle, 0])
+	rotate([0, -thighMotorToAxisUpperAngle, 0])
+	translate([rm - gr2, 0, 0])
+	rotate([0, thighMotorToAxisUpperAngle, 0])
+		children();
 }
 
 module ankleMarkers(){
