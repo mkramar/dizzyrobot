@@ -9,7 +9,7 @@ module foot(){
 	difference() {
 		union() {
 			translate([0, 0, 0.01])
-			rotate([0, 90, 0])
+			rotate([0, -90, 0])
 				motor6caseStator();
 
 			translate([0, 0, -30]){
@@ -35,7 +35,7 @@ module foot(){
 			}
 		}
 		
-		rotate([0, 90, 0])
+		rotate([0, -90, 0])
 			motor6MinusRotor();
 	}
 }
