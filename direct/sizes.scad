@@ -20,6 +20,7 @@ motor8Cut = 4;
 
 motor6D = 68;
 motor6H = 23;
+motor6Cut = 4;
 
 // body -----------------------------------------------------------------------
 
@@ -30,21 +31,23 @@ bodyMotorOffset = [bodyMotorOffsetX, bodyMotorOffsetY, bodyMotorOffsetZ];
 
 // heap -----------------------------------------------------------------------
 
-heapMotorOffsetX = 10;
+heapMotorOffsetX = 30;
 heapMotorOffsetZ = -10;
 heapMotorOffsetY = motor6H + motor8D/2 + 10;
 heapMotorOffset = [heapMotorOffsetX, heapMotorOffsetY, heapMotorOffsetZ];
 
 // thigh ----------------------------------------------------------------------
 
-thighMotorOffsetX = 20;
+thighMotorOffsetX = 0;
 thighMotorOffsetY = 0;
 thighLength = 200;
 thighMotorOffset = [thighMotorOffsetX, thighMotorOffsetY, -thighLength];
 
 // shin -----------------------------------------------------------------------
 
-shinMotorOffsetX = 0;
+shinMotorOffsetX = -25;
 shinMotorOffsetY = 0;
 shinLength = 200;
 shinMotorOffset = [shinMotorOffsetX, shinMotorOffsetY, -shinLength];
+
+// foot -----------------------------------------------------------------------

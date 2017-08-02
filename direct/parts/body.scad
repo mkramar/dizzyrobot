@@ -10,6 +10,10 @@ module bodyAssembly(){
 
 module body(){
 	cylinder(h = 50, d = rod25o);
+	
+	translate(bodyMotorOffset)
+	rotate([-90, 0, 0])
+		motor6caseStator();
 }
 
 module bodyMotors(){

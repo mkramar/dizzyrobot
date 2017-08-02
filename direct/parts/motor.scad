@@ -28,6 +28,67 @@ module motor8case() {
 	translate([0, 0, motor8H/2])
 	shayba2(h, d, x, rd);
 }
+
+module motor8caseRotor(){
+	intersection() {
+		motor8case();
+		
+		translate([0, 0, motor8Cut + gap/2]) 
+			cylinder(d = motor8D + 10, h = motor8H + 20);
+	}
+}
+
+module motor8caseStator(){
+	intersection() {
+		motor8case();
+		
+		translate([0, 0, motor8Cut - gap/2]) 
+		rotate([180, 0, 0])
+			cylinder(d = motor8D + 10, h = motor8H + 20);
+	}
+}
+
 module motor8MinusRotor(){
-	ring(d = motor8D + th*2, h = 30, t = th, center = false);
+	translate([0, 0, motor8Cut - gap/2]) 
+		cylinder(d = motor8D + th*2 + gap*2, h = 30, center = false);
+}
+
+module motor6case() {
+	h = motor6H + 15;
+	d = motor6D + th*2;
+	x = 5;
+	rd = 10;
+	
+	translate([0, 0, motor6H/2])
+	shayba2(h, d, x, rd);
+}
+
+module motor6caseRotor(){
+	intersection() {
+		motor6case();
+		
+		translate([0, 0, motor6Cut + gap/2]) 
+			cylinder(d = motor6D + 10, h = motor6H + 20);
+	}
+}
+
+module motor6caseStator(){
+	intersection() {
+		motor6case();
+		
+		translate([0, 0, motor6Cut - gap/2]) 
+		rotate([180, 0, 0])
+			cylinder(d = motor6D + 10, h = motor6H + 20);
+	}
+}
+
+module motor6MinusRotor(){
+	translate([0, 0, motor6Cut - gap/2]) 
+		cylinder(d = motor6D + th*2 + gap*2, h = 30, center = false);
+}
+
+module motor6MinusStator(){
+	translate([0, 0, motor6Cut + gap/2]) 
+	rotate([180, 0, 0])
+		cylinder(d = motor6D + th*2 + gap*2, h = 30, center = false);
 }
