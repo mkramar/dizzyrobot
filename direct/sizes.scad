@@ -12,9 +12,9 @@ rod10o = 10 + 0.2;
 
 // 80XX
 
-motor8D = 88;
-motor8H = 23;
-motor8Cut = 4;
+motor8D = 88.65 + 1.0;
+motor8H = 21.5;
+motor8Cut = 5;
 
 // 60XX
 

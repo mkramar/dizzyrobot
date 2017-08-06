@@ -12,7 +12,7 @@ module shinAssembly(){
 	
 	difference() {
 		union() {
-			color("turquoise") shin();
+			color("turquoise") shin("preview");
 			color("white") shinMotor();
 		}
 		
@@ -21,10 +21,31 @@ module shinAssembly(){
 	}
 }
 
-module shin() {
-	difference(){
-		shinBase("outer");
-		shinBase("inner");
+module shin(mode) {
+	difference() {
+		union() {
+			difference(){
+				shinBase("outer");
+				shinBase("inner");
+			}
+
+			intersection() {
+				shinBase("outer");
+				
+				if (mode != "preview") {
+					rotate([0, -90, 0])
+						motor8RotorHolderPlus();
+				}
+			}
+		}
+		
+		if (mode != "preview") {
+			rotate([0, -90, 0])
+				motor8RotorHolderMinus();		
+				
+			rotate([0, -90, 0])
+				motor8();
+		}
 	}
 }
 

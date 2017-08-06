@@ -1,16 +1,18 @@
-use <../../lib/shapes.scad>
 include <../sizes.scad>
+use <../../lib/shapes.scad>
+use <../../lib/sensor.scad>
 use <_common.scad>
 use <../../lib/boltFlat.scad>
 
 // motor8 ---------------------------------------------------------------------
 
 module motor8() {
-	z = 2;
+	z1 = 1;
+	z2 = 3;
 	
-	cylinder(d1 = 60, d2 = motor8D, h = z);
-	translate([0, 0, z]) cylinder(d1 = motor8D, d2 = motor8D, h = motor8H - z * 2);
-	translate([0, 0, motor8H - z]) cylinder(d1 = motor8D, d2 = 60, h = z);
+	cylinder(d1 = 70, d2 = motor8D, h = z1);
+	translate([0, 0, z1]) cylinder(d1 = motor8D, d2 = motor8D, h = motor8H - z1 - z2);
+	translate([0, 0, motor8H - z2]) cylinder(d1 = motor8D, d2 = 43, h = z2);
 }
 
 module motor8case(mode) {
@@ -60,6 +62,14 @@ module motor8StatorHolderPlus() {
 					boltPlus(50);
 			}
 		}
+		
+	for (a = [-60 : 20 : 240])
+		rotate([0, 0, a])
+			translate([0, 45, 0])
+				cube([th, 20, 50], center = true);
+		
+	mirror([0, 0, 1])
+		cylinder(d = 25, h = 4);
 }
 
 module motor8StatorHolderMinus() {
@@ -73,6 +83,48 @@ module motor8StatorHolderMinus() {
 					boltMinus(6, 50);					
 			}
 		}
+		
+	mirror([0, 0, 1])
+		rotationSensorSpacing();
+}
+
+module motor8RotorHolderPlus() {
+	for (a = [-45, 45])
+		rotate([0, 0, a]) {
+			translate([0, 0, motor8H]) {
+				cube([th, 100, 50], center = true);
+				
+				translate([35/2, 0, 0])
+					boltPlus(50);
+					
+				translate([-35/2, 0, 0])
+					boltPlus(50);
+			}
+		}
+		
+	for (a = [-180 : 45 : 0])
+		rotate([0, 0, a])
+			translate([0, 45, motor8H])
+				cube([th, 20, 50], center = true);
+		
+	mirror([0, 0, 1])
+		cylinder(d = 25, h = 4);
+}
+
+module motor8RotorHolderMinus() {
+	for (a = [-45, 45])
+		rotate([0, 0, a]) {
+			translate([0, 0, motor8H]) {
+				translate([35/2, 0, 0])
+					boltMinus(6, 50);
+					
+				translate([-35/2, 0, 0])
+					boltMinus(6, 50);
+			}
+		}
+		
+	mirror([0, 0, 1])
+		rotationSensorSpacing();
 }
 
 // motor6 ---------------------------------------------------------------------

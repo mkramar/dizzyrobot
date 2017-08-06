@@ -5,20 +5,21 @@ use <../../lib/shapes.scad>
 
 module thighAssembly(){
 	#coords();
-	
+
+	color("white") thighMotor();
+			
 	difference() {
 		union() {
-			color("tan") thigh();
-			#color("white") thighMotor();
+			color("tan") thigh("preview");
 		}
 		
 		translate([-20, 0, -50])
 			cube([100, 100, 100]);
 
-		translate([0, 0, -thighLength])
-		rotate([45, 0, 0])
-		translate([-20, 0, -50])
-			cube([100, 100, 100]);
+		// translate([0, 0, -thighLength])
+		// rotate([45, 0, 0])
+		// translate([-20, 0, -50])
+			// cube([100, 100, 100]);
 			
 		translate([0, 0, -thighLength])
 		translate([-20, 0, -50])
@@ -26,7 +27,7 @@ module thighAssembly(){
 	}
 }
 
-module thigh() {
+module thigh(mode) {
 	difference() {
 		union() {
 			difference() {
@@ -37,19 +38,23 @@ module thigh() {
 			intersection() {
 				thighBase("outer");
 				
-				translate(thighMotorOffset)
-				rotate([0, -90, 0])
-					motor8StatorHolderPlus();
+				if (mode != "preview") {
+					translate(thighMotorOffset)
+					rotate([0, -90, 0])
+						motor8StatorHolderPlus();
+				}
 			}
 		}
 		
-		translate(thighMotorOffset)
-		rotate([0, -90, 0])
-			motor8StatorHolderMinus();		
-			
-		translate(thighMotorOffset)
-		rotate([0, -90, 0])
-			motor8();			
+		if (mode != "preview") {
+			translate(thighMotorOffset)
+			rotate([0, -90, 0])
+				motor8StatorHolderMinus();		
+				
+			translate(thighMotorOffset)
+			rotate([0, -90, 0])
+				motor8();
+		}
 	}
 }
 
