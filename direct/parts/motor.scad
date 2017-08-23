@@ -49,6 +49,12 @@ module motor8MinusRotor(){
 		cylinder(d = motor8D + th*2 + gap*2, h = 30, center = false);
 }
 
+module motor8MinusStator(){
+	translate([0, 0, motor8Cut + gap/2]) 
+	rotate([180, 0, 0])
+		cylinder(d = motor8D + th*2 + gap*2, h = 30, center = false);
+}
+
 module motor8StatorHolderPlus() {
 	for (a = [-45, 45])
 		rotate([0, 0, a]) {
@@ -106,9 +112,6 @@ module motor8RotorHolderPlus() {
 		rotate([0, 0, a])
 			translate([0, 45, motor8H])
 				cube([th, 20, 50], center = true);
-		
-	mirror([0, 0, 1])
-		cylinder(d = 25, h = 4);
 }
 
 module motor8RotorHolderMinus() {
@@ -122,19 +125,17 @@ module motor8RotorHolderMinus() {
 					boltMinus(6, 50);
 			}
 		}
-		
-	mirror([0, 0, 1])
-		rotationSensorSpacing();
 }
 
 // motor6 ---------------------------------------------------------------------
 
 module motor6() {
-	z = 3;
+	z1 = 4.8;
+	z2 = 4;
 	
-	cylinder(d1 = 30, d2 = motor6D, h = z);
-	translate([0, 0, z]) cylinder(d1 = motor6D, d2 = motor6D, h = motor6H - z * 2);
-	translate([0, 0, motor6H - z]) cylinder(d1 = motor6D, d2 = 30, h = z);
+	cylinder(d1 = 27, d2 = motor6D, h = z1);
+	translate([0, 0, z1]) cylinder(d1 = motor6D, d2 = motor6D, h = motor6H - z1 - z2);
+	translate([0, 0, motor6H - z2]) cylinder(d1 = motor6D, d2 = 30, h = z2);
 }
 
 module motor6case(mode) {
@@ -144,7 +145,7 @@ module motor6case(mode) {
 	rd = (mode == "outer" ? 10 : 8);
 	
 	translate([0, 0, motor6H/2])
-	shayba2(h, d, x, rd);
+		shayba2(h, d, x, rd);
 }
 
 module motor6caseRotor(mode){
@@ -175,4 +176,40 @@ module motor6MinusStator(){
 	translate([0, 0, motor6Cut + gap/2]) 
 	rotate([180, 0, 0])
 		cylinder(d = motor6D + th*2 + gap*2, h = 30, center = false);
+}
+
+module motor6RotorHolderPlus() {
+	for (a = [-45, 45])
+		rotate([0, 0, a]) {
+			translate([0, 0, motor6H]) {
+				//cube([th, 100, 50], center = true);
+				
+				translate([6, 0, 0])
+					boltPlus(50);
+					
+				translate([-6, 0, 0])
+					boltPlus(50);
+			}
+		}
+		
+	for (a = [0 : 72 : 360])
+		rotate([0, 0, a])
+			translate([0, 15, motor6H])
+				cube([th, 30, 50], center = true);
+}
+
+module motor6RotorHolderMinus() {
+	for (a = [-45, 45])
+		rotate([0, 0, a]) {
+			translate([0, 0, motor6H]) {
+				translate([6, 0, 0])
+					boltMinus(6, 20);
+					
+				translate([-6, 0, 0])
+					boltMinus(6, 20);
+			}
+		}
+		
+	translate([0, 0, motor6H-0.01])
+		cylinder(d = 4.5, h = 8);
 }

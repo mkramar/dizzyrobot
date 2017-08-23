@@ -5,3 +5,10 @@ module coords() {
 }
 
 function plus2th(mode) = (mode == "outer" ? th*2 : 0);
+
+module stretch(direction){
+	hull(){
+		children();
+		translate(direction) children();
+	}
+}

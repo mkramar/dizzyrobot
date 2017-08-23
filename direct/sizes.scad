@@ -18,11 +18,41 @@ motor8Cut = 5;
 
 // 60XX
 
-motor6D = 68;
-motor6H = 23;
-motor6Cut = 4;
+motor6D = 57.7 + 1.0;
+motor6H = 27.5;
+motor6Cut = 8;
+
+
+// motor6D = 68;
+// motor6H = 23;
+// motor6Cut = 4;
+
+// battery --------------------------------------------------------------------
+
+batteryZ = 140;
+batteryX = 50;
+batteryY = 50;
+battery = [batteryX, batteryY, batteryZ];
+
+// arm ------------------------------------------------------------------------
+
+armMotorOffset = [70, 30 , 0];
+armLength = 160;
+
+// shoulder -------------------------------------------------------------------
+
+shoulderWidth = 140;
+shoulderY = 30;
+shoulderX = shoulderWidth/2;
+shoulderZ = 300;
+shoulderOffset = [shoulderX, shoulderY, shoulderZ];
 
 // body -----------------------------------------------------------------------
+
+headD = 200;
+headOffsetZ = 400;
+headOffsetY = 60;
+headOffset = [0, headOffsetY, headOffsetZ];
 
 bodyMotorOffsetX = motor6D/2 + gap * 2;
 bodyMotorOffsetZ = -motor6D/2;

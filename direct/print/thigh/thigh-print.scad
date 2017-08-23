@@ -5,10 +5,11 @@ include <../../../lib/shapes.scad>
 
 include <../../parts/thigh.scad>
 
-//$fn = 70;
+$fn = 50;
+
 intersection(){
-	translate([-thighLength, 0, 0])
-		cube([150, 150, 150], center = true);
+	// translate([-thighLength, 0, 0])
+		// cube([150, 150, 150], center = true);
 	
 	rotate([0, 90, 0])
 	difference() {
@@ -18,9 +19,15 @@ intersection(){
 			translate([-16, -50, -thighLength])
 				cube([20, 100, thighLength]);
 				
-			translate(thighMotorOffset)
-			rotate([0, -90, 0])
-				motor8case("outer");
+			union() {
+				translate(thighMotorOffset)
+				rotate([0, -90, 0])
+					motor8case("outer");
+					
+				rotate([0, -90, 0])
+					motor8case("outer");
+					
+			}
 		}
 	}
 }

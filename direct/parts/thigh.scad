@@ -39,6 +39,10 @@ module thigh(mode) {
 				thighBase("outer");
 				
 				if (mode != "preview") {
+					rotate([0, -90, 0])
+					rotate([0, 0, 180])
+						motor8StatorHolderPlus();
+				
 					translate(thighMotorOffset)
 					rotate([0, -90, 0])
 						motor8StatorHolderPlus();
@@ -47,9 +51,16 @@ module thigh(mode) {
 		}
 		
 		if (mode != "preview") {
+			rotate([0, -90, 0])
+			rotate([0, 0, 180])
+				motor8StatorHolderMinus();
+				
+			rotate([0, -90, 0])
+				motor8();
+		
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
-				motor8StatorHolderMinus();		
+				motor8StatorHolderMinus();
 				
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])

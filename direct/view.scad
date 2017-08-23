@@ -1,4 +1,6 @@
 include <sizes.scad>
+include <parts/arm.scad>
+include <parts/shoulder.scad>
 include <parts/body.scad>
 include <parts/heap.scad>
 include <parts/thigh.scad>
@@ -8,6 +10,15 @@ include <parts/foot.scad>
 assembly();
 
 module assembly(){
+	bodyMirror()
+	bodyToShoulder(0){
+		shoulderAssembly();
+		
+		shoulderToArm(0){
+			armAssembly();
+		}
+	}
+
 	bodyAssembly();
 	
 	bodyMirror()
@@ -27,6 +38,18 @@ module assembly(){
 			}
 		}
 	}
+}
+
+module shoulderToArm(angle){
+	translate(armMotorOffset)
+	rotate([angle, 0, 0])
+		children();
+}
+
+module bodyToShoulder(angle){
+	translate(shoulderOffset)
+	rotate([0, -angle, 0])
+		children();
 }
 
 module bodyToHeap(angle){
@@ -50,9 +73,4 @@ module thighToShin(angle){
 module shinToFoot(){
 	translate(shinMotorOffset)
 		children();
-}
-
-module bodyMirror(){
-	children();
-	mirror(1, 0, 0) children();
 }
