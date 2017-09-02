@@ -1,0 +1,205 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:DRV8302
+LIBS:Misha
+LIBS:v1-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 2N7002 Q?
+U 1 1 595F8EE8
+P 5800 2600
+F 0 "Q?" H 6000 2675 50  0000 L CNN
+F 1 "2N7002" H 6000 2600 50  0000 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23" H 6000 2525 50  0001 L CIN
+F 3 "" H 5800 2600 50  0001 L CNN
+	1    5800 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L 2N7002 Q?
+U 1 1 595F8F21
+P 5800 3500
+F 0 "Q?" H 6000 3575 50  0000 L CNN
+F 1 "2N7002" H 6000 3500 50  0000 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23" H 6000 3425 50  0001 L CIN
+F 3 "" H 5800 3500 50  0001 L CNN
+	1    5800 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2800 5900 3300
+$Comp
+L GND #PWR?
+U 1 1 595F8F86
+P 5900 5300
+F 0 "#PWR?" H 5900 5050 50  0001 C CNN
+F 1 "GND" H 5900 5150 50  0000 C CNN
+F 2 "" H 5900 5300 50  0001 C CNN
+F 3 "" H 5900 5300 50  0001 C CNN
+	1    5900 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 3700 5900 4700
+Connection ~ 5900 3000
+Text HLabel 7150 3000 2    60   Input ~ 0
+MOTOR
+Wire Wire Line
+	4850 3000 7150 3000
+$Comp
+L +12V #PWR?
+U 1 1 595F8FF1
+P 5900 2150
+F 0 "#PWR?" H 5900 2000 50  0001 C CNN
+F 1 "+12V" H 5900 2290 50  0000 C CNN
+F 2 "" H 5900 2150 50  0001 C CNN
+F 3 "" H 5900 2150 50  0001 C CNN
+	1    5900 2150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 2150 5900 2400
+$Comp
+L R R?
+U 1 1 595F9028
+P 6750 3150
+F 0 "R?" V 6830 3150 50  0000 C CNN
+F 1 "R" V 6750 3150 50  0000 C CNN
+F 2 "" V 6680 3150 50  0001 C CNN
+F 3 "" H 6750 3150 50  0001 C CNN
+	1    6750 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 595F90E7
+P 6750 3650
+F 0 "R?" V 6830 3650 50  0000 C CNN
+F 1 "R" V 6750 3650 50  0000 C CNN
+F 2 "" V 6680 3650 50  0001 C CNN
+F 3 "" H 6750 3650 50  0001 C CNN
+	1    6750 3650
+	1    0    0    -1  
+$EndComp
+Connection ~ 6750 3000
+Wire Wire Line
+	6750 3300 6750 3500
+Connection ~ 6750 3400
+$Comp
+L GND #PWR?
+U 1 1 595F9117
+P 6750 3950
+F 0 "#PWR?" H 6750 3700 50  0001 C CNN
+F 1 "GND" H 6750 3800 50  0000 C CNN
+F 2 "" H 6750 3950 50  0001 C CNN
+F 3 "" H 6750 3950 50  0001 C CNN
+	1    6750 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 3800 6750 3950
+Text HLabel 7200 3400 2    60   Input ~ 0
+V-SENSE
+Wire Wire Line
+	6750 3400 7200 3400
+Text HLabel 4850 2650 0    60   Input ~ 0
+GH
+Text HLabel 4800 3550 0    60   Input ~ 0
+GL
+Wire Wire Line
+	5600 2650 4850 2650
+Wire Wire Line
+	4800 3550 5600 3550
+$Comp
+L ACS723 U?
+U 1 1 595F95C1
+P 6500 4900
+F 0 "U?" H 6500 4750 60  0000 C CNN
+F 1 "ACS723" H 6500 5050 60  0000 C CNN
+F 2 "" H 6700 4950 60  0001 C CNN
+F 3 "" H 6700 4950 60  0001 C CNN
+	1    6500 4900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 5100 5900 5300
+$Comp
+L +5V #PWR?
+U 1 1 595F98C2
+P 6950 4450
+F 0 "#PWR?" H 6950 4300 50  0001 C CNN
+F 1 "+5V" H 6950 4590 50  0000 C CNN
+F 2 "" H 6950 4450 50  0001 C CNN
+F 3 "" H 6950 4450 50  0001 C CNN
+	1    6950 4450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6950 4450 6950 4650
+$Comp
+L GND #PWR?
+U 1 1 595F98F7
+P 6950 5300
+F 0 "#PWR?" H 6950 5050 50  0001 C CNN
+F 1 "GND" H 6950 5150 50  0000 C CNN
+F 2 "" H 6950 5300 50  0001 C CNN
+F 3 "" H 6950 5300 50  0001 C CNN
+	1    6950 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6950 5050 6950 5300
+Connection ~ 6950 5200
+Text HLabel 7200 4800 2    60   Input ~ 0
+I-SENSE
+Wire Wire Line
+	7200 4800 6950 4800
+Text HLabel 4850 3000 0    60   Input ~ 0
+SH
+Text HLabel 4800 3850 0    60   Input ~ 0
+SL
+Wire Wire Line
+	4800 3850 5900 3850
+Connection ~ 5900 3850
+$EndSCHEMATC

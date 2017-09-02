@@ -1,0 +1,197 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:DRV8302
+LIBS:Misha
+LIBS:v1-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Sheet
+S 750  850  2350 2550
+U 595F7A38
+F0 "Driver" 60
+F1 "Driver.sch" 60
+F2 "GHA" I R 3100 1250 60 
+F3 "GLA" I R 3100 1400 60 
+F4 "GHB" I R 3100 1850 60 
+F5 "GLB" I R 3100 2000 60 
+F6 "GHC" I R 3100 2350 60 
+F7 "GLC" I R 3100 2500 60 
+$EndSheet
+$Sheet
+S 8400 850  950  1100
+U 595F8ECD
+F0 "Power" 60
+F1 "Power.sch" 60
+F2 "MOTOR" I R 9350 1050 60 
+F3 "V-SENSE" I R 9350 1550 60 
+F4 "H" I L 8400 1050 60 
+F5 "L" I L 8400 1200 60 
+F6 "I-SENSE" I R 9350 1750 60 
+$EndSheet
+$Sheet
+S 8400 2250 950  1100
+U 595FA4E2
+F0 "sheet595FA4DB" 60
+F1 "Power.sch" 60
+F2 "MOTOR" I R 9350 2450 60 
+F3 "V-SENSE" I R 9350 2950 60 
+F4 "H" I L 8400 2450 60 
+F5 "L" I L 8400 2600 60 
+F6 "I-SENSE" I R 9350 3150 60 
+$EndSheet
+$Sheet
+S 8400 3700 950  1100
+U 595FA709
+F0 "sheet595FA702" 60
+F1 "Power.sch" 60
+F2 "MOTOR" I R 9350 3900 60 
+F3 "V-SENSE" I R 9350 4400 60 
+F4 "H" I L 8400 3900 60 
+F5 "L" I L 8400 4050 60 
+F6 "I-SENSE" I R 9350 4600 60 
+$EndSheet
+Wire Wire Line
+	6300 1500 7300 1500
+Wire Wire Line
+	7300 1500 7300 1050
+Wire Wire Line
+	7300 1050 8400 1050
+Wire Wire Line
+	7700 1200 8400 1200
+Wire Wire Line
+	7700 1650 7700 1200
+Wire Wire Line
+	6450 1650 7700 1650
+Wire Wire Line
+	6450 2450 8400 2450
+Wire Wire Line
+	7300 2600 8400 2600
+Wire Wire Line
+	7850 3900 8400 3900
+Wire Wire Line
+	7050 4050 8400 4050
+$Comp
+L DRV8302-2 U?
+U 1 1 595FA528
+P 6650 2450
+F 0 "U?" H 5250 850 60  0000 C CNN
+F 1 "DRV8302-2" H 5200 3900 60  0000 C CNN
+F 2 "" H 6650 2450 60  0001 C CNN
+F 3 "" H 6650 2450 60  0001 C CNN
+	1    6650 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 1500 6300 2100
+Wire Wire Line
+	6300 2100 6000 2100
+Wire Wire Line
+	6450 1650 6450 2300
+Wire Wire Line
+	6450 2300 6000 2300
+Wire Wire Line
+	7050 4050 7050 3300
+Wire Wire Line
+	7050 3300 6000 3300
+Wire Wire Line
+	7850 2950 7850 3900
+Wire Wire Line
+	7300 2600 7300 2800
+Wire Wire Line
+	7300 2800 6000 2800
+$Comp
+L C_Small C?
+U 1 1 595FB580
+P 6600 2600
+F 0 "C?" H 6610 2670 50  0000 L CNN
+F 1 "C_Small" H 6610 2520 50  0000 L CNN
+F 2 "" H 6600 2600 50  0001 C CNN
+F 3 "" H 6600 2600 50  0001 C CNN
+	1    6600 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C?
+U 1 1 595FB641
+P 6600 3100
+F 0 "C?" H 6610 3170 50  0000 L CNN
+F 1 "C_Small" H 6610 3020 50  0000 L CNN
+F 2 "" H 6600 3100 50  0001 C CNN
+F 3 "" H 6600 3100 50  0001 C CNN
+	1    6600 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C?
+U 1 1 595FB769
+P 6600 2100
+F 0 "C?" H 6610 2170 50  0000 L CNN
+F 1 "C_Small" H 6610 2020 50  0000 L CNN
+F 2 "" H 6600 2100 50  0001 C CNN
+F 3 "" H 6600 2100 50  0001 C CNN
+	1    6600 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6000 2000 6600 2000
+Wire Wire Line
+	6600 2200 6000 2200
+Wire Wire Line
+	6000 2500 6600 2500
+Wire Wire Line
+	6000 2700 6600 2700
+Wire Wire Line
+	6000 3000 6600 3000
+Wire Wire Line
+	6000 3200 6600 3200
+Wire Wire Line
+	6450 2450 6450 2600
+Wire Wire Line
+	6450 2600 6000 2600
+Wire Wire Line
+	7850 2950 6450 2950
+Wire Wire Line
+	6450 2950 6450 3100
+Wire Wire Line
+	6450 3100 6000 3100
+$EndSCHEMATC

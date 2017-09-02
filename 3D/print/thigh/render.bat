@@ -1,0 +1,1 @@
+"C:\Program Files\OpenSCAD.2017.01.20\openscad.exe" -o thigh-print.stl thigh-print.scad
