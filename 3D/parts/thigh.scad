@@ -1,7 +1,8 @@
 include <../sizes.scad>
+use <../lib/shapes.scad>
 use <_common.scad>
 use <motor.scad>
-use <../../lib/shapes.scad>
+use <elec.scad>
 
 module thighAssembly(){
 	#coords();
@@ -38,7 +39,9 @@ module thigh(mode) {
 			intersection() {
 				thighBase("outer");
 				
-				if (mode != "preview") {
+				if (mode != "preview") 
+				render()
+				{
 					rotate([0, -90, 0])
 					rotate([0, 0, 180])
 						motor8StatorHolderPlus();
@@ -48,23 +51,48 @@ module thigh(mode) {
 						motor8StatorHolderPlus();
 				}
 			}
+			
+			if (mode != "preview") {
+				intersection() {
+					thighBase("outer");
+
+					union() {
+						translate([0, 0, -thighLength])
+						translate([20, 0, 60])
+						rotate([0, -90, 0])
+						rotate([0, 0, 90])
+							boardHolder();
+					
+						translate([20, 0, -60])
+						rotate([0, -90, 0])
+						rotate([0, 0, 90])
+							boardHolder();
+					}
+				}
+			}
 		}
 		
-		if (mode != "preview") {
+		if (mode != "preview")
+		render()
+		{
+			rotate([0, -90, 0])
+				motor8StatorHolderMinus();
+				
+			rotate([0, -90, 0])
+				motor8();
+		
+			translate(thighMotorOffset)
 			rotate([0, -90, 0])
 			rotate([0, 0, 180])
 				motor8StatorHolderMinus();
 				
-			rotate([0, -90, 0])
-				motor8();
-		
-			translate(thighMotorOffset)
-			rotate([0, -90, 0])
-				motor8StatorHolderMinus();
-				
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
 				motor8();
+
+			translate([15, 0, 0])
+			rotate([0, 90, 0])
+				cylinder(d = 20, h = 15);
 		}
 	}
 }

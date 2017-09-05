@@ -1,5 +1,7 @@
 //rotationSensor();
-//rotationSensorSpacing();
+rotationSensorSpacing();
+//roatationSensorBody(true);
+//roatationSensorBody(false);
 
 module rotationSensor(){
 	//Digi-Key Part Number: 490-2400-ND
@@ -21,18 +23,18 @@ module rotationSensor(){
 }
 
 module roatationSensorBody(inflate = false) {
-	x1 = inflate ? 1 : 0;
+	x1 = inflate ? 0.25 : 0;
 	x2 = inflate ? 0.25 : 0;
 	x3 = inflate ? 0.5 : 0;
 
 	difference()
 	{
-		cube ([12 + x1, 11 + x1, 2 + x3], center = true);
+		translate([-0.5, 0, 0]) 
+			cube ([12 + x1, 11 + x1, 2 + x3], center = true);
 		
-		//translate([0.5, 0, 0]) 
 		difference() 
 		{
-			cylinder(h = 5, d1 = 4, d2 = 4, center = true, $fn = 15);
+			cylinder(h = 5, d = 4, center = true, $fn = 15);
 			translate([3, 0, 0]) cube([4, 4, 4], center = true);
 		}
 		
@@ -42,15 +44,7 @@ module roatationSensorBody(inflate = false) {
 		
 		translate([8 + x2, -7.5 - x2, 0])
 		rotate([0, 0, -45]) 
-			cube([10, 10, 5], center = true);
-		
-		//translate([-8.7 - x2, 8.7 + x2, 0])
-		//rotate([0, 0, 45]) 
-		//	cube([10, 10, 5], center = true);
-		
-		//translate([-8.7 - x2, -8.7 - x2, 0])
-		//rotate([0, 0, -45]) 
-		//	cube([10, 10, 5], center = true);				
+			cube([10, 10, 5], center = true);		
 	}
 }
 

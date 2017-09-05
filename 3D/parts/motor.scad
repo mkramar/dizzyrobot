@@ -1,8 +1,8 @@
 include <../sizes.scad>
-use <../../lib/shapes.scad>
-use <../../lib/sensor.scad>
+use <../lib/shapes.scad>
+use <../lib/sensor.scad>
 use <_common.scad>
-use <../../lib/boltFlat.scad>
+use <../lib/boltFlat.scad>
 
 // motor8 ---------------------------------------------------------------------
 
@@ -78,8 +78,7 @@ module motor8StatorHolderPlus() {
 		cylinder(d = 25, h = 4);
 }
 
-module motor8StatorHolderMinus() {
-	for (a = [-45, 45])
+module motor8StatorHolderMinus() {	for (a = [-45, 45])
 		rotate([0, 0, a]) {
 			mirror([0, 0, 1]) {
 				translate([15, 0, 0])
@@ -125,6 +124,24 @@ module motor8RotorHolderMinus() {
 					boltMinus(6, 50);
 			}
 		}
+}
+
+module motor8SensorAdapter(){
+	difference() {
+		union() {
+			cylinder(d = 23, h = 1.5);
+			dCylinder(5, 4, 1, false);
+		}
+		
+		translate([0, 3.25, -0.01])
+			sphere(d = 5.6);
+			
+		translate([0, -3.25, -0.01])
+			sphere(d = 5.6);
+		
+		// translate([-1, -1, -0.01])
+			// cube([2, 2, 2]);
+	}
 }
 
 // motor6 ---------------------------------------------------------------------
