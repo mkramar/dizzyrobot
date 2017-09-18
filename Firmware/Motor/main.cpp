@@ -31,17 +31,65 @@ const int sin[] =
 const int sin_size = sizeof(sin)/sizeof(int);
 const int phase2 = sin_size / 3;
 const int phase3 = sin_size * 2 / 3;
+//const int sensorAngle = 330;
+
+uint32_t gCalib1;
+uint32_t gPhisicalToElec100;
+
+volatile int32_t gResult;
+
+// tick -----------------------------------------------------------------------
+
+uint32_t gTickCount = 0;
 
 extern "C"
 void SysTick_Handler(void){
-	HAL_IncTick();
-	HAL_SYSTICK_IRQHandler();
+	gTickCount++;
 }
 
-//extern "C"
-//void ADC1_IRQHandler(void) {
-//	g_ADCValue = ADC1->DR;
-//}
+// usart ----------------------------------------------------------------------
+
+unsigned char usartInBuffer1[16] = { 0 };
+unsigned char usartInBuffer2[16] = { 0 };
+volatile int usartBufferSize = sizeof(usartInBuffer1);
+volatile unsigned char* usartPartialBuffer = usartInBuffer1;
+volatile unsigned char* usartCompleteBuffer = 0;
+volatile int usartReadCount = 0;
+volatile bool pendingUsartInput = 0;
+
+extern "C"
+void USART1_IRQHandler(void){
+//	if (USART1->ISR & USART_ISR_ORE)
+//	{
+//		usartCompleteBuffer = 0;
+//		usartPartialBuffer = usartInBuffer1;
+//		usartReadCount = 0;
+//		pendingUsartInput = false;
+//		USART1->ISR &= ~USART_ISR_ORE;
+//	}
+//	else
+		
+	while (USART1->ISR & USART_ISR_RXNE)
+	{
+		unsigned char newByte = (uint8_t)(USART1->RDR & (uint8_t)0x00FFU);
+		
+		if (usartReadCount < usartBufferSize)
+		{
+			usartPartialBuffer[usartReadCount++] = newByte;
+			
+			if (usartPartialBuffer[0] == usartReadCount)
+			{
+				usartCompleteBuffer = usartPartialBuffer;
+				if (usartPartialBuffer == usartInBuffer1) usartPartialBuffer = usartInBuffer2;
+				else usartPartialBuffer = usartInBuffer1;
+				usartReadCount = 0;
+				pendingUsartInput = true;
+			}
+		}
+	}
+}
+
+// init -----------------------------------------------------------------------
 
 void initClock() {
 	RCC->CR |= RCC_CR_HSION;							// enable internal clock	
@@ -63,13 +111,11 @@ void initClock() {
 				   RCC_AHBENR_GPIOFEN;					// enable clock for GPIOF
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
-				    RCC_APB2ENR_ADCEN;					// enable ADC
+				    RCC_APB2ENR_ADCEN |					// enable ADC
+					RCC_APB2ENR_USART1EN;				// enable USART
 }
 void initPwm() {
 	TIM1->ARR = 0x100;									// tim1 period
-//	TIM1->CCR3 = 0x80;									// duty cycle of tim1 channel 3
-//	TIM1->CCR2 = 0x40;									// duty cycle of tim1 channel 2
-//	TIM1->CCR1 = 0x60;									// duty cycle of tim1 channel 1
 
 	// tim1 config channel
 
@@ -176,9 +222,13 @@ void initLed() {
 void initAdc() {
 	GPIOA->MODER |= (0b11 << GPIO_MODER_MODER0_Pos);	// analog mode for pin A-0 (sensor ADC in)	
 	
-	ADC1->CFGR1 |= (0b01 << ADC_CFGR1_RES_Pos);			// 10 bit resolution (00=12, 01=10, 10=8,11=6)
-	ADC1->CFGR1 |= ADC_CFGR1_CONT;						// continuous mode
+	ADC1->CFGR1 |= (0b01 << ADC_CFGR1_RES_Pos) |		// 10 bit resolution (00=12, 01=10, 10=8,11=6)
+				   ADC_CFGR1_CONT |						// continuous mode
+				   ADC_CFGR1_OVRMOD;					// overrun mode: overwrite unread data
+	
 	ADC1->CHSELR |= ADC_CHSELR_CHSEL0;					// enable channel 1
+	
+	ADC1->SMPR |= (0b10 << ADC_SMPR_SMP_Pos);			// 13.5 clock sample duration
 	
 //	ADC1->IER |= ADC_IT_EOS |							// end of sequence interrupt
 //			     ADC_IT_EOC;							// end of conversion interrupt
@@ -189,7 +239,7 @@ void initAdc() {
 	ADC1->CR |= ADC_CR_ADSTART;							// start ADC
 }
 void initUsart() {
-	int baud = 38400;
+	int baud = 115200;
 	
 	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER6_Pos) |		// alt function for pin B-6 (TX)
 					(0x02 << GPIO_MODER_MODER7_Pos);		// alt function for pin B-7 (RX)
@@ -200,15 +250,115 @@ void initUsart() {
 	GPIOB->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL6_Pos) |		// alt function 00 for pin B-6 (TX)
 		             (0x00 << GPIO_AFRL_AFSEL7_Pos);		// alt function 00 for pin B-6 (TX)
 
-	USART1->CR2 |= (0 << USART_CR2_STOP_Pos);				// 1 stop bit (00=1, 01=0.5, 10=2, 11=1.5)
-	USART1->BRR = (48 + baud / 2U) / baud;					//???
+	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 69)
 	
-	USART1->CR1 |= USART_CR1_UE;							// enable usart
+	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
+	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));
+	
+	USART1->CR3 |= USART_CR3_OVRDIS;						// disable overrun error interrupt
+	
+	USART1->CR1 |= USART_CR1_TE |							// enable transmitter
+		           USART_CR1_RE |							// enable receiver
+				   USART_CR1_UE |							// enable usart
+				   USART_CR1_RXNEIE;						// interrupt on receive
+	
+	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
+	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable
+	
+	NVIC_EnableIRQ(USART1_IRQn);
+	NVIC_SetPriority(USART1_IRQn, 0);
 }
+void initSysTick(){
+	SysTick->LOAD = (SysTick->CALIB & SysTick_CALIB_TENMS_Msk) - 1;	// 1 ms period
+	SysTick->VAL = 0;
+	SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |		// enable source
+	                 SysTick_CTRL_TICKINT_Msk   |		// enable interrupt
+	                 SysTick_CTRL_ENABLE_Msk;			// enable systick
+}
+
+//
+
+void usartSend(uint8_t *pData, uint16_t size){
+	while (size > 0)
+	{
+		size--;
+		while ((USART1->ISR & USART_ISR_TXE) == 0) {}			// wait for transmit data register empty
+		USART1->TDR = (*pData++ & (uint8_t)0xFFU);
+	}
+	while ((USART1->ISR & USART_ISR_TC) == 0) {}				// wait for transmit complete
+}
+void usartReceive(uint8_t *pData, uint16_t size){
+	while (size > 0)
+	{
+		size--;
+		while ((USART1->ISR & USART_ISR_RXNE) == 0) {}			// wait for receive data register
+		*pData++ = (uint8_t)(USART1->RDR & (uint8_t)0x00FFU);	// read byte
+	}
+}
+
 void setPwm(int angle, int power) {
 	TIM1->CCR1 = sin[angle % sin_size] * power / 256;
 	TIM1->CCR2 = sin[(angle + phase2) % sin_size] * power / 256;
 	TIM1->CCR3 = sin[(angle + phase3) % sin_size] * power / 256;
+}
+void delay(int ms) {
+	int tick = gTickCount;
+	while (gTickCount - tick < ms) {}
+}
+uint16_t getElectricDegrees(){
+	uint16_t adc = ADC1->DR;
+	gResult = ((adc - gCalib1) * 360 / gPhisicalToElec100) % 360;
+	if (gResult < 0) gResult += 360;
+	return gResult;
+}
+
+void calibrate() {
+	const int turns = 3;
+	int a = 0;
+	
+	// 1 back
+	
+	for (a = 360; a >= 0; a--)
+	{
+		delay(1);
+		setPwm(a, 30);
+	}
+		
+	setPwm(0, 30);
+	delay(500);
+	int adcStart1 = ADC1->DR;
+	
+	// 3 forward
+	
+	a = 0;
+	for (a = 0; a <= 360 * turns; a+=2)
+	{
+		delay(1);
+		setPwm(a, 30);
+	}
+	
+	delay(500);	
+	int adcEnd1 = ADC1->DR;
+	int ratio1 = (adcStart1 - adcEnd1) / turns;
+	
+	// 3 backwards
+
+	for (; a >=0; a-=2)
+	{
+		delay(1);
+		setPwm(a, 30);
+	}
+	
+	delay(500);	
+	int adcStart2 = ADC1->DR;
+	int ratio2 = (adcStart2 - adcEnd1) / turns;
+	
+	setPwm(a, 0);	
+	
+	//
+	
+	gCalib1 = (adcStart1 + adcStart2) / 2;
+	gPhisicalToElec100 = (ratio1 + ratio2) / 2;
 }
 
 int main(void) {
@@ -217,14 +367,25 @@ int main(void) {
 	initLed();
 	initAdc();
 	initUsart();
-		
-	setPwm(0, 50);
+	initSysTick();
 	
-	int angle = 0;
-	while(1) {
-		for (int x = 0; x < 500; x++)
-			asm("nop");
-		
-		setPwm(angle++, 20);
+//	calibrate();
+	
+//	while(true){
+//		int deg = getElectricDegrees();
+//		deg = deg * 12 + gCalib1;
+//	}
+	
+//	while (true)
+//	{
+//		usartSend((uint8_t*)"abc", 3);
+//	}
+
+	while (true){
+		if (pendingUsartInput)
+		{
+			int deg = getElectricDegrees();
+			pendingUsartInput = false;
+		}
 	}
 }

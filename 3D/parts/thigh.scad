@@ -40,7 +40,7 @@ module thigh(mode) {
 				thighBase("outer");
 				
 				if (mode != "preview") 
-				render()
+				//render()
 				{
 					rotate([0, -90, 0])
 					rotate([0, 0, 180])
@@ -73,7 +73,7 @@ module thigh(mode) {
 		}
 		
 		if (mode != "preview")
-		render()
+		//render()
 		{
 			rotate([0, -90, 0])
 				motor8StatorHolderMinus();
@@ -89,10 +89,6 @@ module thigh(mode) {
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
 				motor8();
-
-			translate([15, 0, 0])
-			rotate([0, 90, 0])
-				cylinder(d = 20, h = 15);
 		}
 	}
 }

@@ -75,7 +75,13 @@ module motor8StatorHolderPlus() {
 				cube([th, 20, 50], center = true);
 		
 	mirror([0, 0, 1])
-		cylinder(d = 25, h = 4);
+	translate([0, 0, 5])
+	difference() {
+		cylinder(d1 = 22, d2 = 25, h = 20);
+		
+		translate([7.5, -8.5/2, 0])
+			cube([10, 8.5, 20]);
+	}
 }
 
 module motor8StatorHolderMinus() {	for (a = [-45, 45])
@@ -88,9 +94,18 @@ module motor8StatorHolderMinus() {	for (a = [-45, 45])
 					boltMinus(6, 50);					
 			}
 		}
+	
+	mirror([0, 0, 1]) {
+		cylinder(d = 20.5, h = 5);	
 		
-	mirror([0, 0, 1])
-		rotationSensorSpacing();
+		translate([0, 0, 5])
+		{
+			rotationSensorSpacing();
+			
+			translate([0, 0, 2 + th])
+				cylinder(d1 = 22 - th*2, d2 = 25-th*2, h = 20);
+		}
+	}	
 }
 
 module motor8RotorHolderPlus() {
@@ -129,8 +144,11 @@ module motor8RotorHolderMinus() {
 module motor8SensorAdapter(){
 	difference() {
 		union() {
-			cylinder(d = 23, h = 1.5);
-			dCylinder(5, 4, 1, false);
+			cylinder(d1 = 18, d2 = 5, h = 6.5);
+			
+			translate([0, 0, 6.5 - 0.01])
+				dCylinder(5, 4.2, 0.8, false);
+				//dCylinder(5, 4, 1, false);
 		}
 		
 		translate([0, 3.25, -0.01])

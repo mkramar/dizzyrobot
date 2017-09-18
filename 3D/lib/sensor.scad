@@ -57,9 +57,9 @@ module rotationSensorSpacing() {
 	translate([-7.5, 0, 0])
 		cube ([2, 8.5, 15], center = true);
 
-	translate([-5.5, 5, 2.5])
+	translate([-5.5, 4.5, 2.5])
 		cube ([2, 2, 1], center = true);
 		
-	translate([-5.5, -5, 2.5])
+	translate([-5.5, -4.5, 2.5])
 		cube ([2, 2, 1], center = true);
 }
