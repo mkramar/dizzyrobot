@@ -1,8 +1,7 @@
 #include <stm32f0xx_hal.h>
 #include <stm32_hal_legacy.h>
 
-const int sin[] = 
-{128, 131, 134, 137, 140, 143, 146, 149, 152, 156
+const int sin[] = {128, 131, 134, 137, 140, 143, 146, 149, 152, 156
 , 159, 162, 165, 168, 171, 174, 176, 179, 182, 185
 , 188, 191, 193, 196, 199, 201, 204, 206, 209, 211
 , 213, 216, 218, 220, 222, 224, 226, 228, 230, 232
@@ -33,6 +32,10 @@ const int phase2 = sin_size / 3;
 const int phase3 = sin_size * 2 / 3;
 //const int sensorAngle = 330;
 
+const int id = 1;
+
+// calibration ----------------------------------------------------------------
+
 uint32_t gCalib1;
 uint32_t gPhisicalToElec100;
 
@@ -49,48 +52,51 @@ void SysTick_Handler(void){
 
 // usart ----------------------------------------------------------------------
 
-unsigned char usartInBuffer1[16] = { 0 };
-unsigned char usartInBuffer2[16] = { 0 };
-volatile int usartBufferSize = sizeof(usartInBuffer1);
-volatile unsigned char* usartPartialBuffer = usartInBuffer1;
-volatile unsigned char* usartCompleteBuffer = 0;
-volatile int usartReadCount = 0;
-volatile bool pendingUsartInput = 0;
+const int sendBufferSize = 6;
+unsigned char sendBuffer[sendBufferSize] = { 0 };
+
+const int recvBufferSize = 6;
+unsigned char recvBuffer[recvBufferSize] = { 0 };
+volatile unsigned int ringPosition = 0;
+
+const int COMMAND_TORQUE = 1;
+
+volatile bool pendingTorqueCommand = false;
+volatile int torqueCommandValue = 0;
 
 extern "C"
 void USART1_IRQHandler(void){
-//	if (USART1->ISR & USART_ISR_ORE)
-//	{
-//		usartCompleteBuffer = 0;
-//		usartPartialBuffer = usartInBuffer1;
-//		usartReadCount = 0;
-//		pendingUsartInput = false;
-//		USART1->ISR &= ~USART_ISR_ORE;
-//	}
-//	else
-		
 	while (USART1->ISR & USART_ISR_RXNE)
 	{
 		unsigned char newByte = (uint8_t)(USART1->RDR & (uint8_t)0x00FFU);
 		
-		if (usartReadCount < usartBufferSize)
+		recvBuffer[ringPosition % recvBufferSize] = newByte;
+		
+		if (recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF &&		// FF 4 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == 0xFF &&		// FF 3 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == id)			// ID 2 bytes back
 		{
-			usartPartialBuffer[usartReadCount++] = newByte;
-			
-			if (usartPartialBuffer[0] == usartReadCount)
+			if (recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
 			{
-				usartCompleteBuffer = usartPartialBuffer;
-				if (usartPartialBuffer == usartInBuffer1) usartPartialBuffer = usartInBuffer2;
-				else usartPartialBuffer = usartInBuffer1;
-				usartReadCount = 0;
-				pendingUsartInput = true;
+				if (!pendingTorqueCommand)
+				{
+					torqueCommandValue = (int)newByte;
+					pendingTorqueCommand = true;
+				}
 			}
 		}
+		
+		ringPosition++;
 	}
 }
 
 // init -----------------------------------------------------------------------
 
+void initVars() {
+	sendBuffer[0] = 0xFF;
+	sendBuffer[1] = 0xFF;
+	sendBuffer[2] = 0;
+}
 void initClock() {
 	RCC->CR |= RCC_CR_HSION;							// enable internal clock	
 	while (!(RCC->CR & RCC_CR_HSIRDY)) {}
@@ -362,30 +368,21 @@ void calibrate() {
 }
 
 int main(void) {
+	initVars();
 	initClock();
 	initPwm();
 	initLed();
 	initAdc();
 	initUsart();
 	initSysTick();
-	
-//	calibrate();
-	
-//	while(true){
-//		int deg = getElectricDegrees();
-//		deg = deg * 12 + gCalib1;
-//	}
-	
-//	while (true)
-//	{
-//		usartSend((uint8_t*)"abc", 3);
-//	}
 
 	while (true){
-		if (pendingUsartInput)
+		if (pendingTorqueCommand)
 		{
-			int deg = getElectricDegrees();
-			pendingUsartInput = false;
+			sendBuffer[3] = (uint8_t)(ADC1->DR & (uint8_t)0x00FFU);
+			sendBuffer[4] = (uint8_t)((ADC1->DR >> 8) & (uint8_t)0x00FFU);
+			usartSend(sendBuffer, 5);
+			pendingTorqueCommand = false;
 		}
 	}
 }
