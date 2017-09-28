@@ -72,11 +72,12 @@ void USART1_IRQHandler(void){
 		
 		recvBuffer[ringPosition % recvBufferSize] = newByte;
 		
-		if (recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF &&		// FF 4 bytes back
-			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == 0xFF &&		// FF 3 bytes back
-			recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == id)			// ID 2 bytes back
+		if (recvBuffer[(ringPosition + recvBufferSize - 5) % recvBufferSize] == 0xFF &&		// FF 4 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF &&		// FF 3 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == id)			// ID 2 bytes back
 		{
-			if (recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
+			if (recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == 0 &&	// comes from main controller
+				recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
 			{
 				if (!pendingTorqueCommand)
 				{
@@ -95,7 +96,8 @@ void USART1_IRQHandler(void){
 void initVars() {
 	sendBuffer[0] = 0xFF;
 	sendBuffer[1] = 0xFF;
-	sendBuffer[2] = 0;
+	sendBuffer[2] = 0;			// to main controller
+	sendBuffer[3] = id;			// id of the sender
 }
 void initClock() {
 	RCC->CR |= RCC_CR_HSION;							// enable internal clock	
@@ -375,12 +377,14 @@ int main(void) {
 	initAdc();
 	initUsart();
 	initSysTick();
+	
+	calibrate();
 
 	while (true){
 		if (pendingTorqueCommand)
 		{
-			sendBuffer[3] = (uint8_t)(ADC1->DR & (uint8_t)0x00FFU);
-			sendBuffer[4] = (uint8_t)((ADC1->DR >> 8) & (uint8_t)0x00FFU);
+			sendBuffer[4] = (uint8_t)(ADC1->DR & (uint8_t)0x00FFU);
+			sendBuffer[5] = (uint8_t)((ADC1->DR >> 8) & (uint8_t)0x00FFU);
 			usartSend(sendBuffer, 5);
 			pendingTorqueCommand = false;
 		}
