@@ -1,11 +1,17 @@
 include <../sizes.scad>
+include <_common.scad>
 include <motor.scad>
+include <elec.scad>
 
 module bodyAssembly(){
-	color("lightGray") {
-		body();
+	//color("lightGray") 
+	//{
+		%body("preview");
 		//bodyMotors();
-	}
+	//}
+	
+	color("white")
+		bodyMotors();
 	
 	%translate(headOffset)
 		sphere(d = headD);
@@ -14,11 +20,75 @@ module bodyAssembly(){
 		cube(battery, center = true);
 }
 
-module body(){
-	//cylinder(h = 50, d = rod25o);
+module body(mode){
 	difference(){
-		bodyBase("outer");
-		bodyBase("inner");
+		union() {
+			difference() {
+				bodyBase("outer");
+				bodyBase("inner");
+			}
+
+			if (mode != "preview") {
+				intersection() {
+					bodyBase("outer");
+					
+					bodySimmetry()
+					union() {
+						translate(bodyMotorOffset)
+						rotate([-90, 0, 0])
+						rotate([0, 0, 90])
+							motor6StatorHolderPlus();
+							
+						// boards
+
+						bodySimmetry()
+						translate([-18, -15, 23])
+						rotate([-35, 0, 0])
+						rotate([-90, 0, 0])
+						//rotate([0, 0, -10])
+							boardHolder();
+					}
+				}
+			}
+		}
+		
+		if (mode != "preview") {
+			// spacing for heap
+			
+			bodySimmetry()
+			translate(bodyMotorOffset)
+			rotate([-90, 0, 0]) {
+				motor6MinusRotor();
+				cylinder(d = heapConnectorCylinderD + th * 2 + gap * 2, h = 120);
+			}
+			
+			//
+			
+			bodySimmetry()
+			translate(bodyMotorOffset)
+			rotate([-90, 0, 0])
+			rotate([0, 0, 90]){
+				motor6StatorHolderMinus();
+				motor6();
+			}
+			
+			// cable hole
+			
+			bodySimmetry()
+			translate([20, -20, -17])
+			rotate([90, 0, 0])
+				cylinder(d = 15, h = 30);
+		}		
+	}
+		//
+		
+	if (mode != "preview") {
+		intersection() {
+			bodyBase("outer");			
+			
+			translate([0, 0, -10])
+			cube([th, 100, 100], center = true);
+		}		
 	}
 }
 
@@ -28,7 +98,7 @@ module bodyBase(mode) {
 		translate([shoulderWidth/2, 0, 0])
 		translate([0, shoulderY, shoulderZ])
 		rotate([0, 90, 0])
-			motor6case(mode);
+			motor8case(mode);
 	}
 
 	hull(){
@@ -41,7 +111,7 @@ module bodyBase(mode) {
 
 	hull(){
 		translate([0, 40, 60])
-			sphere(30);
+			sphere(25 + plus2th(mode));
 	
 		bodySimmetry()
 		translate(bodyMotorOffset)
@@ -66,20 +136,20 @@ module bodyMotors(){
 }
 
 module bodySimmetry(){
-	intersection() {
+	//intersection() {
 		children();
 		
-		translate([0, -500, -500])
-			cube([1000, 1000, 1000]);
-	}
+	//	translate([0, -500, -500])
+	//		cube([1000, 1000, 1000]);
+	//}
 	
-	intersection() {
+	//intersection() {
 		mirror([1, 0, 0])
 			children();
 		
-		translate([-1000, -500, -500])
-			cube([1000, 1000, 1000]);
-	}
+	//	translate([-1000, -500, -500])
+	//		cube([1000, 1000, 1000]);
+	//}
 }
 
 module bodyMirror(){

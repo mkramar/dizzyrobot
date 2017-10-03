@@ -17,7 +17,7 @@ module shoulder(mode) {
 module shoulderBase(mode){
 	translate([0, 0, 0.01])
 	rotate([0, 90, 0])
-		motor6caseRotor(mode);
+		motor8caseRotor(mode);
 		
 	translate(armMotorOffset)
 	rotate([90, 0, 0])

@@ -29,8 +29,8 @@ motor6Cut = 8;
 
 // board ----------------------------------------------------------------------
 
-boardW = 28 + 0.5;
-boardH = 52 + 0.5;
+boardW = 20 + 0.5;
+boardH = 37 + 0.5;
 
 // battery --------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ headOffsetZ = 400;
 headOffsetY = 60;
 headOffset = [0, headOffsetY, headOffsetZ];
 
-bodyMotorOffsetX = motor6D/2 + gap * 2;
+bodyMotorOffsetX = motor6D/2 + gap * 2 + 15;
 bodyMotorOffsetZ = -motor6D/2;
 bodyMotorOffsetY = -30;
 bodyMotorOffset = [bodyMotorOffsetX, bodyMotorOffsetY, bodyMotorOffsetZ];
@@ -67,9 +67,11 @@ bodyMotorOffset = [bodyMotorOffsetX, bodyMotorOffsetY, bodyMotorOffsetZ];
 // heap -----------------------------------------------------------------------
 
 heapMotorOffsetX = 30;
-heapMotorOffsetZ = -10;
+heapMotorOffsetZ = 0;
 heapMotorOffsetY = motor6H + motor8D/2 + 10;
 heapMotorOffset = [heapMotorOffsetX, heapMotorOffsetY, heapMotorOffsetZ];
+
+heapConnectorCylinderD = motor6D + plus2th("outer");//40;
 
 // thigh ----------------------------------------------------------------------
 

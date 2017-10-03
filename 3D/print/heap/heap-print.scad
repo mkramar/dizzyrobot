@@ -5,6 +5,6 @@ include <../../lib/shapes.scad>
 
 include <../../parts/heap.scad>
 
-//$fn = 70;
+$fn = 70;
 
 heap();

@@ -65,6 +65,12 @@ module heap(mode) {
 				
 			rotate([-90, 0, 0])	
 				motor6();
+			
+			// opening for screwdriver
+			
+			translate([0, 70, 0])
+			rotate([-90, 0, 0])
+				cylinder(d = 15, h = 70);
 		}
 	}
 }
@@ -78,13 +84,13 @@ module heapBase(mode){
 	rotate([0, -90, 0])
 		motor8caseRotor(mode);
 		
-	d1 = 5 + plus2th(mode);
-	d2 = 40 + plus2th(mode);
+	d1 = heapConnectorCylinderD + plus2th(mode);
+	d2 = heapConnectorCylinderD + plus2th(mode);
 		
 	hull() {
 		translate(heapMotorOffset)
 		translate([-motor8H - 10, 0, 0])
-			sphere(d1);
+			sphere(d = d1);
 			
 		translate([0, motor6H + 9, 0])
 		rotate([90, 0, 0])
