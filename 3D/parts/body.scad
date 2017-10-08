@@ -18,6 +18,9 @@ module bodyAssembly(){
 		
 	translate([0, 30, 120])
 		cube(battery, center = true);
+		
+	color("red")
+		cylinder(d = 40, h = 60);
 }
 
 module body(mode){
@@ -42,8 +45,8 @@ module body(mode){
 						// boards
 
 						bodySimmetry()
-						translate([-18, -15, 23])
-						rotate([-35, 0, 0])
+						translate([-22, -25, 27])
+						rotate([-18, 0, 0])
 						rotate([-90, 0, 0])
 						//rotate([0, 0, -10])
 							boardHolder();
@@ -59,7 +62,7 @@ module body(mode){
 			translate(bodyMotorOffset)
 			rotate([-90, 0, 0]) {
 				motor6MinusRotor();
-				cylinder(d = heapConnectorCylinderD + th * 2 + gap * 2, h = 120);
+				//cylinder(d = heapConnectorCylinderD + th * 2 + gap * 2, h = 120);
 			}
 			
 			//
@@ -94,13 +97,25 @@ module body(mode){
 
 module bodyBase(mode) {	
 	bodySimmetry(){
-		hull()
-		translate([shoulderWidth/2, 0, 0])
-		translate([0, shoulderY, shoulderZ])
-		rotate([0, 90, 0])
-			motor8case(mode);
+		hull() {
+			translate([shoulderWidth/2, 0, 0])
+			translate([0, shoulderY, shoulderZ])
+			rotate([0, 90, 0])
+				motor8case(mode);
+				
+			translate([0, shoulderY, shoulderZ])
+				sphere(10);
+		}
 	}
 
+	// hull() {
+		// translate([0, 50, 180])
+			// sphere(45 + plus2th(mode));
+		
+		// translate([0, 50, 80])
+			// sphere(45 + plus2th(mode));
+	// }
+	
 	hull(){
 		translate([0, shoulderY, shoulderZ])
 			spineEnd(mode);
@@ -110,8 +125,8 @@ module bodyBase(mode) {
 	}
 
 	hull(){
-		translate([0, 40, 60])
-			sphere(25 + plus2th(mode));
+		translate([0, 30, 60])
+			spineEnd(mode);
 	
 		bodySimmetry()
 		translate(bodyMotorOffset)
@@ -136,20 +151,10 @@ module bodyMotors(){
 }
 
 module bodySimmetry(){
-	//intersection() {
-		children();
-		
-	//	translate([0, -500, -500])
-	//		cube([1000, 1000, 1000]);
-	//}
+	children();
 	
-	//intersection() {
-		mirror([1, 0, 0])
-			children();
-		
-	//	translate([-1000, -500, -500])
-	//		cube([1000, 1000, 1000]);
-	//}
+	mirror([1, 0, 0])
+		children();
 }
 
 module bodyMirror(){

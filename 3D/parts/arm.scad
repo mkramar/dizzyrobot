@@ -19,6 +19,6 @@ module armBase(mode){
 		motor6caseStator(mode);
 		
 	translate([0, 0, -armLength])
-	rotate([90, 0, 0])
+	rotate([0, 90, 0])
 		motor6caseStator(mode);		
 }

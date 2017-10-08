@@ -1,20 +1,12 @@
-include <../../sizes.scad>
-include <../../parts/_common.scad>
-include <../../parts/motor.scad>
-include <../../lib/shapes.scad>
-
-include <../../parts/body.scad>
-
 //$fn = 70;
 
-difference() {
-	intersection() {
-		body();
-		
-		translate([-100, -190, -100])
+module cut1(){
+	translate([0, 30, 60]) {
+		rotate([160, 0, 0])
+		translate([-100, 0, 0])
 			cube([200, 200, 170]);
+			
+		translate([-100, -200, 0])
+			cube([200, 200, 100]);
 	}
-	
-	translate([-100, -10, -200])
-		cube([200, 200, 200]);	
 }

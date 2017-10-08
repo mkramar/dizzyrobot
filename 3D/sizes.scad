@@ -82,7 +82,7 @@ thighMotorOffset = [thighMotorOffsetX, thighMotorOffsetY, -thighLength];
 
 // shin -----------------------------------------------------------------------
 
-shinMotorOffsetX = -15;
+shinMotorOffsetX = -25;
 shinMotorOffsetY = 0;
 shinLength = 200;
 shinMotorOffset = [shinMotorOffsetX, shinMotorOffsetY, -shinLength];

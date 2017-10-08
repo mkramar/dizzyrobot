@@ -56,7 +56,7 @@ module shinBase(mode) {
 	
 	h = 16 + plus2th(mode);
 	d1 = 56 + plus2th(mode);
-	d2 = 46 + plus2th(mode);
+	d2 = 36 + plus2th(mode);
 	rd = (mode == "outer" ? 10 : 8);
 	
 	difference() {
@@ -87,19 +87,19 @@ module shinBase(mode) {
 					shayba2(h, d2, 5, rd);
 
 				translate(shinMotorOffset)
-				rotate([0, -90, 0])
-					motor6caseRotor(mode);
+				rotate([0, 90, 0])
+					motor6caseStator(mode);
 			}
 		}
 		
 		translate(shinMotorOffset)
-		rotate([0, -90, 0])
-			motor6MinusStator();
+		rotate([0, 90, 0])
+			motor6MinusRotor();
 	}
 }
 
 module shinMotor() {
 	translate(shinMotorOffset)
-	rotate([0, -90, 0])
+	rotate([0, 90, 0])
 		motor6();
 }
