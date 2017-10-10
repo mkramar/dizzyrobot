@@ -16,11 +16,12 @@ module bodyAssembly(){
 	%translate(headOffset)
 		sphere(d = headD);
 		
-	translate([0, 30, 120])
+	translate([0, 30, 160])
 		cube(battery, center = true);
 		
 	color("red")
-		cylinder(d = 40, h = 60);
+	translate([0, 30, 40])
+		motor6();
 }
 
 module body(mode){

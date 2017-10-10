@@ -1,7 +1,8 @@
 include <sizes.scad>
 include <parts/arm.scad>
 include <parts/shoulder.scad>
-include <parts/body.scad>
+include <parts/body-lower.scad>
+//include <parts/body-upper.scad>
 include <parts/heap.scad>
 include <parts/thigh.scad>
 include <parts/shin.scad>
@@ -19,10 +20,10 @@ module assembly(){
 		}
 	}
 
-	bodyAssembly();
+	bodyLowerAssembly();
 	
 	bodyMirror()
-	bodyToHeap(0)
+	bodyToHeap(00)
 	{
 		heapAssembly();
 		

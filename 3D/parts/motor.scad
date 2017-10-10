@@ -221,17 +221,17 @@ module motor6RotorHolderPlus() {
 				//cube([th, 100, 50], center = true);
 				
 				translate([6, 0, 0])
-					boltPlus(50);
+					boltPlus(20);
 					
 				translate([-6, 0, 0])
-					boltPlus(50);
+					boltPlus(20);
 			}
 		}
 		
 	for (a = [0 : 72 : 360])
 		rotate([0, 0, a])
-			translate([0, 15, motor6H])
-				cube([th, 30, 50], center = true);
+			translate([0, 20, motor6H])
+				cube([th, 40, 40], center = true);
 }
 
 module motor6RotorHolderMinus() {
@@ -239,10 +239,10 @@ module motor6RotorHolderMinus() {
 		rotate([0, 0, a]) {
 			translate([0, 0, motor6H]) {
 				translate([6, 0, 0])
-					boltMinus(6, 20);
+					boltMinus(6, 30);
 					
 				translate([-6, 0, 0])
-					boltMinus(6, 20);
+					boltMinus(6, 30);
 			}
 		}
 		
