@@ -1,5 +1,5 @@
-magnetoSensor();
-#magnetoSensorSpacing();
+//magnetoSensor();
+//#magnetoSensorSpacing();
 
 module magnetoSensor(){
 	boardX = 13.2;

@@ -1,4 +1,4 @@
-include <foot-print.scad>
+include <thigh-print.scad>
 
 //$fn = 50;
 
@@ -6,15 +6,15 @@ rotate([0, 90, 0])
 difference() {
 	union() {
 		difference() {
-			foot();
-			cut("minus");
+			thigh();
+			cut();
 		}
 		
 		intersection(){
-			footBase("outer");
-			nutsPlus();
+			thighBase("outer");
+			boltsPlus();
 		}
 	}
 	
-	nutsMinus();
+	boltsMinus();
 }

@@ -36,12 +36,11 @@ module thigh(mode) {
 				thighBase("inner");
 			}
 
+			if (mode != "preview")
 			intersection() {
 				thighBase("outer");
-				
-				if (mode != "preview") 
-				//render()
-				{
+		
+				union() {
 					rotate([0, -90, 0])
 					rotate([0, 0, 180])
 						motor8StatorHolderPlus();

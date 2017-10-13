@@ -5,29 +5,66 @@ include <../../lib/shapes.scad>
 
 include <../../parts/thigh.scad>
 
-$fn = 50;
+cutLevel = 6;
 
-intersection(){
-	// translate([-thighLength, 0, 0])
-		// cube([150, 150, 150], center = true);
-	
-	rotate([0, 90, 0])
+boltPositions = [[50, 22, 0], [50, -22, 0],
+				 [150, 20, 0], [150, -20, 0]];
+
+module cut() {
 	difference() {
-		thigh();
-		
-		difference() {
-			translate([-16, -50, -thighLength])
-				cube([20, 100, thighLength]);
+		translate([cutLevel, -50, -thighLength])
+		mirror([1, 0, 0])
+			cube([50, 100, thighLength]);
+			
+		union() {
+			translate(thighMotorOffset)
+			rotate([0, -90, 0])
+				motor8caseRough("outer");
 				
-			union() {
-				translate(thighMotorOffset)
-				rotate([0, -90, 0])
-					motor8case("outer");
-					
-				rotate([0, -90, 0])
-					motor8case("outer");
-					
-			}
+			rotate([0, -90, 0])
+				motor8caseRough("outer");
+				
 		}
+	}
+}
+
+
+module boltsPlus(){
+	translate([cutLevel, 0, 0])
+	rotate([0, 90, 0])
+	for (x = boltPositions)
+	{
+		translate(x)
+			boltPlus(40);
+	}
+}
+
+module boltsMinus(){
+	translate([cutLevel, 0, 0])
+	rotate([0, 90, 0])
+	for (x = boltPositions)
+	{
+		translate(x)
+			boltMinus(4, 40);
+	}
+}
+
+module nutsPlus(){
+	translate([cutLevel, 0, 0])
+	rotate([0, 90, 0])
+	for (x = boltPositions)
+	{
+		translate(x)
+			nutPlus(40);
+	}
+}
+
+module nutsMinus(){
+	translate([cutLevel, 0, 0])
+	rotate([0, 90, 0])
+	for (x = boltPositions)
+	{
+		translate(x)
+			nutMinus(4, 40);
 	}
 }

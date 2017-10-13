@@ -3,15 +3,15 @@ include <_common.scad>
 include <motor.scad>
 include <elec.scad>
 
-module bodyAssembly(){
+module bodyUpperAssembly(){
 	//color("lightGray") 
 	//{
-		%body("preview");
+		%bodyUpper("preview");
 		//bodyMotors();
 	//}
 	
 	color("white")
-		bodyMotors();
+		bodyUpperMotors();
 	
 	%translate(headOffset)
 		sphere(d = headD);
@@ -24,25 +24,25 @@ module bodyAssembly(){
 		motor6();
 }
 
-module body(mode){
+module bodyUpper(mode){
 	difference(){
 		union() {
 			difference() {
-				bodyBase("outer");
-				bodyBase("inner");
+				bodUpperBase("outer");
+				bodUpperBase("inner");
 			}
 
 			if (mode != "preview") {
 				intersection() {
-					bodyBase("outer");
-					
+					bodUpperBase("outer");
+
 					bodySimmetry()
 					union() {
 						translate(bodyMotorOffset)
 						rotate([-90, 0, 0])
 						rotate([0, 0, 90])
 							motor6StatorHolderPlus();
-							
+
 						// boards
 
 						bodySimmetry()
@@ -55,19 +55,17 @@ module body(mode){
 				}
 			}
 		}
-		
+
 		if (mode != "preview") {
 			// spacing for heap
-			
+
 			bodySimmetry()
 			translate(bodyMotorOffset)
-			rotate([-90, 0, 0]) {
+			rotate([-90, 0, 0])
 				motor6MinusRotor();
-				//cylinder(d = heapConnectorCylinderD + th * 2 + gap * 2, h = 120);
-			}
-			
+
 			//
-			
+
 			bodySimmetry()
 			translate(bodyMotorOffset)
 			rotate([-90, 0, 0])
@@ -75,20 +73,21 @@ module body(mode){
 				motor6StatorHolderMinus();
 				motor6();
 			}
-			
+
 			// cable hole
-			
+
 			bodySimmetry()
 			translate([20, -20, -17])
 			rotate([90, 0, 0])
 				cylinder(d = 15, h = 30);
 		}		
 	}
-		//
-		
+
+	//
+
 	if (mode != "preview") {
 		intersection() {
-			bodyBase("outer");			
+			bodUpperBase("outer");			
 			
 			translate([0, 0, -10])
 			cube([th, 100, 100], center = true);
@@ -96,7 +95,7 @@ module body(mode){
 	}
 }
 
-module bodyBase(mode) {	
+module bodUpperBase(mode) {	
 	bodySimmetry(){
 		hull() {
 			translate([shoulderWidth/2, 0, 0])
@@ -109,30 +108,12 @@ module bodyBase(mode) {
 		}
 	}
 
-	// hull() {
-		// translate([0, 50, 180])
-			// sphere(45 + plus2th(mode));
-		
-		// translate([0, 50, 80])
-			// sphere(45 + plus2th(mode));
-	// }
-	
 	hull(){
 		translate([0, shoulderY, shoulderZ])
 			spineEnd(mode);
 	
 		translate([0, 30, 60])
 			spineEnd(mode);
-	}
-
-	hull(){
-		translate([0, 30, 60])
-			spineEnd(mode);
-	
-		bodySimmetry()
-		translate(bodyMotorOffset)
-		rotate([-90, 0, 0])
-			motor6case(mode);
 	}
 }
 
@@ -145,7 +126,7 @@ module spineEnd(mode){
 		shayba2(h, d1, 10, rd);
 }
 
-module bodyMotors(){
+module bodyUpperMotors(){
 	translate(bodyMotorOffset)
 	rotate([-90, 0, 0])
 		motor6();

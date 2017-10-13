@@ -378,6 +378,9 @@ int main(void) {
 	initUsart();
 	initSysTick();
 	
+	setPwm(0, 10);
+	while (true) {};
+	
 	calibrate();
 
 	while (true){
