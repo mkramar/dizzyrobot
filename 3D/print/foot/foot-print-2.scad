@@ -2,19 +2,10 @@ include <foot-print.scad>
 
 //$fn = 50;
 
-rotate([0, 90, 0])
-difference() {
-	union() {
-		difference() {
-			foot();
-			cut("minus");
-		}
-		
-		intersection(){
-			footBase("outer");
-			nutsPlus();
-		}
+mirror([0, 0, 1]) {
+	cutNuts(boltPositions){
+		rotate([0, 90, 0]) foot();
+		rotate([0, 90, 0]) cut();
+		rotate([0, 90, 0]) footBase("outer");
 	}
-	
-	nutsMinus();
 }

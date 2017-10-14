@@ -2,22 +2,8 @@ include <thigh-print.scad>
 
 //$fn = 50;
 
-rotate([0, 90, 0])
-difference(){
-	union() {
-		intersection() {
-			thigh();
-			cut();
-		}
-		
-		intersection(){
-			intersection(){
-				thighBase("outer");
-				cut();
-			}
-			nutsPlus();
-		}
-	}
-	
-	nutsMinus();		
+cutNuts(boltPositions){
+	rotate([0, -90, 0])thigh();
+	rotate([0, -90, 0])cut();
+	rotate([0, -90, 0]) thighBase("outer");
 }

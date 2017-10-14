@@ -3,13 +3,15 @@ include <../../parts/_common.scad>
 include <../../parts/motor.scad>
 include <../../lib/shapes.scad>
 include <../../lib/dent.scad>
+include <../../lib/cut.scad>
 include <../../lib/boltFlat.scad>
 include <../../parts/foot.scad>
 
-boltPositions = [[39, 70, 0], [39, 0, 0], [39, -55, 0]];
+cutOffset = motor6Cut + gap/2;
+boltPositions = [[-39, 70, -cutOffset], [-39, 0, -cutOffset], [-39, -55, -cutOffset]];
 				 
 module cut(mode) {
-	translate([motor6Cut + gap/2, 0, 0]){
+	translate([cutOffset, 0, 0]){
 		translate([0, -100, -100])
 			cube([100, 200, 200]);
 			
@@ -28,45 +30,5 @@ module cut(mode) {
 		translate([0, 80, -44])
 		rotate([0, -90, 0])
 			dent(mode);
-	}
-}
-
-module boltsPlus(){
-	translate([motor6Cut + gap/2, 0, 0])
-	rotate([0, 90, 0])
-	for (x = boltPositions)
-	{
-		translate(x)
-			boltPlus(40);
-	}
-}
-
-module boltsMinus(){
-	translate([motor6Cut + gap/2, 0, 0])
-	rotate([0, 90, 0])
-	for (x = boltPositions)
-	{
-		translate(x)
-			boltMinus(4, 40);
-	}
-}
-
-module nutsPlus(){
-	translate([motor6Cut + gap/2, 0, 0])
-	rotate([0, 90, 0])
-	for (x = boltPositions)
-	{
-		translate(x)
-			nutPlus(40);
-	}
-}
-
-module nutsMinus(){
-	translate([motor6Cut + gap/2, 0, 0])
-	rotate([0, 90, 0])
-	for (x = boltPositions)
-	{
-		translate(x)
-			nutMinus(4, 40);
 	}
 }
