@@ -50,6 +50,28 @@ void SysTick_Handler(void){
 	gTickCount++;
 }
 
+// buttons --------------------------------------------------------------------
+
+volatile bool button1Pressed;
+volatile bool button2Pressed;
+
+extern "C"
+void EXTI2_3_IRQHandler(void) {
+	if ((EXTI->IMR & EXTI_IMR_MR2) && (EXTI->PR & EXTI_PR_PR2))
+	//if (GPIOA->IDR & GPIO_IDR_2)
+	{
+		button1Pressed = true;
+		EXTI->PR |= EXTI_PR_PR2 ;
+	}	
+	
+	if ((EXTI->IMR & EXTI_IMR_MR3) && (EXTI->PR & EXTI_PR_PR3))
+	//if (GPIOA->IDR & GPIO_IDR_3)
+	{
+		button2Pressed = true;
+		EXTI->PR |= EXTI_PR_PR3;
+	}		
+}
+
 // usart ----------------------------------------------------------------------
 
 const int sendBufferSize = 6;
@@ -94,12 +116,15 @@ void USART1_IRQHandler(void){
 // init -----------------------------------------------------------------------
 
 void initVars() {
+	button1Pressed = false;
+	button2Pressed = false;
+	
 	sendBuffer[0] = 0xFF;
 	sendBuffer[1] = 0xFF;
 	sendBuffer[2] = 0;			// to main controller
 	sendBuffer[3] = id;			// id of the sender
 }
-void initClock() {
+void initClockInternal() {
 	RCC->CR |= RCC_CR_HSION;							// enable internal clock	
 	while (!(RCC->CR & RCC_CR_HSIRDY)) {}
 	
@@ -121,6 +146,42 @@ void initClock() {
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
 				    RCC_APB2ENR_ADCEN |					// enable ADC
 					RCC_APB2ENR_USART1EN;				// enable USART
+}
+void initClockExternal() {
+	RCC->CR |= RCC_CR_HSEON;							// enable external clock	
+	while (!(RCC->CR & RCC_CR_HSERDY)) {}
+	
+	RCC->CR |= RCC_CR_PLLON;							// enable PLL
+	while (!(RCC->CR & RCC_CR_PLLRDY)) {}
+	
+	RCC->CFGR |= (0x02 << RCC_CFGR_SW_Pos);				// select PLL as system clock
+	while ((RCC->CFGR & RCC_CFGR_SWS) != (0x02 << RCC_CFGR_SWS_Pos)) {}
+	
+	RCC->CR2 |= RCC_CR2_HSI14ON;						// enable internal 14-meg clock for ADC
+	while (!(RCC->CR2 & RCC_CR2_HSI14RDY)) {}
+	
+	RCC->CFGR |= RCC_CFGR_PLLMUL6;						// PLL input clock x6
+	
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN |					// enable clock for GPIOA
+				   RCC_AHBENR_GPIOBEN |					// enable clock for GPIOB
+				   RCC_AHBENR_GPIOFEN;					// enable clock for GPIOF
+
+	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
+				    RCC_APB2ENR_ADCEN |					// enable ADC
+					RCC_APB2ENR_USART1EN;				// enable USART
+}
+void initButtons() {
+	GPIOA->PUPDR |= (0x02 << GPIO_PUPDR_PUPDR2_Pos) |	// pull-down A-2
+		            (0x02 << GPIO_PUPDR_PUPDR3_Pos);	// pull-down A-3
+	
+	EXTI->IMR |= EXTI_IMR_MR2 |		// enable line 2
+				 EXTI_IMR_MR3;		// enable line 3
+	
+	EXTI->RTSR |= EXTI_RTSR_RT2 |	// raizing edge for line 2
+		          EXTI_RTSR_RT3;	// raizing edge for line 3
+	
+	HAL_NVIC_SetPriority(EXTI2_3_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);	
 }
 void initPwm() {
 	TIM1->ARR = 0x100;									// tim1 period
@@ -252,11 +313,11 @@ void initUsart() {
 	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER6_Pos) |		// alt function for pin B-6 (TX)
 					(0x02 << GPIO_MODER_MODER7_Pos);		// alt function for pin B-7 (RX)
 	
-	GPIOB->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR13_Pos) |// high speed for pin B-6 (TX)
-		              (0b11 << GPIO_OSPEEDR_OSPEEDR14_Pos);	// high speed for pin B-7 (RX)
+	GPIOB->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR6_Pos) |	// high speed for pin B-6 (TX)
+		              (0b11 << GPIO_OSPEEDR_OSPEEDR7_Pos);	// high speed for pin B-7 (RX)
 	
 	GPIOB->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL6_Pos) |		// alt function 00 for pin B-6 (TX)
-		             (0x00 << GPIO_AFRL_AFSEL7_Pos);		// alt function 00 for pin B-6 (TX)
+		             (0x00 << GPIO_AFRL_AFSEL7_Pos);		// alt function 00 for pin B-7 (RX)
 
 	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 69)
 	
@@ -371,12 +432,15 @@ void calibrate() {
 
 int main(void) {
 	initVars();
-	initClock();
+	initClockExternal();
+	initButtons();
 	initPwm();
-	initLed();
+	//initLed();
 	initAdc();
 	initUsart();
 	initSysTick();
+
+	//while ((GPIOA->IDR & GPIO_IDR_3) == 0) {}	
 	
 	setPwm(0, 10);
 	while (true) {};
@@ -390,6 +454,16 @@ int main(void) {
 			sendBuffer[5] = (uint8_t)((ADC1->DR >> 8) & (uint8_t)0x00FFU);
 			usartSend(sendBuffer, 5);
 			pendingTorqueCommand = false;
+		}
+		
+		if (button1Pressed)
+		{
+			button1Pressed = false;
+		}
+		
+		if (button2Pressed)
+		{
+			button2Pressed = false;
 		}
 	}
 }
