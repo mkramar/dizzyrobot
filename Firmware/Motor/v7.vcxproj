@@ -122,6 +122,7 @@
     <ClCompile Include="..\..\..\..\Users\M\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="..\..\..\..\Users\M\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SpiTle5012B.cpp" />
     <ClCompile Include="system_stm32f0xx.c" />
   </ItemGroup>
   <ItemGroup>

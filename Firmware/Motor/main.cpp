@@ -30,7 +30,6 @@ const int sin[] = {128, 131, 134, 137, 140, 143, 146, 149, 152, 156
 const int sin_size = sizeof(sin)/sizeof(int);
 const int phase2 = sin_size / 3;
 const int phase3 = sin_size * 2 / 3;
-//const int sensorAngle = 330;
 
 const int id = 1;
 
@@ -113,6 +112,11 @@ void USART1_IRQHandler(void){
 	}
 }
 
+// spi ------------------------------------------------------------------------
+
+void initSpi();
+uint16_t SpiReadAngle();
+
 // init -----------------------------------------------------------------------
 
 void initVars() {
@@ -145,7 +149,8 @@ void initClockInternal() {
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
 				    RCC_APB2ENR_ADCEN |					// enable ADC
-					RCC_APB2ENR_USART1EN;				// enable USART
+					RCC_APB2ENR_USART1EN |				// enable USART
+		            RCC_APB2ENR_SPI1EN;					// enable SPI
 }
 void initClockExternal() {
 	RCC->CR |= RCC_CR_HSEON;							// enable external clock	
@@ -168,7 +173,8 @@ void initClockExternal() {
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
 				    RCC_APB2ENR_ADCEN |					// enable ADC
-					RCC_APB2ENR_USART1EN;				// enable USART
+					RCC_APB2ENR_USART1EN |				// enable USART
+				    RCC_APB2ENR_SPI1EN;					// enable SPI
 }
 void initButtons() {
 	GPIOA->PUPDR |= (0x02 << GPIO_PUPDR_PUPDR2_Pos) |	// pull-down A-2
@@ -438,12 +444,15 @@ int main(void) {
 	//initLed();
 	initAdc();
 	initUsart();
+	initSpi();
 	initSysTick();
 
-	//while ((GPIOA->IDR & GPIO_IDR_3) == 0) {}	
+	while (true) {
+		SpiReadAngle();
+	}
 	
 	setPwm(0, 10);
-	while (true) {};
+	while (true) {}
 	
 	calibrate();
 
