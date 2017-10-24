@@ -177,6 +177,24 @@ module motor8SensorAdapter(){
 	}
 }
 
+module motor8MagnetAdapter(){
+	h = 4.5;
+	d = 6.2;
+	
+	difference() {
+		cylinder(d = 18, h = h);
+		
+		translate([0, 3.25, -0.01])
+			sphere(d = d);
+			
+		translate([0, -3.25, -0.01])
+			sphere(d = d);
+
+		translate([0, 0, h + 0.01])
+			cube([3.2, 6.2, 3.2], center = true);
+	}
+}
+
 // motor6 ---------------------------------------------------------------------
 
 module motor6() {

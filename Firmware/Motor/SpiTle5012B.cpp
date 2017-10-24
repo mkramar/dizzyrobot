@@ -1,5 +1,4 @@
-#include <stm32f0xx_hal.h>
-#include <stm32_hal_legacy.h>
+#include <main.h>
 
 #define READ_STATUS				0x8001			//8000
 #define READ_ANGLE_VALUE		0x8021			//8020
@@ -20,7 +19,17 @@
 #define WRITE_IFAB_VALUE		0x50B1
 #define IFAB_VALUE				0x000D
 
+//
+
+uint16_t spiCurrentAngle;
+uint32_t spiTickAngleRead;
+
 void initSpi() {
+	spiCurrentAngle = 0;
+	spiTickAngleRead = 0;
+	
+	//
+	
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
 		            (0x02 << GPIO_MODER_MODER7_Pos);	// alt func mode for pin A-7 (MOSI)
@@ -94,7 +103,6 @@ uint16_t SpiGetRegister(uint16_t wr) {
 	data &= 0x7FFF - 0x4000;
 	return data;
 }
-uint16_t SpiReadAngle()
-{
+uint16_t SpiReadAngle() {
 	return SpiGetRegister(READ_ANGLE_VALUE);
 }

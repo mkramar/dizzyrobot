@@ -1,4 +1,4 @@
 include <../../parts/motor.scad>
 
 $fn = 50;
-motor8SensorAdapter();
+motor8MagnetAdapter();
