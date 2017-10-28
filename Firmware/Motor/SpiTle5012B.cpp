@@ -21,8 +21,8 @@
 
 //
 
-uint16_t spiCurrentAngle;
-uint32_t spiTickAngleRead;
+int spiCurrentAngle;
+unsigned int spiTickAngleRead;
 
 void initSpi() {
 	spiCurrentAngle = 0;
@@ -100,9 +100,12 @@ uint16_t SpiGetRegister(uint16_t wr) {
 	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
 	
 	data = *((__IO uint16_t *)&SPI1->DR);
-	data &= 0x7FFF - 0x4000;
 	return data;
 }
-uint16_t SpiReadAngle() {
-	return SpiGetRegister(READ_ANGLE_VALUE);
+int SpiReadAngle() {
+	int reg = SpiGetRegister(READ_ANGLE_VALUE);
+	reg &= ~0x8000;										// clear "new value" flag which we don't need
+	if (reg & 0x4000) reg |= 0xFFFF8000;				// move 15-bit sign into 32nd bit
+	//reg &= ~0x4000;
+	return reg;
 }

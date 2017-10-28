@@ -41,19 +41,17 @@ int main(void) {
 	readConfig();
 	initButtons();
 	initPwm();
-	//initLed();
 	initUsart();
 	initSpi();
 	initSysTick();
-
-//	while (true) {
-//		SpiReadAngle();
-//	}
-//	
-//	setPwm(0, 10);
-//	while (true) {}
-//	
-//	calibrate();
+	
+	calibrate();
+	
+	usartTorqueCommandValue = 20;
+	
+	spiCurrentAngle = SpiReadAngle();
+	setPwm(0, 20);	
+	//while (true){}
 
 	while (true){
 		if (spiTickAngleRead != gTickCount) 

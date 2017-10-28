@@ -8,7 +8,7 @@ extern int controllerId;
 
 // clock ----------------------------------------------------------------------
 
-extern uint32_t gTickCount;
+extern unsigned int gTickCount;
 
 void initClockInternal();
 void initClockExternal();
@@ -20,6 +20,11 @@ void delay(int ms);
 void initPwm();
 void setPwm(int angle, int power);
 void setPwmTorque();
+
+// calibrate ------------------------------------------------------------------
+
+void calibrate();
+int getElectricDegrees();
 	
 // buttons --------------------------------------------------------------------
 
@@ -30,11 +35,11 @@ void initButtons();
 
 // spi ------------------------------------------------------------------------
 
-extern uint16_t spiCurrentAngle;
-extern uint32_t spiTickAngleRead;
+extern int spiCurrentAngle;
+extern unsigned int spiTickAngleRead;
 
 void initSpi();
-uint16_t SpiReadAngle();
+int SpiReadAngle();
 
 // usart ----------------------------------------------------------------------
 

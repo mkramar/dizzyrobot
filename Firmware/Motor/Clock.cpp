@@ -1,6 +1,6 @@
 #include <main.h>
 
-uint32_t gTickCount = 0;
+unsigned int gTickCount = 0;
 
 extern "C"
 void SysTick_Handler(void) {

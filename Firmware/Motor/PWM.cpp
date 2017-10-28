@@ -120,12 +120,16 @@ void setPwm(int angle, int power) {
 	TIM1->CCR3 = sin[(angle + phase3) % sin_size] * power / 256;
 }
 void setPwmTorque() {
+	int a;
+	
 	if (usartTorqueCommandValue > 0)
 	{
-		setPwm(((int)spiCurrentAngle) * 360 / 0xFFF + ninetyDeg, usartTorqueCommandValue);
+		a = getElectricDegrees() + ninetyDeg;
 	}
 	else
 	{
-		setPwm(((int)spiCurrentAngle) * 360 / 0xFFF - ninetyDeg, -usartTorqueCommandValue);
+		a = getElectricDegrees() - ninetyDeg;
 	}
+	
+	setPwm(a, usartTorqueCommandValue);
 }

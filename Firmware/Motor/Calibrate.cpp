@@ -1,13 +1,12 @@
 #include <main.h>
 
-uint32_t gCalib1;
-uint32_t gPhisicalToElec100;
+int32_t gCalib1;
+int32_t gPhisicalToElec100;
 
-volatile int32_t gResult;
+volatile int gResult;
 
-uint16_t getElectricDegrees() {
-	uint16_t adc = ADC1->DR;
-	gResult = ((adc - gCalib1) * 360 / gPhisicalToElec100) % 360;
+int getElectricDegrees() {
+	gResult = ((spiCurrentAngle - gCalib1) * 360 / gPhisicalToElec100) % 360;
 	if (gResult < 0) gResult += 360;
 	return gResult;
 }
@@ -26,8 +25,8 @@ void calibrate() {
 		
 	setPwm(0, 30);
 	delay(500);
-	int adcStart1 = ADC1->DR;
-	
+	int adcStart1 = SpiReadAngle();
+
 	// 3 forward
 	
 	a = 0;
@@ -36,9 +35,9 @@ void calibrate() {
 		delay(1);
 		setPwm(a, 30);
 	}
-	
+		
 	delay(500);	
-	int adcEnd1 = ADC1->DR;
+	int adcEnd1 = SpiReadAngle();
 	int ratio1 = (adcStart1 - adcEnd1) / turns;
 	
 	// 3 backwards
@@ -50,11 +49,11 @@ void calibrate() {
 	}
 	
 	delay(500);	
-	int adcStart2 = ADC1->DR;
+	int adcStart2 = SpiReadAngle();
 	int ratio2 = (adcStart2 - adcEnd1) / turns;
 	
 	setPwm(a, 0);	
-	
+
 	//
 	
 	gCalib1 = (adcStart1 + adcStart2) / 2;
