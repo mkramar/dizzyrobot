@@ -1,0 +1,10 @@
+**/CodeDB/**
+**/Debug/**
+**/Gerber/**
+**/.vs/**
+
+*.bak
+*.stl
+*.zip
+*.old
+*.user

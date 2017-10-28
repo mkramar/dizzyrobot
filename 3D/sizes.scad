@@ -16,16 +16,17 @@ motor8D = 88.65 + 1.0;
 motor8H = 21.5;
 motor8Cut = 5;
 
-// 60XX
+// multistar elite 5008
 
-motor6D = 57.7 + 1.0;
+//motor6D = 57.7 + 1.0;
+//motor6H = 27.5;
+//motor6Cut = 8;
+
+// TYI-Motor 5008
+
+motor6D = 58.4 + 1.0;
 motor6H = 27.5;
-motor6Cut = 8;
-
-
-// motor6D = 68;
-// motor6H = 23;
-// motor6Cut = 4;
+motor6Cut = 8.5;
 
 // board ----------------------------------------------------------------------
 
