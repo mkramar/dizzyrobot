@@ -99,7 +99,7 @@
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.initargs</Key>
-          <Value />
+          <Value>-c "adapter_khz 500"</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.commands.halt</Key>
@@ -110,32 +110,24 @@
           <Value>load</Value>
         </KeyValue>
         <KeyValue>
-          <Key>com.sysprogs.arm.openocd.commands.autoprogram</Key>
-          <Value />
-        </KeyValue>
-        <KeyValue>
           <Key>com.sysprogs.arm.openocd.commands.reset</Key>
           <Value>mon reset init</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.commands.resetafter</Key>
-          <Value />
+          <Value>mon reset init</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.quicksetup.enabled</Key>
-          <Value>1</Value>
+          <Value>0</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.delay</Key>
-          <Value>0</Value>
+          <Value>10</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.arm.openocd.transport</Key>
           <Value />
-        </KeyValue>
-        <KeyValue>
-          <Key>com.sysprogs.arm.openocd.quicksetup.interface</Key>
-          <Value>stlink-v2</Value>
         </KeyValue>
       </Entries>
     </DebugMethodProperties>

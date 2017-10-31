@@ -47,20 +47,23 @@ int main(void) {
 	
 	calibrate();
 	
-	usartTorqueCommandValue = 20;
-	
-	spiCurrentAngle = SpiReadAngle();
-	setPwm(0, 20);	
-	//while (true){}
+	usartTorqueCommandValue = 15;
+
+	//setPwm(0, 20);
+	//while (true){
+	//	spiCurrentAngle = SpiReadAngle();
+	//}
 
 	while (true){
-		if (spiTickAngleRead != gTickCount) 
-		{
+		//if (spiTickAngleRead != gTickCount) 
+		//{
 			spiCurrentAngle = SpiReadAngle();
 			setPwmTorque();
-			spiTickAngleRead = gTickCount;
-		}
+		//	spiTickAngleRead = gTickCount;
+		//}
 		
+		
+		/*
 		if (usartPendingTorqueCommand)
 		{
 			usartSendAngle();
@@ -76,5 +79,6 @@ int main(void) {
 		{
 			button2Pressed = false;
 		}
+		*/
 	}
 }

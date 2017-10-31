@@ -6,20 +6,26 @@ use <../lib/magnetoSensor.scad>
 use <../lib/boltFlat.scad>
 
 module motor6() {
-	z1 = 6;
-	z2 = 16;
+	z1 = 5;
+	za = 3.5;
+	z2 = 12.5;
 	z3 = 3.6;
 	z4 = 2;
 	
 	cylinder(d = 25.5, h = z1);
 	translate([0, 0, z1 - 0.01]) {
-		cylinder(d = motor6D, h = z2);
-		translate([0, 0, z2 - 0.01]) {
-			cylinder(d1 = motor6D, d2 = 40, h = z3);
-			translate([0, 0, z3 - 0.01]) {
-				cylinder(d = 19, h = z4);
-				translate([0, 0, z4 - 0.01]) {
-					cylinder(d = 4, h = 5);
+	
+		cylinder(d = 55, h = za);
+		translate([0, 0, za - 0.01]) {
+	
+			cylinder(d = motor6D, h = z2);
+			translate([0, 0, z2 - 0.01]) {
+				cylinder(d1 = motor6D, d2 = 40, h = z3);
+				translate([0, 0, z3 - 0.01]) {
+					cylinder(d = 19, h = z4);
+					translate([0, 0, z4 - 0.01]) {
+						cylinder(d = 4, h = 5);
+					}
 				}
 			}
 		}
@@ -34,11 +40,12 @@ module motor6() {
 }
 
 module motor6case(mode) {
-	h = motor6H + 10 + plus2th(mode);
+	h = motor6H + 12 + plus2th(mode);
 	d = motor6D + plus2th(mode);
 	x = 5;
 	rd = (mode == "outer" ? 10 : 8);
 	
+	translate([0, 0, -1])
 	translate([0, 0, motor6H/2])
 		shayba2(h, d, x, rd);
 }
@@ -123,11 +130,12 @@ module motor6StatorHolderPlus() {
 		}
 		
 	mirror([0, 0, 1])
-	translate([0, 0, 5])
-		cylinder(d = 22, h = 10);
+		cylinder(d = 22, h = 15);
 }
 
 module motor6StatorHolderMinus() {
+	sensorOffset = 11;
+	
 	for (a = [-22.5, 67.5])
 		rotate([0, 0, a]) {
 			mirror([0, 0, 1]) {
@@ -140,9 +148,9 @@ module motor6StatorHolderMinus() {
 		}
 	
 	mirror([0, 0, 1]) {
-		cylinder(d = 18, h = 5);	
+		cylinder(d = 18, h = sensorOffset - 2);
 		
-		translate([0, 0, 8]){
+		translate([0, 0, sensorOffset]){
 			mirror([0, 0, 1])
 			rotate([0, 0, 22.5])
 				magnetoSensorSpacing();
@@ -158,11 +166,13 @@ module motor6StatorHolderMinus() {
 module motor6MagnetAdapter(){
 	h = 4.5;
 	
+	translate([0, 0, -1]) // to match motor
+	mirror([0, 0, 1])
 	difference() {
 		cylinder(d = 16, h = h);
 
-		cylinder(d = 10, h = 1);
-		cylinder(d = 6.2, h = 2);
+		cylinder(d = 10.5, h = 1);
+		cylinder(d = 6.8, h = 2);
 
 		translate([0, 0, h + 0.01])
 			cube([3.2, 6.2, 3.2], center = true);

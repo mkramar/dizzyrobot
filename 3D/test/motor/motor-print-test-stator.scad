@@ -1,7 +1,7 @@
 include <../../sizes.scad>
 include <../../parts/motor6-tyi.scad>
 
-//$fn = 50;
+$fn = 50;
 
 //motor6();
 

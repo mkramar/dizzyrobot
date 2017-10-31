@@ -115,9 +115,20 @@ void initPwm() {
 	TIM1->CR1 |= TIM_CR1_CEN;							// enable timer 1	
 }
 void setPwm(int angle, int power) {
-	TIM1->CCR1 = sin[angle % sin_size] * power / 256;
-	TIM1->CCR2 = sin[(angle + phase2) % sin_size] * power / 256;
-	TIM1->CCR3 = sin[(angle + phase3) % sin_size] * power / 256;
+	int a1 = angle % sin_size;
+	int a2 = (angle + phase2) % sin_size;
+	int a3 = (angle + phase3) % sin_size;
+	
+	if (a1 < 0)
+	{
+		a1 += sin_size;
+		a2 += sin_size;
+		a3 += sin_size;
+	}
+	
+	TIM1->CCR1 = sin[a1] * power / 256;
+	TIM1->CCR2 = sin[a2] * power / 256;
+	TIM1->CCR3 = sin[a3] * power / 256;
 }
 void setPwmTorque() {
 	int a;

@@ -1,4 +1,6 @@
 include <../../parts/motor6-tyi.scad>
 
 $fn = 50;
-motor6MagnetAdapter();
+
+mirror([0, 0, 1])
+	motor6MagnetAdapter();

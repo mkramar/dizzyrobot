@@ -1,4 +1,4 @@
-gap = 3; // distance between moving parts that should not touch
+gap = 2.5; // distance between moving parts that should not touch
 th = 2.5;
 
 // rods -----------------------------------------------------------------------

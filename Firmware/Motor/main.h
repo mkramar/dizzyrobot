@@ -17,6 +17,7 @@ void delay(int ms);
 
 // pwm ------------------------------------------------------------------------
 
+extern const int sin_size;
 void initPwm();
 void setPwm(int angle, int power);
 void setPwmTorque();

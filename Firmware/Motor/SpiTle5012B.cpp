@@ -21,6 +21,12 @@
 
 //
 
+extern "C"
+void SPI1_IRQHandler() {
+	// should be empty
+}
+
+//
 int spiCurrentAngle;
 unsigned int spiTickAngleRead;
 
@@ -104,8 +110,9 @@ uint16_t SpiGetRegister(uint16_t wr) {
 }
 int SpiReadAngle() {
 	int reg = SpiGetRegister(READ_ANGLE_VALUE);
-	reg &= ~0x8000;										// clear "new value" flag which we don't need
-	if (reg & 0x4000) reg |= 0xFFFF8000;				// move 15-bit sign into 32nd bit
+	//reg &= ~0x8000;										// clear "new value" flag which we don't need
+	//if (reg & 0x4000) reg |= 0xFFFF8000;				// move 15-bit sign into 32nd bit
 	//reg &= ~0x4000;
+	reg &= ~0xC000;
 	return reg;
 }

@@ -39,7 +39,7 @@ module magnetoSensorSpacing(){
 	d = 0.6;
 	
 	translate([-(boardX + d)/2, -(boardY + d)/2, 0]) {
-		cube([boardX + d, boardY + d, boardZ + icZ + d]);
+		cube([boardX + d, boardY + d, /*boardZ + icZ + d*/15]);
 		
 		translate([(boardX + d)/2 - cableX/2, 0, -cableZ])
 			cube([cableX, boardY + cableY, 15]);
