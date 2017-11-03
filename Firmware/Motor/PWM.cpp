@@ -119,12 +119,9 @@ void setPwm(int angle, int power) {
 	int a2 = (angle + phase2) % sin_size;
 	int a3 = (angle + phase3) % sin_size;
 	
-	if (a1 < 0)
-	{
-		a1 += sin_size;
-		a2 += sin_size;
-		a3 += sin_size;
-	}
+	if (a1 < 0) a1 += sin_size;
+	if (a2 < 0) a2 += sin_size;
+	if (a3 < 0) a3 += sin_size;
 	
 	TIM1->CCR1 = sin[a1] * power / 256;
 	TIM1->CCR2 = sin[a2] * power / 256;

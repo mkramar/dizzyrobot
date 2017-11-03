@@ -37,10 +37,10 @@ void initButtons();
 // spi ------------------------------------------------------------------------
 
 extern int spiCurrentAngle;
-extern unsigned int spiTickAngleRead;
 
 void initSpi();
-int SpiReadAngle();
+int spiReadAngle();
+void spiUpdateTorque();
 
 // usart ----------------------------------------------------------------------
 

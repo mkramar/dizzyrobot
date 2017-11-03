@@ -50,6 +50,14 @@ module motor6case(mode) {
 		shayba2(h, d, x, rd);
 }
 
+module motor6caseRough(mode) {
+	h = motor6H + 10 + plus2th(mode);
+	d = motor6D + plus2th(mode);
+	
+	translate([0, 0, motor6H/2])
+		cylinder(h = h, d = d, center = true);
+}
+
 // rotor ----------------------------------------------------------------------
 
 module motor6caseRotor(mode){
@@ -113,52 +121,56 @@ module motor6MinusStator(){
 }
 
 module motor6StatorHolderPlus() {
-	for (a = [-45, 0, 45, 90])
-		rotate([0, 0, a]) {
-			cube([th, 60, 50], center = true);
-		}
-		
-	for (a = [-22.5, 67.5])
-		rotate([0, 0, a]) {
-			mirror([0, 0, 1]) {
-				translate([12.5, 0, 0])
-					boltPlus(50);
-					
-				translate([-12.5, 0, 0])
-					boltPlus(50);
+	rotate([0, 0, 22.5]){
+		for (a = [-45, 0, 45, 90])
+			rotate([0, 0, a]) {
+				cube([th, 60, 50], center = true);
 			}
-		}
-		
-	mirror([0, 0, 1])
-		cylinder(d = 22, h = 15);
+			
+		for (a = [-22.5, 67.5])
+			rotate([0, 0, a]) {
+				mirror([0, 0, 1]) {
+					translate([12.5, 0, 0])
+						boltPlus(50);
+						
+					translate([-12.5, 0, 0])
+						boltPlus(50);
+				}
+			}
+			
+		mirror([0, 0, 1])
+			cylinder(d = 22, h = 15);
+	}
 }
 
 module motor6StatorHolderMinus() {
 	sensorOffset = 11;
 	
-	for (a = [-22.5, 67.5])
-		rotate([0, 0, a]) {
-			mirror([0, 0, 1]) {
-				translate([12.5, 0, 0])
-					boltMinus(6, 50);
-					
-				translate([-12.5, 0, 0])
-					boltMinus(6, 50);					
+	rotate([0, 0, 22.5]){
+		for (a = [-22.5, 67.5])
+			rotate([0, 0, a]) {
+				mirror([0, 0, 1]) {
+					translate([12.5, 0, 0])
+						boltMinus(6, 50);
+						
+					translate([-12.5, 0, 0])
+						boltMinus(6, 50);					
+				}
+			}
+		
+		mirror([0, 0, 1]) {
+			cylinder(d = 18, h = sensorOffset - 2);
+			
+			translate([0, 0, sensorOffset]){
+				mirror([0, 0, 1])
+				rotate([0, 0, 22.5])
+					magnetoSensorSpacing();
+				
+				translate([0, 0, 2 + th])
+					cylinder(d1 = 22 - th*2, d2 = 25-th*2, h = 20);
 			}
 		}
-	
-	mirror([0, 0, 1]) {
-		cylinder(d = 18, h = sensorOffset - 2);
-		
-		translate([0, 0, sensorOffset]){
-			mirror([0, 0, 1])
-			rotate([0, 0, 22.5])
-				magnetoSensorSpacing();
-			
-			translate([0, 0, 2 + th])
-				cylinder(d1 = 22 - th*2, d2 = 25-th*2, h = 20);
-		}
-	}	
+	}
 }
 
 // magnet ---------------------------------------------------------------------

@@ -1,4 +1,5 @@
 include <../sizes.scad>
+use <elec.scad>
 
 shinTubeUpZ = motor8D/2 + 10;
 shinTubeDownZ = motor6D/2 + 10;
@@ -29,22 +30,55 @@ module shin(mode) {
 				shinBase("inner");
 			}
 
-			intersection() {
-				shinBase("outer");
-				
-				if (mode != "preview") {
+			if (mode != "preview") {
+				intersection() {
+					shinBase("outer");
+					
 					rotate([0, -90, 0])
 						motor8RotorHolderPlus();
 				}
+				
+				intersection() {
+					shinBase("outer");
+
+					translate(shinMotorOffset)
+					rotate([0, 90, 0])
+					rotate([0, 0, 45])
+						motor6StatorHolderPlus();
+				}				
 			}
 		}
 		
 		if (mode != "preview") {
 			rotate([0, -90, 0])
-				motor8RotorHolderMinus();		
+				motor8RotorHolderMinus();
 				
 			rotate([0, -90, 0])
 				motor8();
+				
+			translate(shinMotorOffset)
+			rotate([0, 90, 0])
+			rotate([0, 0, 45])
+			{
+				motor6StatorHolderMinus();
+				motor6();
+			}
+			
+			translate([0, 0, -55])
+			rotate([0, -90, 0])
+				cylinder(d = 10, h = 40);
+		}
+	}
+	
+	if (mode != "preview") {
+		intersection() {
+			shinBase("outer");
+
+			translate([0, 0, -shinLength])
+			translate([-40, 0, 70])
+			rotate([0, 90, 0])
+			rotate([0, 0, 90])
+				boardHolder();
 		}
 	}
 }

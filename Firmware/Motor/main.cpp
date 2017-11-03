@@ -47,7 +47,7 @@ int main(void) {
 	
 	calibrate();
 	
-	usartTorqueCommandValue = 15;
+	usartTorqueCommandValue = 20;
 
 	//setPwm(0, 20);
 	//while (true){
@@ -55,13 +55,9 @@ int main(void) {
 	//}
 
 	while (true){
-		//if (spiTickAngleRead != gTickCount) 
-		//{
-			spiCurrentAngle = SpiReadAngle();
-			setPwmTorque();
-		//	spiTickAngleRead = gTickCount;
-		//}
-		
+		//spiUpdateTorque();
+		spiCurrentAngle = spiReadAngle();
+		setPwmTorque();
 		
 		/*
 		if (usartPendingTorqueCommand)

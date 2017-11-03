@@ -27,15 +27,11 @@ void SPI1_IRQHandler() {
 }
 
 //
-int spiCurrentAngle;
-unsigned int spiTickAngleRead;
+
+int spiCurrentAngle = 0;
+int spiUpdateSequence = 0;
 
 void initSpi() {
-	spiCurrentAngle = 0;
-	spiTickAngleRead = 0;
-	
-	//
-	
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
 		            (0x02 << GPIO_MODER_MODER7_Pos);	// alt func mode for pin A-7 (MOSI)
@@ -88,7 +84,7 @@ void initSpi() {
 //	hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
 //	HAL_SPI_Init(&hspi1);
 }
-uint16_t SpiGetRegister(uint16_t wr) {
+uint16_t spiGetRegister(uint16_t wr) {
 	uint16_t data = 0;
 	
 	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
@@ -108,11 +104,40 @@ uint16_t SpiGetRegister(uint16_t wr) {
 	data = *((__IO uint16_t *)&SPI1->DR);
 	return data;
 }
-int SpiReadAngle() {
-	int reg = SpiGetRegister(READ_ANGLE_VALUE);
+int spiReadAngle() {
+	int reg = spiGetRegister(READ_ANGLE_VALUE);
 	//reg &= ~0x8000;										// clear "new value" flag which we don't need
 	//if (reg & 0x4000) reg |= 0xFFFF8000;				// move 15-bit sign into 32nd bit
 	//reg &= ~0x4000;
 	reg &= ~0xC000;
 	return reg;
+}
+void spiUpdateTorque() {
+	switch (spiUpdateSequence)
+	{
+	case 0:
+		GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
+		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
+	
+		while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
+		*((__IO uint16_t *)&SPI1->DR) = READ_ANGLE_VALUE;	// write command
+		break;
+		
+	case 1:
+		while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
+		SPI1->CR1 &= ~SPI_CR1_BIDIOE;						// input mode			
+		break;
+		
+	case 2:
+		while ((SPI1->SR & SPI_SR_RXNE) != SPI_SR_RXNE) {}	// wait for input buffer
+		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
+		GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
+	
+		int data = SPI1->DR;
+		spiCurrentAngle = data & ~0xC000;					// clear "new value" flag which we don't need
+		setPwmTorque();
+	}
+
+	spiUpdateSequence++;
+	spiUpdateSequence = spiUpdateSequence % 3;
 }

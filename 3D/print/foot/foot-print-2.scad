@@ -1,6 +1,6 @@
 include <foot-print.scad>
 
-//$fn = 50;
+$fn = 50;
 
 mirror([0, 0, 1]) {
 	cutNuts(boltPositions){

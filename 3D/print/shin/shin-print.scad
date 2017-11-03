@@ -1,25 +1,30 @@
 include <../../sizes.scad>
 include <../../parts/_common.scad>
-include <../../parts/motor.scad>
+include <../../parts/motor8.scad>
+include <../../parts/motor6-tyi.scad>
 include <../../lib/shapes.scad>
-
+include <../../lib/cut.scad>
 include <../../parts/shin.scad>
 
-$fn = 70;
+cutLevel = -25;
 
-intersection(){
-	cube([150, 150, 150], center = true);
-	
-	rotate([0, -90, 0])
+boltPositions = [[-55, 20, -cutLevel], [-55, -20, -cutLevel],
+				 [-160, 14, -cutLevel], [-160, -14, -cutLevel]];
+
+module cut() {
 	difference() {
-		shin();
-		
-		difference() {
-			translate([-23, -50, -shinLength])
-				cube([20, 100, shinLength]);
+		translate([cutLevel, -50, -shinLength])
+		//mirror([1, 0, 0])
+			cube([20, 100, shinLength]);
+			
+		union() {
+			translate(shinMotorOffset)
+			rotate([0, -90, 0])
+				motor6caseRough("outer");
 				
 			rotate([0, -90, 0])
-				motor8case("outer");
+				motor8caseRough("outer");
+				
 		}
 	}
 }

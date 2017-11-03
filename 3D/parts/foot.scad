@@ -37,7 +37,7 @@ module foot(mode){
 module footBase(mode){
 	d = 16 + plus2th(mode);
 	d2 = 26 + plus2th(mode);
-	centre = [20, 0, 0];
+	centre = [10, 0, 0];
 	
 	rotate([0, 90, 0])
 	translate([0, 0, 0.01])

@@ -1,8 +1,9 @@
 #include <main.h>
 
 const int calibPower = 20;
-int calibZeros[50] = { 0 };
-int calibRates[50] = { 0 };
+const int maxPoles = 25;
+int calibZeros[maxPoles] = { 0 };
+int calibRates[maxPoles] = { 0 };
 int calibPoles = 0;
 int calibCurrentPole = 0;
 int calibHighestPole = 0;
@@ -28,9 +29,12 @@ int getElectricDegrees() {
 
 void calibrate() {
 	int a = 0;
+	int i = 0;
 	int sensor;
+	int zerosUp[maxPoles] = { 0 };
+	int zerosDn[maxPoles] = { 0 };
 	
-	// set 0 angle
+	// gently set 0 angle
 	
 	for (int p = 0; p < calibPower * 10; p++)
 	{
@@ -38,29 +42,33 @@ void calibrate() {
 		setPwm(0, p/10);
 	}
 
-	delay(500);
+	for (a = 0; a < sin_size; a++)
+	{
+		delay(1);
+		setPwm(a, calibPower);
+	}
 	
-	// go
+	// full turn up
 		
 	while (true)
 	{
 		a = a % sin_size;
 		if (a == 0)
 		{
-			int sensor = SpiReadAngle();
+			int sensor = spiReadAngle();
 			
-			if (calibPoles > 1)
+			if (i > 1)
 			{
-				int d1 = calibZeros[1] - calibZeros[0];
-				int d2 = calibZeros[0] - sensor;
+				int d1 = zerosUp[1] - zerosUp[0];
+				int d2 = zerosUp[0] - sensor;
 				if (d1 < 0) d1 = -d1;
 				if (d2 < 0) d2 = -d2;
 				
 				if (d2 < d1 / 4) break;
 			}
 			
-			calibZeros[calibPoles] = sensor;
-			calibPoles++;			
+			zerosUp[i] = sensor;
+			i++;			
 		}
 		
 		a++;
@@ -68,7 +76,53 @@ void calibrate() {
 		setPwm(a, calibPower);
 	}
 	
-	setPwm(a, 0);
+	calibPoles = i;
+	
+	// a bit more up then back down
+	
+	for (; a < sin_size; a++)
+	{
+		delay(1);
+		setPwm(a, calibPower);
+	}
+	
+	for (; a > 0; a--)
+	{
+		delay(1);
+		setPwm(a, calibPower);
+	}
+
+	// full turn down
+	
+	while (i >= 0)
+	{
+		if (a == 0)
+		{
+			int sensor = spiReadAngle();			
+			zerosDn[i] = sensor;
+			i--;
+		}
+		
+		a--;
+		if (a < 0) a += sin_size;
+		delay(1);
+		setPwm(a, calibPower);
+	}	
+	
+	// gently release
+	
+	for (int p = calibPower * 10; p > 0; p--)
+	{
+		delay(1);
+		setPwm(0, p / 10);
+	}
+
+	setPwm(0, 0);
+	
+	// calc average zeros
+	
+	for (i = 0; i < calibPoles; i++)
+		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
 	// up or down?
 

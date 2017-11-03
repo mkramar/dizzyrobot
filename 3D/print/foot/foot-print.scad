@@ -1,6 +1,6 @@
 include <../../sizes.scad>
 include <../../parts/_common.scad>
-include <../../parts/motor.scad>
+include <../../parts/motor6-tyi.scad>
 include <../../lib/shapes.scad>
 include <../../lib/dent.scad>
 include <../../lib/cut.scad>
@@ -8,7 +8,7 @@ include <../../lib/boltFlat.scad>
 include <../../parts/foot.scad>
 
 cutOffset = motor6Cut + gap/2;
-boltPositions = [[-39, 70, -cutOffset], [-39, 0, -cutOffset], [-39, -55, -cutOffset]];
+boltPositions = [[-42, 70, -cutOffset], [-27, 30, -cutOffset], [-28.5, -30, -cutOffset], [-42.5, -55, -cutOffset]];
 				 
 module cut(mode) {
 	translate([cutOffset, 0, 0]){
