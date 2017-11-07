@@ -22,7 +22,7 @@ void USART1_IRQHandler(void) {
 		
 		if (recvBuffer[(ringPosition + recvBufferSize - 5) % recvBufferSize] == 0xFF &&			// FF 4 bytes back
 			recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF &&			// FF 3 bytes back
-			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == controllerId)	// ID 2 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == config->controllerId)	// ID 2 bytes back
 		{
 			if (recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == 0 &&		// comes from main controller
 				recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
@@ -45,8 +45,8 @@ void initUsart() {
 	
 	sendBuffer[0] = 0xFF;
 	sendBuffer[1] = 0xFF;
-	sendBuffer[2] = 0;				// to main controller
-	sendBuffer[3] = controllerId;	// id of the sender
+	sendBuffer[2] = 0;						// to main controller
+	sendBuffer[3] = config->controllerId;	// id of the sender
 
 	//
 	

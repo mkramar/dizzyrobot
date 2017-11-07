@@ -1,16 +1,5 @@
 #include <main.h>
 
-int controllerId;
-
-// calibration ----------------------------------------------------------------
-
-
-// init -----------------------------------------------------------------------
-
-void readConfig(){
-	// todo: read from flash
-	controllerId = 1;
-}
 void initLed() {
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;					// enable clock for GPIOF
 
@@ -33,33 +22,38 @@ void initLed() {
 	TIM2->CCER |= TIM_CCER_CC3E;						// enable tim2 channel 3, positive
 	TIM2->CR1 |= TIM_CR1_CEN;							// enable timer 2
 }
+int ensureConfigured() {
+	while (config->calibPoles == -1)
+	{
+		if (button2Pressed)
+		{
+			calibrate();
+			button2Pressed = false;
+		}
+	}
+}
 
 //
 
 int main(void) {
 	initClockExternal();
-	readConfig();
 	initButtons();
 	initPwm();
 	initUsart();
 	initSpi();
 	initSysTick();
 	
-	calibrate();
+	//calibrate();
 	
-	usartTorqueCommandValue = 20;
-
-	//setPwm(0, 20);
-	//while (true){
-	//	spiCurrentAngle = SpiReadAngle();
-	//}
+	ensureConfigured();
+	
+	usartTorqueCommandValue = 20;	
 
 	while (true){
 		//spiUpdateTorque();
 		spiCurrentAngle = spiReadAngle();
 		setPwmTorque();
 		
-		/*
 		if (usartPendingTorqueCommand)
 		{
 			usartSendAngle();
@@ -73,8 +67,8 @@ int main(void) {
 		
 		if (button2Pressed)
 		{
+			calibrate();
 			button2Pressed = false;
 		}
-		*/
 	}
 }

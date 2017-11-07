@@ -230,6 +230,9 @@
     <ClCompile Include="Calibrate.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="flash.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stm32f0xx_hal_conf.h">

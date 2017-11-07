@@ -4,7 +4,21 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-extern int controllerId;
+const unsigned int flashPageAddress = 0x08007800;
+const int maxPoles = 25;
+
+struct ConfigData
+{
+	int controllerId = 0;
+	
+	int calibZeros[maxPoles] = { 0 };
+	int calibRates[maxPoles] = { 0 };
+	int calibPoles = 0;
+	int calibHighestPole = 0;
+	int calibLowestPole = 0;	
+};
+
+extern ConfigData* config;
 
 // clock ----------------------------------------------------------------------
 
@@ -49,5 +63,9 @@ extern volatile int usartTorqueCommandValue;
 
 void initUsart();
 void usartSendAngle();
+
+// flash ----------------------------------------------------------------------
+
+void writeFlash(uint16_t* data, int count);
 
 #endif

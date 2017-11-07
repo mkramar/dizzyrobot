@@ -124,6 +124,7 @@
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Calibrate.cpp" />
     <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="flash.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PWM.cpp" />
     <ClCompile Include="SpiTle5012B.cpp" />

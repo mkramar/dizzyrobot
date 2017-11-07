@@ -1,28 +1,27 @@
 #include <main.h>
 
 const int calibPower = 20;
-const int maxPoles = 25;
-int calibZeros[maxPoles] = { 0 };
-int calibRates[maxPoles] = { 0 };
-int calibPoles = 0;
 int calibCurrentPole = 0;
-int calibHighestPole = 0;
-int calibLowestPole = 0;
-bool calibGoUp;
+
+ConfigData* config = (ConfigData*)flashPageAddress;
+
+extern const int maxPoles;
 
 int getElectricDegrees() {
-	while (spiCurrentAngle > calibZeros[calibCurrentPole + 1] && calibCurrentPole != calibHighestPole)
+	while (spiCurrentAngle > config->calibZeros[calibCurrentPole + 1] && 
+		   calibCurrentPole != config->calibHighestPole)
 	{
 		calibCurrentPole++;
-		if (calibCurrentPole == calibPoles) calibCurrentPole = 0;
+		if (calibCurrentPole == config->calibPoles) calibCurrentPole = 0;
 	}
-	while (spiCurrentAngle < calibZeros[calibCurrentPole] && calibCurrentPole != calibLowestPole) 
+	while (spiCurrentAngle < config->calibZeros[calibCurrentPole] && 
+		   calibCurrentPole != config->calibLowestPole) 
 	{
 		calibCurrentPole--;
-		if (calibCurrentPole < 0) calibCurrentPole = calibPoles - 1;
+		if (calibCurrentPole < 0) calibCurrentPole = config->calibPoles - 1;
 	}
 	
-	int retval = ((spiCurrentAngle - calibZeros[calibCurrentPole]) * sin_size / calibRates[calibCurrentPole]) % sin_size;
+	int retval = ((spiCurrentAngle - config->calibZeros[calibCurrentPole]) * sin_size / config->calibRates[calibCurrentPole]) % sin_size;
 //	//if (retval < 0) retval += sin_size;
 	return retval;	
 }
@@ -34,6 +33,8 @@ void calibrate() {
 	int zerosUp[maxPoles] = { 0 };
 	int zerosDn[maxPoles] = { 0 };
 	
+	ConfigData lc;
+
 	// gently set 0 angle
 	
 	for (int p = 0; p < calibPower * 10; p++)
@@ -76,7 +77,7 @@ void calibrate() {
 		setPwm(a, calibPower);
 	}
 	
-	calibPoles = i;
+	lc.calibPoles = i;
 	
 	// a bit more up then back down
 	
@@ -121,41 +122,46 @@ void calibrate() {
 	
 	// calc average zeros
 	
-	for (i = 0; i < calibPoles; i++)
-		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
+	for (i = 0; i < lc.calibPoles; i++)
+		lc.calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
 	// up or down?
 
 	int up = 0;
 	int down = 0;
 	
-	for (int i = 1; i < calibPoles; i++)
+	for (int i = 1; i < lc.calibPoles; i++)
 	{
-		if (calibZeros[i - 1] < calibZeros[i]) up++;
+		if (lc.calibZeros[i - 1] < lc.calibZeros[i]) up++;
 		else down++;
 	}
 	
-	calibGoUp = up > down;
+	bool calibGoUp = up > down;
 	
 	// rates
 	
-	calibRates[0] = calibZeros[0] - calibZeros[calibPoles - 1];
+	lc.calibRates[0] = lc.calibZeros[0] - lc.calibZeros[lc.calibPoles - 1];
 	
-	for (int i = 1; i < calibPoles; i++)
+	for (int i = 1; i < lc.calibPoles; i++)
 	{
-		calibRates[i] = calibZeros[i] - calibZeros[i - 1];
+		lc.calibRates[i] = lc.calibZeros[i] - lc.calibZeros[i - 1];
 		
-		if (calibGoUp && calibZeros[i] < calibZeros[i - 1]) 
-			calibRates[i] += 0x4000;
+		if (calibGoUp && lc.calibZeros[i] < lc.calibZeros[i - 1]) 
+			lc.calibRates[i] += 0x4000;
 	}
 	
 	// find highest & lowest
 	
-	for (int i = 1; i < calibPoles; i++)
+	for (int i = 1; i < lc.calibPoles; i++)
 	{
-		if (calibZeros[calibHighestPole] < calibZeros[i]) calibHighestPole = i;
-		if (calibZeros[calibLowestPole] > calibZeros[i]) calibLowestPole = i;
+		if (lc.calibZeros[lc.calibHighestPole] < lc.calibZeros[i]) lc.calibHighestPole = i;
+		if (lc.calibZeros[lc.calibLowestPole] > lc.calibZeros[i]) lc.calibLowestPole = i;
 	}
+	
+	// store in flash
+	
+	lc.controllerId = config->controllerId;	
+	writeFlash((uint16_t*)&lc, sizeof(ConfigData)/sizeof(uint16_t));
 }
 
 #if OLD
