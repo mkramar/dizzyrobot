@@ -47,7 +47,11 @@ int main(void) {
 	
 	ensureConfigured();
 	
-	usartTorqueCommandValue = 20;	
+	//usartTorqueCommandValue = 20;	
+	
+	usartPendingTorqueCommand = false;
+	button1Pressed = false;
+	button2Pressed = false;
 
 	while (true){
 		//spiUpdateTorque();
@@ -67,7 +71,7 @@ int main(void) {
 		
 		if (button2Pressed)
 		{
-			calibrate();
+			calibrate(); 
 			button2Pressed = false;
 		}
 	}

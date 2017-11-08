@@ -21,17 +21,17 @@ void USART1_IRQHandler(void) {
 		recvBuffer[ringPosition % recvBufferSize] = newByte;
 		
 		if (recvBuffer[(ringPosition + recvBufferSize - 5) % recvBufferSize] == 0xFF &&			// FF 4 bytes back
-			recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF &&			// FF 3 bytes back
-			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == config->controllerId)	// ID 2 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 4) % recvBufferSize] == 0xFF/* &&			// FF 3 bytes back
+			recvBuffer[(ringPosition + recvBufferSize - 3) % recvBufferSize] == config->controllerId*/)	// ID 2 bytes back
 		{
 			if (recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == 0 &&		// comes from main controller
 				recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
 			{
-				if (!usartPendingTorqueCommand)
-				{
+				//if (!usartPendingTorqueCommand)
+				//{
 					usartTorqueCommandValue = (int)newByte;
 					usartPendingTorqueCommand = true;
-				}
+				//}
 			}
 		}
 		
@@ -47,10 +47,14 @@ void initUsart() {
 	sendBuffer[1] = 0xFF;
 	sendBuffer[2] = 0;						// to main controller
 	sendBuffer[3] = config->controllerId;	// id of the sender
-
-	//
 	
-	int baud = 115200;
+	// config A-1 pin as DE
+	
+	GPIOA->MODER |= (0x02 << GPIO_MODER_MODER1_Pos);		// alternative function for pin A-1
+	GPIOA->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR1_Pos);	// high speed for pin A-1 (led)
+	GPIOA->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL1_Pos);		// alternative funciton 1 for pin A-1
+
+	// config B-6 and B-7 as TX and RX
 	
 	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER6_Pos) |		// alt function for pin B-6 (TX)
 					(0x02 << GPIO_MODER_MODER7_Pos);		// alt function for pin B-7 (RX)
@@ -61,6 +65,10 @@ void initUsart() {
 	GPIOB->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL6_Pos) |		// alt function 00 for pin B-6 (TX)
 		             (0x00 << GPIO_AFRL_AFSEL7_Pos);		// alt function 00 for pin B-7 (RX)
 
+	// config USART
+		
+	int baud = 115200;
+	
 	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 69)
 	
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
