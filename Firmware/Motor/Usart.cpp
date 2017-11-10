@@ -49,11 +49,10 @@ void initUsart() {
 	sendBuffer[3] = config->controllerId;	// id of the sender
 	
 	// config A-1 pin as DE
-	
-	GPIOA->MODER |= (0x02 << GPIO_MODER_MODER1_Pos);		// alternative function for pin A-1
-	GPIOA->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR1_Pos);	// high speed for pin A-1 (led)
-	GPIOA->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL1_Pos);		// alternative funciton 1 for pin A-1
 
+	GPIOA->MODER |= (0x01 << GPIO_MODER_MODER1_Pos);
+	GPIOA->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR1_Pos);
+	
 	// config B-6 and B-7 as TX and RX
 	
 	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER6_Pos) |		// alt function for pin B-6 (TX)
@@ -89,6 +88,8 @@ void initUsart() {
 }
 
 void usartSend(uint8_t *pData, uint16_t size) {
+	GPIOA->BSRR |= 0b10;										// DE enable
+		
 	while (size > 0)
 	{
 		size--;
@@ -96,6 +97,8 @@ void usartSend(uint8_t *pData, uint16_t size) {
 		USART1->TDR = (*pData++ & (uint8_t)0xFFU);
 	}
 	while ((USART1->ISR & USART_ISR_TC) == 0) {}				// wait for transmit complete
+	
+	GPIOA->BRR |= 0b10;											// DE disable
 }
 void usartReceive(uint8_t *pData, uint16_t size) {
 	while (size > 0)
