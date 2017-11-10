@@ -44,6 +44,7 @@ int main(void) {
 	initSysTick();
 	
 	//calibrate();
+	delay(2000);
 	
 	ensureConfigured();
 	
@@ -54,9 +55,9 @@ int main(void) {
 	button2Pressed = false;
 
 	while (true){
-		//spiUpdateTorque();
-		spiCurrentAngle = spiReadAngle();
-		setPwmTorque();
+		spiUpdateTorque();
+		//spiCurrentAngle = spiReadAngle();
+		//setPwmTorque();
 		
 		if (usartPendingTorqueCommand)
 		{

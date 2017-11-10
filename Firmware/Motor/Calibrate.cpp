@@ -125,6 +125,10 @@ void calibrate() {
 	for (i = 0; i < lc.calibPoles; i++)
 		lc.calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
+	// add one more
+	
+	//lc.calibZeros[lc.calibPoles] = lc.calibZeros[lc.calibPoles - 1] * 2 - lc.calibZeros[lc.calibPoles - 2];
+	
 	// up or down?
 
 	int up = 0;
@@ -142,7 +146,7 @@ void calibrate() {
 	
 	lc.calibRates[0] = lc.calibZeros[0] - lc.calibZeros[lc.calibPoles - 1];
 	
-	for (int i = 1; i < lc.calibPoles; i++)
+	for (int i = 1; i <= lc.calibPoles; i++)
 	{
 		lc.calibRates[i] = lc.calibZeros[i] - lc.calibZeros[i - 1];
 		

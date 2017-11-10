@@ -27,6 +27,10 @@ void USART1_IRQHandler(void) {
 			if (recvBuffer[(ringPosition + recvBufferSize - 2) % recvBufferSize] == 0 &&		// comes from main controller
 				recvBuffer[(ringPosition + recvBufferSize - 1) % recvBufferSize] == COMMAND_TORQUE)
 			{
+				if (newByte > 30)
+				{
+					newByte = 30;
+				}
 				//if (!usartPendingTorqueCommand)
 				//{
 					usartTorqueCommandValue = (int)newByte;
