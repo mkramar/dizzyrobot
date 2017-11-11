@@ -8,17 +8,18 @@ ConfigData* config = (ConfigData*)flashPageAddress;
 extern const int maxPoles;
 
 int getElectricDegrees() {
-	while (spiCurrentAngle > config->calibZeros[calibCurrentPole + 1] && 
-		   calibCurrentPole != config->calibHighestPole)
+	int a = spiCurrentAngle - config->calibZeroShift;
+	if (a < 0) a += 0x4000;
+	
+	while (a > config->calibZeros[calibCurrentPole + 1] && calibCurrentPole <= config->calibPoles)
 	{
 		calibCurrentPole++;
-		if (calibCurrentPole == config->calibPoles) calibCurrentPole = 0;
+		//if (calibCurrentPole == config->calibPoles + 2) calibCurrentPole = 1;
 	}
-	while (spiCurrentAngle < config->calibZeros[calibCurrentPole] && 
-		   calibCurrentPole != config->calibLowestPole) 
+	while (a < config->calibZeros[calibCurrentPole] && calibCurrentPole >= 0) 
 	{
 		calibCurrentPole--;
-		if (calibCurrentPole < 0) calibCurrentPole = config->calibPoles - 1;
+		//if (calibCurrentPole < 0) calibCurrentPole = config->calibPoles - 2;
 	}
 	
 	int retval = ((spiCurrentAngle - config->calibZeros[calibCurrentPole]) * sin_size / config->calibRates[calibCurrentPole]) % sin_size;
@@ -125,10 +126,6 @@ void calibrate() {
 	for (i = 0; i < lc.calibPoles; i++)
 		lc.calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
-	// add one more
-	
-	//lc.calibZeros[lc.calibPoles] = lc.calibZeros[lc.calibPoles - 1] * 2 - lc.calibZeros[lc.calibPoles - 2];
-	
 	// up or down?
 
 	int up = 0;
@@ -142,9 +139,47 @@ void calibrate() {
 	
 	bool calibGoUp = up > down;
 	
-	// rates
+	// find lowest
 	
-	lc.calibRates[0] = lc.calibZeros[0] - lc.calibZeros[lc.calibPoles - 1];
+	int lowestPole = 0;
+	int lowestValue = 0x4000;
+	
+	for (i = 0; i < lc.calibPoles; i++)
+	{
+		if (lowestValue > lc.calibZeros[i]) 
+		{
+			lowestPole = i;
+			lowestValue = lc.calibZeros[i];
+		}
+	}
+	
+	lc.calibZeroShift = lowestPole * 0x4000 / lc.calibPoles;
+	
+	// shift to zero
+	
+	for (int x = 0; x < lowestPole; x++)
+	{
+		int save = lc.calibZeros[0];
+		
+		for (i = 0; i < lc.calibPoles - 1; i++)
+			lc.calibZeros[i] = lc.calibZeros[i + 1];
+		
+		lc.calibZeros[lc.calibPoles - 1] = save;
+	}
+	
+	// shift one up
+	
+	for (i = lc.calibPoles; i > 0; i--)
+		lc.calibZeros[i] = lc.calibZeros[i - 1];
+	
+	lc.calibZeros[0] = 0;
+	
+	// first and last one 
+	
+	lc.calibZeros[lc.calibPoles + 1] = 0x4000 + lc.calibZeros[0];
+	lc.calibZeros[0] = lc.calibZeros[lc.calibPoles] - 0x4000;
+	
+	// rates
 	
 	for (int i = 1; i <= lc.calibPoles; i++)
 	{
@@ -154,13 +189,15 @@ void calibrate() {
 			lc.calibRates[i] += 0x4000;
 	}
 	
+	lc.calibRates[0] = lc.calibRates[lc.calibPoles];
+	
 	// find highest & lowest
 	
-	for (int i = 1; i < lc.calibPoles; i++)
-	{
-		if (lc.calibZeros[lc.calibHighestPole] < lc.calibZeros[i]) lc.calibHighestPole = i;
-		if (lc.calibZeros[lc.calibLowestPole] > lc.calibZeros[i]) lc.calibLowestPole = i;
-	}
+//	for (int i = 1; i < lc.calibPoles; i++)
+//	{
+//		if (lc.calibZeros[lc.calibHighestPole] < lc.calibZeros[i]) lc.calibHighestPole = i;
+//		if (lc.calibZeros[lc.calibLowestPole] > lc.calibZeros[i]) lc.calibLowestPole = i;
+//	}
 	
 	// store in flash
 	
