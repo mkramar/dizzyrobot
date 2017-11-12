@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/_source/dizzyrobot/Schamatic/Motor/V5/v5.sch)
-    (date "12/11/2017 12:35:10 AM")
+    (date "12/11/2017 10:47:19 AM")
     (tool "Eeschema 4.0.6")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -535,12 +535,12 @@
         (pin (num 48) (name VDD) (type input))
         (pin (num 49) (name HEATPAD) (type input)))))
   (libraries
+    (library (logical Dizzy)
+      (uri C:\_source\dizzyrobot\Schamatic\Lib\Dizzy.lib))
     (library (logical device)
       (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\device.lib"))
     (library (logical conn)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
-    (library (logical Dizzy)
-      (uri C:\_source\dizzyrobot\Schamatic\Lib\Dizzy.lib)))
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib")))
   (nets
     (net (code 1) (name "Net-(C2-Pad2)")
       (node (ref U1) (pin 6))
