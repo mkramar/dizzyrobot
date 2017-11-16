@@ -48,7 +48,7 @@ armLength = 160;
 // shoulder -------------------------------------------------------------------
 
 shoulderWidth = 140;
-shoulderY = 30;
+shoulderY = 10;
 shoulderX = shoulderWidth/2;
 shoulderZ = 300;
 shoulderOffset = [shoulderX, shoulderY, shoulderZ];

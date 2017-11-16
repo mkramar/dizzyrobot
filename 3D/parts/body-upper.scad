@@ -1,6 +1,6 @@
 include <../sizes.scad>
 include <_common.scad>
-include <motor.scad>
+include <motor6-tyi.scad>
 include <elec.scad>
 
 module bodyUpperAssembly(){
@@ -19,9 +19,9 @@ module bodyUpperAssembly(){
 	translate([0, 30, 160])
 		cube(battery, center = true);
 		
-	color("red")
-	translate([0, 30, 40])
-		motor6();
+	translate([0, -15, 150])
+	rotate([-90, -90, 0])
+	pi3();
 }
 
 module bodyUpper(mode){
@@ -112,8 +112,16 @@ module bodUpperBase(mode) {
 		translate([0, shoulderY, shoulderZ])
 			spineEnd(mode);
 	
-		translate([0, 30, 60])
+		translate([0, shoulderY, 60])
 			spineEnd(mode);
+	}
+	
+	hull() {
+		translate([0, shoulderY, 60])
+			spineEnd(mode);
+			
+		mirror([0, 0, 1])	
+			motor6caseStator(mode);	
 	}
 }
 
@@ -127,9 +135,7 @@ module spineEnd(mode){
 }
 
 module bodyUpperMotors(){
-	translate(bodyMotorOffset)
-	rotate([-90, 0, 0])
-		motor6();
+
 }
 
 module bodySimmetry(){

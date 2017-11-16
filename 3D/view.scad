@@ -58,7 +58,7 @@ module bodyToShoulder(angle){
 }
 
 module bodyLowerToBodyUpper(angle) {
-	translate(waistMotorOffset)
+	translate(waistMotorOffset2)
 	rotate([0, 0, angle])
 		children();
 }

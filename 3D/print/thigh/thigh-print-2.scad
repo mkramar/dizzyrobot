@@ -1,6 +1,6 @@
 include <thigh-print.scad>
 
-//$fn = 50;
+$fn = 50;
 
 cutNuts(boltPositions){
 	rotate([0, -90, 0])thigh();

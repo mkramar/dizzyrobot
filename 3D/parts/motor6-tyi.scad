@@ -86,7 +86,7 @@ module motor6RotorHolderPlus() {
 	for (a = [0 : 60 : 360])
 		rotate([0, 0, a])
 			translate([0, 20, motor6H])
-				cube([th, 40, 40], center = true);
+				cube([th, 90, 40], center = true);
 }
 
 module motor6RotorHolderMinus() {

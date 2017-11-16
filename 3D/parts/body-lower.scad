@@ -1,6 +1,6 @@
 include <../sizes.scad>
 include <_common.scad>
-include <motor.scad>
+include <motor6-tyi.scad>
 include <elec.scad>
 use <../lib/shapes.scad>
 
@@ -16,12 +16,12 @@ module bodyLowerAssembly(){
 	
 	%translate(headOffset)
 		sphere(d = headD);
-		
-	translate([0, 30, 160])
-		cube(battery, center = true);
 }
 
 module bodyLower(mode){
+	boardOffset = [-27, -17, 13];
+	boardAngle = -35;
+	
 	difference(){
 		union() {
 			difference() {
@@ -38,7 +38,7 @@ module bodyLower(mode){
 						
 						translate(waistMotorOffset2)
 						mirror([0, 0, 1])
-						//rotate([0, 0, 35])
+						rotate([0, 0, 60])
 							motor6RotorHolderPlus();
 						
 						// heap motors
@@ -52,16 +52,15 @@ module bodyLower(mode){
 						// boards
 
 						bodySimmetry()
-						translate([-22, -23, 17])
-						rotate([-35, 0, 0])
+						translate(boardOffset)
+						rotate([boardAngle, 0, 0])
 						rotate([-90, 0, 0])
-						//rotate([0, 0, -10])
-							boardHolder();
+							boardHolderPlus();
 							
 						//
  
 						translate([0, 0, -10])
-							cube([th, 100, 100], center = true);
+							cube([th, 130, 100], center = true);
 					}
 				}
 			}
@@ -72,10 +71,8 @@ module bodyLower(mode){
 			
 			bodySimmetry()
 			translate(bodyMotorOffset)
-			rotate([-90, 0, 0]) {
+			rotate([-90, 0, 0])
 				motor6MinusRotor();
-				//cylinder(d = heapConnectorCylinderD + th * 2 + gap * 2, h = 120);
-			}
 			
 			bodySimmetry()
 			translate(bodyMotorOffset)
@@ -90,7 +87,7 @@ module bodyLower(mode){
 			
 			translate(waistMotorOffset2)
 			mirror([0, 0, 1]) 
-			//rotate([0, 0, 35]) 
+			rotate([0, 0, 60])
 			{
 				motor6RotorHolderMinus();
 				motor6();
@@ -109,28 +106,39 @@ module bodyLower(mode){
 			// cable hole
 			
 			bodySimmetry()
-			translate([20, -20, -17])
+			translate([15, -20, -30])
 			rotate([90, 0, 0])
 				cylinder(d = 15, h = 30);
-		}		
+				
+			bodySimmetry()
+			translate(boardOffset)
+			rotate([boardAngle, 0, 0])
+			rotate([-90, 0, 0])
+				boardHolderMinus();
+							
+			// adjustments
+
+			translate(waistMotorOffset2)
+			mirror([0, 0, 1]) 
+			translate([-25, 5, motor6H + 20])
+				cube([50, 50, 50]);
+				
+			translate([0, 27, -50])
+			rotate([-20, 0, 0])
+				cube([80, 50, 50], center = true);
+		}
 	}
-		//
-		
-	// if (mode != "preview") {
-		// intersection() {
-			// bodyLowerBase("outer");			
-			
-			// translate([0, 0, -10])
-			// cube([th, 100, 100], center = true);
-		// }		
-	// }
 }
 
 module bodyLowerBase(mode) {	
 	hull(){
 		translate(waistMotorOffset2)
-		mirror([0, 0, 1])
+		mirror([0, 0, 1]) {
 			motor6caseRotor(mode);
+				
+			translate([0, 0, motor6Cut + gap/2]) 
+				cylinder(d = motor6D + plus2th(mode), h = 80, center = false);
+		}
 	
 		bodySimmetry()
 		translate(bodyMotorOffset)

@@ -1,7 +1,8 @@
 include <../sizes.scad>
 use <../lib/shapes.scad>
 use <_common.scad>
-use <motor.scad>
+include <motor6-tyi.scad>
+include <motor8.scad>
 use <elec.scad>
 
 module thighAssembly(){
@@ -56,23 +57,17 @@ module thigh(mode) {
 					thighBase("outer");
 
 					union() {
-						translate([0, 0, -thighLength])
-						translate([20, 0, 60])
-						rotate([0, -90, 0])
-						rotate([0, 0, 90])
-							boardHolder();
+						_toThighBoard1()
+							boardHolderPlus();
 					
-						translate([20, 0, -60])
-						rotate([0, -90, 0])
-						rotate([0, 0, 90])
-							boardHolder();
+						_toThighBoard2()
+							boardHolderPlus();
 					}
 				}
 			}
 		}
 		
 		if (mode != "preview")
-		//render()
 		{
 			rotate([0, -90, 0])
 				motor8StatorHolderMinus();
@@ -88,6 +83,12 @@ module thigh(mode) {
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
 				motor8();
+	
+			_toThighBoard1()
+				boardHolderMinus();
+		
+			_toThighBoard2()
+				boardHolderMinus();				
 		}
 	}
 }
@@ -95,7 +96,7 @@ module thigh(mode) {
 module thighBase(mode){
 	zUp = 10;
 	zDn = 10;
-	x = 10;
+	x = 9;
 	
 	h = 16 + plus2th(mode);
 	d1 = 56 + plus2th(mode);
@@ -148,4 +149,19 @@ module thighMotor(){
 	translate(thighMotorOffset)
 	rotate([0, -90, 0])
 		motor8();
+}
+
+// private --------------------------------------------------------------------
+
+module _toThighBoard1(){
+	translate([0, 0, -thighLength])
+	translate([15, 0, 70])
+	rotate([0, -90, 0])
+		children();
+}
+
+module _toThighBoard2(){
+	translate([15, 0, -70])
+	rotate([0, -90, 0])
+		children();
 }
