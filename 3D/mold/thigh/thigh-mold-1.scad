@@ -10,14 +10,9 @@ moldMoldA(thighBoltPositions, lockPositions){
 	translate(partUp) rotate([0, -90, 0]) thighStructPlus();
 	translate(partUp) rotate([0, -90, 0]) thighStructMinus();
 	
-	union() {
-		translate(boxToPart) boxBottomA(boxSize);
-		thighBoxAdjustment();
-	}
-	
-	//difference(){
-		translate(boxToPart) boxVolumeA(boxSize);
-	//	thighBoxAdjustment();
-	//}
+	translate(boxToPart) boxBottomA(boxSize);
+	translate(boxToPart) boxVolumeA(boxSize);
+
+	thighBoxAdjustment();	
 }
 

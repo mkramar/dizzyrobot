@@ -1,6 +1,12 @@
-include <thigh-print.scad>
+include <../../sizes.scad>
+include <../../parts/_common.scad>
+include <../../parts/motor8.scad>
+include <../../lib/shapes.scad>
 include <../../lib/cut.scad>
+include <../../parts/thigh.scad>
 include <../../lib/moldFramework.scad>
+
+include <thigh-print.scad>
 
 //$fn = 50;
 
@@ -10,7 +16,7 @@ cutA(thighBoltPositions){
 	thighShell("inner");
 	thighStructPlus();
 	thighStructMinus();
-	cut();
+	#thighPrintCut();
 }
 
 // mirror([0, 0, 1]) {

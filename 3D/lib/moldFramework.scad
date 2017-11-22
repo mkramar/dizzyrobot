@@ -105,10 +105,7 @@ module moldMoldA(bolts, locks){
 	difference() {
 		union() {
 			intersection() {
-				//difference() {
-					children(5);			// volume
-				//	children(4);			// box bottom
-				//}
+				children(5);				// volume
 
 				difference() {
 					children(0);			// shell outer
@@ -116,12 +113,10 @@ module moldMoldA(bolts, locks){
 				}
 			}
 			
+			children(6);					// box adjustment
+			
 			intersection() {
-				//difference() {
-					children(5);			// volume
-				//	children(4);			// box bottom
-				//}
-				
+				children(5);				// volume
 				children(1);				// shell inner
 			}
 			
@@ -144,6 +139,7 @@ module moldMoldB(bolts, locks){
 	difference() {
 		children(5);						// volume
 		children(1);						// shell inner
+		children(6);						// box adjustment
 		
 		for (x = locks){
 			translate(x)
@@ -161,14 +157,18 @@ module moldMoldB(bolts, locks){
 		}
 	}
 
-	intersection() {
-		children(5);						// volume
-		children(1);						// shell inner	
+	difference() {
+		intersection() {
+			children(5);						// volume
+			children(1);						// shell inner	
+			
+			for (x = bolts){
+				translate(x)
+				boltPlus();
+			}				
+		}
 		
-		for (x = bolts){
-			translate(x)
-			boltPlus();
-		}				
+		children(6);						// box adjustment
 	}
 }
 

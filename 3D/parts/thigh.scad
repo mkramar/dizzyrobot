@@ -206,7 +206,7 @@ module thighMotor(){
 
 // print & mold ---------------------------------------------------------------
 
-cutLevel = 6;
+cutLevel = 9;
 thighBoltPositions = [[50, 22, cutLevel], [50, -22, cutLevel],
 				 [150, 20, cutLevel], [150, -20, cutLevel]];
 thighLockPositions = [];
@@ -215,17 +215,43 @@ boxToPart = [-70, -70, 0];
 partUp = [0, 0, 3.5];
 
 module thighBoxAdjustment(){
+	h = motor8H + 10 + plus2th("outer");
+	d = motor8D + plus2th("outer");
+	a1 = 35;
+	a2 = 40;
+	
 	difference() {
-		cube([200, 200, cutLevel]);
+		translate([0, -50, -0.01])
+			cuboid(thighLength, 100, cutLevel, 1);
 		
-		rotate([0, -90, 0]) {
+		rotate([0, -90, 0]) 
+		translate([cutLevel, 0, 0]){
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
-				motor8caseRough("outer");
+				//motor8caseRough("outer");
+				cylinderSector(d, h, a1, 360-a1);
 				
 			rotate([0, -90, 0])
-				motor8caseRough("outer");
+			mirror([1, 0, 0])
+				cylinderSector(d, h, a2, 360-a2);
 		}
+	}
+}
+
+module thighPrintCut() {
+	translate([cutLevel, -50, -300])
+		cube([20, 100, 400]);
+		
+	union() {
+		translate([cutLevel, 0, 0])
+		translate(thighMotorOffset)
+		rotate([0, -90, 0])
+			motor8caseRough("outer");
+		
+		translate([cutLevel, 0, 0])		
+		rotate([0, -90, 0])
+			motor8caseRough("outer");
+			
 	}
 }
 
