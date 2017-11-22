@@ -2,7 +2,7 @@ include <../../lib/moldFramework.scad>
 include <../../parts/thigh.scad>
 
 rotate([180, 0, 0])
-moldMoldB(thighBoltPositions, lockPositions){
+moldMoldB(thighBoltPositions, thighLockPositions){
 	translate(partUp) rotate([0, -90, 0]) thighShell("outer");
 	translate(partUp) rotate([0, -90, 0]) thighShell("inner");
 	

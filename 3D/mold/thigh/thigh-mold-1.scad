@@ -3,7 +3,7 @@ include <../../parts/thigh.scad>
 
 
 
-moldMoldA(thighBoltPositions, lockPositions){
+moldMoldA(thighBoltPositions, thighLockPositions){
 	translate(partUp) rotate([0, -90, 0]) thighShell("outer");
 	translate(partUp) rotate([0, -90, 0]) thighShell("inner");
 	
@@ -16,3 +16,4 @@ moldMoldA(thighBoltPositions, lockPositions){
 	thighBoxAdjustment();	
 }
 
+translate(boxToPart) boxBorderA(boxSize);

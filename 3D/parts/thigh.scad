@@ -208,10 +208,11 @@ module thighMotor(){
 
 cutLevel = 9;
 thighBoltPositions = [[50, 22, cutLevel], [50, -22, cutLevel],
-				 [150, 20, cutLevel], [150, -20, cutLevel]];
-thighLockPositions = [];
-boxSize = [340, 140, 100];
-boxToPart = [-70, -70, 0];
+				     [150, 20, cutLevel], [150, -20, cutLevel]];
+thighLockPositions = [[-40, -45, 0], [-40, 45, 0], [thighLength + 40, -45, 0], [thighLength + 40, 45, 0],
+                      [45, 42, cutLevel], [45, -42, cutLevel], [thighLength - 45, 42, cutLevel], [thighLength - 45, -42, cutLevel]];
+boxSize = [320, 140, 30];
+boxToPart = [-60, -70, 0];
 partUp = [0, 0, 3.5];
 
 module thighBoxAdjustment(){
@@ -221,14 +222,13 @@ module thighBoxAdjustment(){
 	a2 = 40;
 	
 	difference() {
-		translate([0, -50, -0.01])
-			cuboid(thighLength, 100, cutLevel, 1);
+		translate([0, -55, -0.01])
+			cuboid(thighLength, 110, cutLevel, 1);
 		
 		rotate([0, -90, 0]) 
 		translate([cutLevel, 0, 0]){
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
-				//motor8caseRough("outer");
 				cylinderSector(d, h, a1, 360-a1);
 				
 			rotate([0, -90, 0])
