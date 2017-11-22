@@ -4,7 +4,7 @@ use <_common.scad>
 include <motor6-tyi.scad>
 include <motor8.scad>
 use <elec.scad>
-
+				 
 module thighAssembly(){
 	#coords();
 
@@ -33,13 +33,13 @@ module thigh(mode) {
 	difference() {
 		union() {
 			difference() {
-				thighBase("outer");
-				thighBase("inner");
+				thighShell("outer");
+				thighShell("inner");
 			}
 
 			if (mode != "preview")
 			intersection() {
-				thighBase("outer");
+				thighShell("outer");
 		
 				union() {
 					rotate([0, -90, 0])
@@ -54,7 +54,7 @@ module thigh(mode) {
 			
 			if (mode != "preview") {
 				intersection() {
-					thighBase("outer");
+					thighShell("outer");
 
 					union() {
 						_toThighBoard1()
@@ -67,8 +67,7 @@ module thigh(mode) {
 			}
 		}
 		
-		if (mode != "preview")
-		{
+		if (mode != "preview"){
 			rotate([0, -90, 0])
 				motor8StatorHolderMinus();
 				
@@ -93,7 +92,61 @@ module thigh(mode) {
 	}
 }
 
-module thighBase(mode){
+module thighStructPlus(){
+	//if (mode != "preview")
+	//intersection() {
+	//	thighShell("outer");
+
+		union() {
+			rotate([0, -90, 0])
+			rotate([0, 0, 180])
+				motor8StatorHolderPlus();
+		
+			translate(thighMotorOffset)
+			rotate([0, -90, 0])
+				motor8StatorHolderPlus();
+		}
+	//}
+	
+	//if (mode != "preview") {
+	//	intersection() {
+	//		thighShell("outer");
+
+			union() {
+				_toThighBoard1()
+					boardHolderPlus();
+			
+				_toThighBoard2()
+					boardHolderPlus();
+			}
+	//	}
+	//}
+}
+
+module thighStructMinus(){
+	rotate([0, -90, 0])
+		motor8StatorHolderMinus();
+		
+	rotate([0, -90, 0])
+		motor8();
+
+	translate(thighMotorOffset)
+	rotate([0, -90, 0])
+	rotate([0, 0, 180])
+		motor8StatorHolderMinus();
+		
+	translate(thighMotorOffset)
+	rotate([0, -90, 0])
+		motor8();
+
+	_toThighBoard1()
+		boardHolderMinus();
+
+	_toThighBoard2()
+		boardHolderMinus();				
+}
+
+module thighShell(mode){
 	zUp = 10;
 	zDn = 10;
 	x = 9;
@@ -149,6 +202,31 @@ module thighMotor(){
 	translate(thighMotorOffset)
 	rotate([0, -90, 0])
 		motor8();
+}
+
+// print & mold ---------------------------------------------------------------
+
+cutLevel = 6;
+thighBoltPositions = [[50, 22, cutLevel], [50, -22, cutLevel],
+				 [150, 20, cutLevel], [150, -20, cutLevel]];
+thighLockPositions = [];
+boxSize = [340, 140, 100];
+boxToPart = [-70, -70, 0];
+partUp = [0, 0, 3.5];
+
+module thighBoxAdjustment(){
+	difference() {
+		cube([200, 200, cutLevel]);
+		
+		rotate([0, -90, 0]) {
+			translate(thighMotorOffset)
+			rotate([0, -90, 0])
+				motor8caseRough("outer");
+				
+			rotate([0, -90, 0])
+				motor8caseRough("outer");
+		}
+	}
 }
 
 // private --------------------------------------------------------------------

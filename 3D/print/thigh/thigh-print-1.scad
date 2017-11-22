@@ -1,28 +1,22 @@
 include <thigh-print.scad>
 include <../../lib/cut.scad>
+include <../../lib/moldFramework.scad>
 
-$fn = 50;
+//$fn = 50;
 
-mirror([0, 0, 1]) {
-	cutBolts(boltPositions){
-		rotate([0, -90, 0]) thigh();
-		rotate([0, -90, 0]) cut();
-		rotate([0, -90, 0]) thighBase("outer");
-	}
+rotate([0, 90, 0])
+cutA(thighBoltPositions){
+	thighShell("outer");
+	thighShell("inner");
+	thighStructPlus();
+	thighStructMinus();
+	cut();
 }
 
-// difference() {
-	// union() {
-		// difference() {
-			// thigh();
-			// cut();
-		// }
-		
-		// intersection(){
-			// thighBase("outer");
-			// boltsPlus();
-		// }
+// mirror([0, 0, 1]) {
+	// cutBolts(boltPositions){
+		// rotate([0, -90, 0]) thigh();
+		// rotate([0, -90, 0]) cut();
+		// rotate([0, -90, 0]) thighShell("outer");
 	// }
-	
-	// boltsMinus();
 // }
