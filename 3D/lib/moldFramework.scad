@@ -99,33 +99,30 @@ module cutB(bolts){
 
 // mold mold ------------------------------------------------------------------
 
-module moldMoldA(bolts, locks){	
-	children(4);							// box bottom
+module moldMoldA(bolts, locks, boxToPart, boxSize) {	
+	translate(boxToPart) boxBottomA(boxSize);	
 	
 	difference() {
 		union() {
 			intersection() {
-				children(5);				// volume
-
-				difference() {
-					children(0);			// shell outer
-					children(3);			// structure minus
+				translate(boxToPart) boxVolumeA(boxSize);
+				
+				union() {
+					children(0);			// shell outer					
+					children(5);			// pour					
 				}
 			}
 			
 			children(6);					// box adjustment
-			
-			intersection() {
-				children(5);				// volume
-				children(1);				// shell inner
-			}
-			
+
 			for (x = locks){
 				translate(x)
 					sphere(d=lockPlus);
 			}
 		}
 		
+		children(4);						// structure minus outer
+
 		for (x = bolts){
 			translate(x)
 				boltMinus(10);
@@ -133,39 +130,42 @@ module moldMoldA(bolts, locks){
 	}
 }
 
-module moldMoldB(bolts, locks){	
-	children(4);							// box bottom
+module moldMoldB(bolts, locks, boxToPart, boxSize){	
+	translate(boxToPart) boxBottomB(boxSize);
+	
+	intersection() {
+		children(5);						// pour
+		translate(boxToPart) boxOverB(boxSize);
+	}
 	
 	difference() {
-		children(5);						// volume
+		translate(boxToPart) boxVolumeB(boxSize);
 		children(1);						// shell inner
 		children(6);						// box adjustment
 		
-		for (x = locks){
+		for (x = locks)
 			translate(x)
 				sphere(d=lockMinus);
-		}	
 	}
 	
 	intersection() {
-		children(5);						// volume
+		translate(boxToPart) boxVolumeB(boxSize);
 		children(1);						// shell inner	
 		
 		difference() {
 			children(2);					// structure plus
-			children(3);					// structure minus
+			children(3);					// structure minus inner
 		}
 	}
 
 	difference() {
 		intersection() {
-			children(5);						// volume
+			translate(boxToPart) boxVolumeB(boxSize);
 			children(1);						// shell inner	
 			
-			for (x = bolts){
+			for (x = bolts)
 				translate(x)
-				boltPlus();
-			}				
+					boltPlus();
 		}
 		
 		children(6);						// box adjustment
@@ -224,6 +224,11 @@ module boxBottomB(box) {
 		translate([0, 0, box[2]])
 			cube([box[0], box[1], boxTh]);
 	}
+}
+
+module boxOverB(box){
+	mirror([0, 0, 1])
+		cuboid(box[0], box[1], moldTh, -plusAngle(moldTh));
 }
 
 // bolts ----------------------------------------------------------------------

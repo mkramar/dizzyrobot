@@ -98,13 +98,8 @@ module thighStructPlus(){
 	//	thighShell("outer");
 
 		union() {
-			rotate([0, -90, 0])
-			rotate([0, 0, 180])
-				motor8StatorHolderPlus();
-		
-			translate(thighMotorOffset)
-			rotate([0, -90, 0])
-				motor8StatorHolderPlus();
+			_toMotor1() motor8StatorHolderPlus();		
+			_toMotor2() motor8StatorHolderPlus();
 		}
 	//}
 	
@@ -112,38 +107,47 @@ module thighStructPlus(){
 	//	intersection() {
 	//		thighShell("outer");
 
-			union() {
-				_toThighBoard1()
-					boardHolderPlus();
+			_toThighBoard1() boardHolderPlus();
+			_toThighBoard2() boardHolderPlus();					
 			
-				_toThighBoard2()
-					boardHolderPlus();
-			}
+			_toTerminator1() terminatorHolderPlus();
+			_toTerminator2() terminatorHolderPlus();
 	//	}
 	//}
 }
 
 module thighStructMinus(){
-	rotate([0, -90, 0])
-		motor8StatorHolderMinus();
-		
-	rotate([0, -90, 0])
+	thighStructMinusInner();
+	thighStructMinusOuter();
+}
+
+module thighStructMinusOuter(){
+	_toMotor1() motor8StatorHolderMinusOuter();
+	_toMotor2() motor8StatorHolderMinusOuter();
+
+	_toThighBoard1() boardHolderMinus();
+	_toThighBoard2() boardHolderMinus();				
+	
+	_toTerminator1() terminatorHolderMinusOuter();
+	_toTerminator2() terminatorHolderMinusOuter();	
+}
+
+module thighStructMinusInner(){
+	_toMotor1() {
+		motor8StatorHolderMinusInner();
 		motor8();
+	}
 
-	translate(thighMotorOffset)
-	rotate([0, -90, 0])
-	rotate([0, 0, 180])
-		motor8StatorHolderMinus();
-		
-	translate(thighMotorOffset)
-	rotate([0, -90, 0])
+	_toMotor2() {
+		motor8StatorHolderMinusInner();
 		motor8();
+	}
 
-	_toThighBoard1()
-		boardHolderMinus();
-
-	_toThighBoard2()
-		boardHolderMinus();				
+	// _toThighBoard1() boardHolderMinus();
+	// _toThighBoard2() boardHolderMinus();				
+	
+	_toTerminator1() terminatorHolderMinusInner();
+	_toTerminator2() terminatorHolderMinusInner();	
 }
 
 module thighShell(mode){
@@ -195,25 +199,29 @@ module thighShell(mode){
 		translate(thighMotorOffset)
 		rotate([0, -90, 0])
 			motor8MinusRotor();
+			
+		// cable holes
+		
+		_toCableHole1() cylinder(d1 = 8, d2 = 10, h = 10);			
+		_toCableHole2() cylinder(d1 = 8, d2 = 10, h = 10);		
 	}
 }
 
 module thighMotor(){
-	translate(thighMotorOffset)
-	rotate([0, -90, 0])
-		motor8();
+	_toMotor2() motor8();
 }
 
 // print & mold ---------------------------------------------------------------
 
-cutLevel = 9;
-thighBoltPositions = [[50, 22, cutLevel], [50, -22, cutLevel],
-				     [150, 20, cutLevel], [150, -20, cutLevel]];
-thighLockPositions = [[-40, -45, 0], [-40, 45, 0], [thighLength + 40, -45, 0], [thighLength + 40, 45, 0],
-                      [45, 42, cutLevel], [45, -42, cutLevel], [thighLength - 45, 42, cutLevel], [thighLength - 45, -42, cutLevel]];
+thighCutLevel = 9;
+thighMoldDown = -3.5;
+thighBoltPositions = [[50, 22, thighCutLevel], [50, -22, thighCutLevel],
+				     [150, 20, thighCutLevel], [150, -20, thighCutLevel]];
+thighLockPositions = [[-40, -55, thighMoldDown], [-20, 55, thighMoldDown], [thighLength + 40, -55, thighMoldDown], [thighLength + 20, 55, thighMoldDown],
+                      [45, 42, thighCutLevel + thighMoldDown], [45, -42, thighCutLevel + thighMoldDown], [thighLength - 45, 42, thighCutLevel + thighMoldDown], [thighLength - 45, -42, thighCutLevel + thighMoldDown]];
 boxSize = [320, 140, 30];
-boxToPart = [-60, -70, 0];
-partUp = [0, 0, 3.5];
+boxToPart = [-60, -70, thighMoldDown];
+partUp = [0, 0, 0];
 
 module thighBoxAdjustment(){
 	h = motor8H + 10 + plus2th("outer");
@@ -221,12 +229,13 @@ module thighBoxAdjustment(){
 	a1 = 35;
 	a2 = 40;
 	
+	translate([0, 0, thighMoldDown])
 	difference() {
 		translate([0, -55, -0.01])
-			cuboid(thighLength, 110, cutLevel, 1);
+			cuboid(thighLength, 110, thighCutLevel, 1);
 		
 		rotate([0, -90, 0]) 
-		translate([cutLevel, 0, 0]){
+		translate([thighCutLevel, 0, 0]){
 			translate(thighMotorOffset)
 			rotate([0, -90, 0])
 				cylinderSector(d, h, a1, 360-a1);
@@ -239,23 +248,72 @@ module thighBoxAdjustment(){
 }
 
 module thighPrintCut() {
-	translate([cutLevel, -50, -300])
+	translate([thighCutLevel, -50, -300])
 		cube([20, 100, 400]);
 		
 	union() {
-		translate([cutLevel, 0, 0])
+		translate([thighCutLevel, 0, 0])
 		translate(thighMotorOffset)
 		rotate([0, -90, 0])
 			motor8caseRough("outer");
 		
-		translate([cutLevel, 0, 0])		
+		translate([thighCutLevel, 0, 0])		
 		rotate([0, -90, 0])
 			motor8caseRough("outer");
 			
 	}
 }
 
+module thighPour() {
+	_thighPour();
+	
+	translate([thighLength, 0, 0])
+	mirror(0, 0, 1)
+		_thighPour();
+}
+
+module _thighPour() {
+	p1 = [-35, 60, 0];
+	p2 = [-54, 20, 0];
+	p3 = [-54, -30, 0];
+	p4 = [-15, -55, 0];
+	p5 = [-10, -45, 0];
+	
+	translate([0, 0, thighMoldDown]){
+		translate(p1)
+		rotate([-90, 0, 0])
+			cylinder(d1 = 4, d2 = 35, h = 10);
+		
+		rod(p1, p2, 4, $fn = 15);
+		rod(p2, p3, 4, $fn = 15);
+		rod(p3, p4, 4, $fn = 15);
+		rod(p4, p5, 3, $fn = 15);
+		
+		//
+		
+		p6 = [-5, 60, 0];
+		p7 = [-5, 46, 0];
+		
+		translate(p6)
+		rotate([-90, 0, 0])
+			cylinder(d1 = 3, d2 = 20, h = 10);	
+		
+		rod(p6, p7, 3, $fn = 15);
+	}
+}
+
 // private --------------------------------------------------------------------
+
+module _toMotor1() {
+	rotate([0, -90, 0])
+	rotate([0, 0, 180])
+		children();
+}
+module _toMotor2() {
+	translate(thighMotorOffset)
+	rotate([0, -90, 0])
+		children();
+}
 
 module _toThighBoard1(){
 	translate([0, 0, -thighLength])
@@ -263,9 +321,33 @@ module _toThighBoard1(){
 	rotate([0, -90, 0])
 		children();
 }
-
 module _toThighBoard2(){
 	translate([15, 0, -70])
 	rotate([0, -90, 0])
+		children();
+}
+
+module _toTerminator1(){
+	translate([18, 0, -34])
+	rotate([0, 90, 0])
+	rotate([0, 0, 90])
+		children();
+}
+module _toTerminator2(){
+	translate([19, 0, -thighLength+34])
+	rotate([0, 90, 0])
+	rotate([0, 0, -90])
+		children();
+}
+
+module _toCableHole1(){
+	translate([15, 0, -20])
+	rotate([0, 90, 0])
+		children();		
+
+}
+module _toCableHole2(){
+	translate([15, 0, -thighLength+20])
+	rotate([0, 90, 0])
 		children();
 }

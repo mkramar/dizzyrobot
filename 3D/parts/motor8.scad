@@ -84,41 +84,40 @@ module motor8StatorHolderPlus() {
 		
 	mirror([0, 0, 1])
 	translate([0, 0, 5])
-	difference() {
 		cylinder(d1 = 22, d2 = 25, h = 20);
-		
-		translate([7.5, -8.5/2, 0])
-			cube([10, 8.5, 20]);
-	}
 	
 	// translate([0, 0, -7.5])
 	// rotate([0, 0, 90])
 		// magnetoSensor();	
 }
 
-module motor8StatorHolderMinus() {	for (a = [-45, 45])
-		rotate([0, 0, a]) {
-			mirror([0, 0, 1]) {
-				translate([15, 0, 0])
-					boltMinus(6, 50);
-					
-				translate([-15, 0, 0])
-					boltMinus(6, 50);					
-			}
-		}
-	
-	mirror([0, 0, 1]) {
+module motor8StatorHolderMinus() {	motor8StatorHolderMinusInner();
+	motor8StatorHolderMinusOuter();
+}
+
+module motor8StatorHolderMinusInner(){
+	mirror([0, 0, 1])
 		cylinder(d = 20.5, h = 5);
 		
-		translate([0, 0, 5])
-		translate([0, 0, 4 + th])
-			cylinder(d1 = 22 - th*2, d2 = 25-th*2, h = 20);
-	}
-	
 	translate([0, 0, -7.5])
-	rotate([0, 0, 90])
+	rotate([0, 0, -90])
 		magnetoSensorSpacing();
-	
+}
+module motor8StatorHolderMinusOuter(){
+	for (a = [-45, 45])
+	rotate([0, 0, a])
+	mirror([0, 0, 1]) {
+		translate([15, 0, 0])
+			boltMinus(6, 50);
+			
+		translate([-15, 0, 0])
+			boltMinus(6, 50);					
+	}
+
+	mirror([0, 0, 1])
+	translate([0, 0, 5])
+	translate([0, 0, 4 + th])
+		cylinder(d1 = 22 - th*2, d2 = 25-th*2, h = 20);
 }
 
 module motor8RotorHolderPlus() {

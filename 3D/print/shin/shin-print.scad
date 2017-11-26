@@ -6,14 +6,14 @@ include <../../lib/shapes.scad>
 include <../../lib/cut.scad>
 include <../../parts/shin.scad>
 
-cutLevel = -25;
+thighCutLevel = -25;
 
-boltPositions = [[-55, 20, -cutLevel], [-55, -20, -cutLevel],
-				 [-160, 14, -cutLevel], [-160, -14, -cutLevel]];
+boltPositions = [[-55, 20, -thighCutLevel], [-55, -20, -thighCutLevel],
+				 [-160, 14, -thighCutLevel], [-160, -14, -thighCutLevel]];
 
 module cut() {
 	difference() {
-		translate([cutLevel, -50, -shinLength])
+		translate([thighCutLevel, -50, -shinLength])
 		//mirror([1, 0, 0])
 			cube([20, 100, shinLength]);
 			

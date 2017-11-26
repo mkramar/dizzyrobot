@@ -16,7 +16,7 @@ cutA(thighBoltPositions){
 	thighShell("inner");
 	thighStructPlus();
 	thighStructMinus();
-	#thighPrintCut();
+	thighPrintCut();
 }
 
 // mirror([0, 0, 1]) {

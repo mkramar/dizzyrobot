@@ -2,8 +2,8 @@ include <../sizes.scad>
 include <../lib/boltFlat.scad>
 
 // difference() {
-	// boardHolderPlus();
-	// boardHolderMinus();
+	// terminatorHolderPlus();
+	// terminatorHolderMinus();
 // }
 
 // motor board  ---------------------------------------------------------------
@@ -116,4 +116,24 @@ module pi3()
     color("silver") translate([0,22,-2.9]) cube([13,14,1.5]);    
     color("darkgrey") translate([-2.4,23.5,-2.65]) cube([2.4,11,1]);
   }
+}
+
+// O-terminator holder --------------------------------------------------------
+
+module terminatorHolderPlus(){
+	cylinder(d = 14, h = 20);
+}
+
+module terminatorHolderMinus(){
+	terminatorHolderMinusOuter();
+	terminatorHolderMinusInner();
+}
+
+module terminatorHolderMinusInner(){
+	translate([0, 0, -0.01]) cylinder(d = 10, h = 2);
+	translate([0, 4, 0]) cube([6, 6, 4], center = true);
+}
+
+module terminatorHolderMinusOuter(){
+	mirror([0, 0, 1]) nutMinus(20);
 }
