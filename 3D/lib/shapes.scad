@@ -82,7 +82,7 @@ module pyramid(w, l, h) {
 //h - height
 //taper - how much to taper the each edge at the top by
 
-module tapered_cuboid(w, l, h, taper) {
+module cuboid(w, l, h, taper) {
 	ho = taper;
 	hw = w - taper;
 	hl = l - taper;

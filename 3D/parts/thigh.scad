@@ -11,9 +11,9 @@ module thighAssembly(){
 	color("white") thighMotor();
 			
 	difference() {
-		union() {
-			color("tan") thigh("preview");
-		}
+		color("tan") //thigh("preview");
+			thighShell("outer");
+			thighShell("inner");
 		
 		translate([-20, 0, -50])
 			cube([100, 100, 100]);
@@ -29,91 +29,78 @@ module thighAssembly(){
 	}
 }
 
-module thigh(mode) {
-	difference() {
-		union() {
-			difference() {
-				thighShell("outer");
-				thighShell("inner");
-			}
+// module thigh(mode) {
+	// difference() {
+		// union() {
+			// difference() {
+				// thighShell("outer");
+				// thighShell("inner");
+			// }
 
-			if (mode != "preview")
-			intersection() {
-				thighShell("outer");
+			// if (mode != "preview")
+			// intersection() {
+				// thighShell("outer");
 		
-				union() {
-					rotate([0, -90, 0])
-					rotate([0, 0, 180])
-						motor8StatorHolderPlus();
+				// union() {
+					// rotate([0, -90, 0])
+					// rotate([0, 0, 180])
+						// motor8StatorHolderPlus();
 				
-					translate(thighMotorOffset)
-					rotate([0, -90, 0])
-						motor8StatorHolderPlus();
-				}
-			}
+					// translate(thighMotorOffset)
+					// rotate([0, -90, 0])
+						// motor8StatorHolderPlus();
+				// }
+			// }
 			
-			if (mode != "preview") {
-				intersection() {
-					thighShell("outer");
+			// if (mode != "preview") {
+				// intersection() {
+					// thighShell("outer");
 
-					union() {
-						_toThighBoard1()
-							boardHolderPlus();
+					// union() {
+						// _toThighBoard1()
+							// boardHolderPlus();
 					
-						_toThighBoard2()
-							boardHolderPlus();
-					}
-				}
-			}
-		}
+						// _toThighBoard2()
+							// boardHolderPlus();
+					// }
+				// }
+			// }
+		// }
 		
-		if (mode != "preview"){
-			rotate([0, -90, 0])
-				motor8StatorHolderMinus();
+		// if (mode != "preview"){
+			// rotate([0, -90, 0])
+				// motor8StatorHolderMinus();
 				
-			rotate([0, -90, 0])
-				motor8();
+			// rotate([0, -90, 0])
+				// motor8();
 		
-			translate(thighMotorOffset)
-			rotate([0, -90, 0])
-			rotate([0, 0, 180])
-				motor8StatorHolderMinus();
+			// translate(thighMotorOffset)
+			// rotate([0, -90, 0])
+			// rotate([0, 0, 180])
+				// motor8StatorHolderMinus();
 				
-			translate(thighMotorOffset)
-			rotate([0, -90, 0])
-				motor8();
+			// translate(thighMotorOffset)
+			// rotate([0, -90, 0])
+				// motor8();
 	
-			_toThighBoard1()
-				boardHolderMinus();
+			// _toThighBoard1()
+				// boardHolderMinus();
 		
-			_toThighBoard2()
-				boardHolderMinus();				
-		}
-	}
-}
+			// _toThighBoard2()
+				// boardHolderMinus();				
+		// }
+	// }
+// }
 
 module thighStructPlus(){
-	//if (mode != "preview")
-	//intersection() {
-	//	thighShell("outer");
+	_toMotor1() motor8StatorHolderPlus();	
+	_toMotor2() motor8StatorHolderPlus();
 
-		union() {
-			_toMotor1() motor8StatorHolderPlus();		
-			_toMotor2() motor8StatorHolderPlus();
-		}
-	//}
+	_toThighBoard1() boardHolderPlus();
+	_toThighBoard2() boardHolderPlus();			
 	
-	//if (mode != "preview") {
-	//	intersection() {
-	//		thighShell("outer");
-
-			_toThighBoard1() boardHolderPlus();
-			_toThighBoard2() boardHolderPlus();					
-			
-			_toTerminator1() terminatorHolderPlus();
-			_toTerminator2() terminatorHolderPlus();
-	//	}
-	//}
+	_toTerminator1() terminatorHolderPlus();
+	_toTerminator2() terminatorHolderPlus();
 }
 
 module thighStructMinus(){
@@ -142,9 +129,6 @@ module thighStructMinusInner(){
 		motor8StatorHolderMinusInner();
 		motor8();
 	}
-
-	// _toThighBoard1() boardHolderMinus();
-	// _toThighBoard2() boardHolderMinus();				
 	
 	_toTerminator1() terminatorHolderMinusInner();
 	_toTerminator2() terminatorHolderMinusInner();	
@@ -248,19 +232,28 @@ module thighBoxAdjustment(){
 }
 
 module thighPrintCut() {
+	h = motor8H + 10 + plus2th("outer");
+	d = motor8D + plus2th("outer");
+	a1 = 35;
+	a2 = 40;
+	
 	translate([thighCutLevel, -50, -300])
 		cube([20, 100, 400]);
 		
 	union() {
 		translate([thighCutLevel, 0, 0])
 		translate(thighMotorOffset)
-		rotate([0, -90, 0])
-			motor8caseRough("outer");
+		rotate([0, -90, 0]){
+			cylinderSector(d, h, a1, 360-a1);
+			cylinder(d = 50, h = h);
+		}
 		
 		translate([thighCutLevel, 0, 0])		
 		rotate([0, -90, 0])
-			motor8caseRough("outer");
-			
+		mirror([1, 0, 0]) {
+			cylinderSector(d, h, a2, 360-a2);
+			cylinder(d = 50, h = h);
+		}
 	}
 }
 
@@ -282,7 +275,7 @@ module _thighPour() {
 	translate([0, 0, thighMoldDown]){
 		translate(p1)
 		rotate([-90, 0, 0])
-			cylinder(d1 = 4, d2 = 35, h = 10);
+			cylinder(d1 = 4, d2 = 35, h = 13);
 		
 		rod(p1, p2, 4, $fn = 15);
 		rod(p2, p3, 4, $fn = 15);
@@ -296,7 +289,7 @@ module _thighPour() {
 		
 		translate(p6)
 		rotate([-90, 0, 0])
-			cylinder(d1 = 3, d2 = 20, h = 10);	
+			cylinder(d1 = 3, d2 = 20, h = 13);	
 		
 		rod(p6, p7, 3, $fn = 15);
 	}

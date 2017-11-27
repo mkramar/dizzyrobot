@@ -10,8 +10,8 @@ include <thigh-print.scad>
 
 //$fn = 50;
 
-rotate([0, 90, 0])
-cutA(thighBoltPositions){
+rotate([0, 180, 0])
+cutA([0, -90, 0], thighBoltPositions){
 	thighShell("outer");
 	thighShell("inner");
 	thighStructPlus();

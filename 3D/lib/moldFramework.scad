@@ -1,3 +1,5 @@
+include <shapes.scad>
+
 shaft = 100;
 boxTh = 10;
 moldTh = 20;
@@ -71,35 +73,35 @@ module assembly(bolts){
 
 // cut ------------------------------------------------------------------------
 
-module cutA(bolts){
+module cutA(partRotate, bolts){
 	intersection() {
 		assembly(bolts){
-			children(0);					// shell outer
-			children(1);					// shell inner
-			children(2);					// inner plus
-			children(3);					// inner minus
+			rotate(partRotate) children(0);					// shell outer
+			rotate(partRotate) children(1);					// shell inner
+			rotate(partRotate) children(2);					// inner plus
+			rotate(partRotate) children(3);					// inner minus
 		}
 		
-		children(4);						// split
+		rotate(partRotate) children(4);						// split
 	}
 }
 
-module cutB(bolts){
+module cutB(partRotate, bolts){
 	difference() {
 		assembly(bolts){
-			children(0);
-			children(1);
-			children(2);
-			children(3);
+			rotate(partRotate) children(0);
+			rotate(partRotate) children(1);
+			rotate(partRotate) children(2);
+			rotate(partRotate) children(3);
 		}
 		
-		children(4);						// split
+		rotate(partRotate) children(4);						// split
 	}
 }
 
 // mold mold ------------------------------------------------------------------
 
-module moldMoldA(bolts, locks, boxToPart, boxSize) {	
+module moldMoldA(bolts, locks, partRotate, boxToPart, boxSize) {	
 	translate(boxToPart) boxBottomA(boxSize);	
 	
 	difference() {
@@ -108,12 +110,12 @@ module moldMoldA(bolts, locks, boxToPart, boxSize) {
 				translate(boxToPart) boxVolumeA(boxSize);
 				
 				union() {
-					children(0);			// shell outer					
-					children(5);			// pour					
+					rotate(partRotate) children(0);		// shell outer					
+					children(5);						// pour					
 				}
 			}
 			
-			children(6);					// box adjustment
+			children(6);								// box adjustment
 
 			for (x = locks){
 				translate(x)
@@ -121,7 +123,7 @@ module moldMoldA(bolts, locks, boxToPart, boxSize) {
 			}
 		}
 		
-		children(4);						// structure minus outer
+		rotate(partRotate) children(4);					// structure minus outer
 
 		for (x = bolts){
 			translate(x)
@@ -130,7 +132,7 @@ module moldMoldA(bolts, locks, boxToPart, boxSize) {
 	}
 }
 
-module moldMoldB(bolts, locks, boxToPart, boxSize){	
+module moldMoldB(bolts, locks, partRotate, boxToPart, boxSize){	
 	translate(boxToPart) boxBottomB(boxSize);
 	
 	intersection() {
@@ -140,7 +142,7 @@ module moldMoldB(bolts, locks, boxToPart, boxSize){
 	
 	difference() {
 		translate(boxToPart) boxVolumeB(boxSize);
-		children(1);						// shell inner
+		rotate(partRotate) children(1);						// shell inner
 		children(6);						// box adjustment
 		
 		for (x = locks)
@@ -150,18 +152,18 @@ module moldMoldB(bolts, locks, boxToPart, boxSize){
 	
 	intersection() {
 		translate(boxToPart) boxVolumeB(boxSize);
-		children(1);						// shell inner	
+		rotate(partRotate) children(1);						// shell inner	
 		
 		difference() {
-			children(2);					// structure plus
-			children(3);					// structure minus inner
+			rotate(partRotate) children(2);					// structure plus
+			rotate(partRotate) children(3);					// structure minus inner
 		}
 	}
 
 	difference() {
 		intersection() {
 			translate(boxToPart) boxVolumeB(boxSize);
-			children(1);						// shell inner	
+			rotate(partRotate) children(1);						// shell inner	
 			
 			for (x = bolts)
 				translate(x)
@@ -268,32 +270,3 @@ module boltMinus(bolt) {
 
 function plus2th(mode) = (mode == "outer" ? th*2 : 0);
 function plusAngle(length) = length * 5 / 100;
-
-module cuboid(w, l, h, taper) {
-	ho = taper;
-	hw = w - taper;
-	hl = l - taper;
-	polyhedron( points=[
-		[ 0,  0, 0],
-		[ho, ho, h],
-		[hw, ho, h],
-		[ w,  0, 0],
-		[ 0,  l, 0],
-		[ho, hl, h],
-		[hw, hl, h],
-		[ w,  l, 0] 
-	], faces = [
-		[0, 1, 2],
-		[2, 3, 0],
-		[3, 2, 6],
-		[6, 7, 3],
-		[7, 6, 5],
-		[5, 4, 7],
-		[4, 5, 1],
-		[1, 0, 4],
-		[1, 5, 2],
-		[2, 5, 6],
-		[4, 0, 3],
-		[7, 4, 3],
-	] );
-}
