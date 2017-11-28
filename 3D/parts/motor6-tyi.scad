@@ -139,7 +139,7 @@ module motor6StatorHolderPlus() {
 			}
 			
 		mirror([0, 0, 1])
-			cylinder(d = 22, h = 15);
+			cylinder(d = 22, h = 20);
 	}
 }
 
@@ -159,7 +159,7 @@ module motor6StatorHolderMinus() {
 			}
 		
 		mirror([0, 0, 1]) {
-			cylinder(d = 18, h = sensorOffset - 2);
+			cylinder(d = 17.5, h = sensorOffset - 2);
 			
 			translate([0, 0, sensorOffset]){
 				mirror([0, 0, 1])

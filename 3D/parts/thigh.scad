@@ -205,7 +205,6 @@ thighLockPositions = [[-40, -55, thighMoldDown], [-20, 55, thighMoldDown], [thig
                       [45, 42, thighCutLevel + thighMoldDown], [45, -42, thighCutLevel + thighMoldDown], [thighLength - 45, 42, thighCutLevel + thighMoldDown], [thighLength - 45, -42, thighCutLevel + thighMoldDown]];
 boxSize = [320, 140, 30];
 boxToPart = [-60, -70, thighMoldDown];
-partUp = [0, 0, 0];
 
 module thighBoxAdjustment(){
 	h = motor8H + 10 + plus2th("outer");
