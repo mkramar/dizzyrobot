@@ -1,6 +1,8 @@
 include <../../lib/moldFramework.scad>
 include <../../parts/thigh.scad>
 
+//$fn = 60;
+
 // difference() {
 rotate([180, 0, 0])
 moldMoldB(thighBoltPositions, thighLockPositions, [0, -90, 0], boxToPart, boxSize){

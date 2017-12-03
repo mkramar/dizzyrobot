@@ -55,9 +55,9 @@ int main(void) {
 	button2Pressed = false;
 
 	while (true){
-		spiUpdateTorque();
-		//spiCurrentAngle = spiReadAngle();
-		//setPwmTorque();
+		//spiUpdateTorque();
+		spiCurrentAngle = spiReadAngle();
+		setPwmTorque();
 		
 		if (usartPendingTorqueCommand)
 		{
@@ -74,6 +74,8 @@ int main(void) {
 		{
 			calibrate(); 
 			button2Pressed = false;
+			usartTorqueCommandValue = 0;
+			usartPendingTorqueCommand = false;
 		}
 	}
 }

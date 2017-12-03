@@ -50,7 +50,7 @@ armLength = 160;
 shoulderWidth = 140;
 shoulderY = 10;
 shoulderX = shoulderWidth/2;
-shoulderZ = 300;
+shoulderZ = 200;
 shoulderOffset = [shoulderX, shoulderY, shoulderZ];
 
 // waist ----------------------------------------------------------------------
@@ -64,7 +64,7 @@ waistMotorOffset2 = [waistMotorX, waistMotorY, waistMotorZ + motor6H];
 // body -----------------------------------------------------------------------
 
 headD = 200;
-headOffsetZ = 400;
+headOffsetZ = 300;
 headOffsetY = 60;
 headOffset = [0, headOffsetY, headOffsetZ];
 

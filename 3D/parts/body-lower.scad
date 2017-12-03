@@ -13,9 +13,6 @@ module bodyLowerAssembly(){
 	
 	color("white")
 		bodyMotors();
-	
-	%translate(headOffset)
-		sphere(d = headD);
 }
 
 module bodyLower(mode){

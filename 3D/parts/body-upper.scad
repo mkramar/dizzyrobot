@@ -16,12 +16,12 @@ module bodyUpperAssembly(){
 	%translate(headOffset)
 		sphere(d = headD);
 		
-	translate([0, 30, 160])
+	translate([0, 0, 120])
 		cube(battery, center = true);
 		
-	translate([0, -15, 150])
-	rotate([-90, -90, 0])
-	pi3();
+	// translate([0, -15, 150])
+	// rotate([-90, -90, 0])
+		// pi3();
 }
 
 module bodyUpper(mode){
@@ -90,7 +90,7 @@ module bodyUpper(mode){
 			bodUpperBase("outer");			
 			
 			translate([0, 0, -10])
-			cube([th, 100, 100], center = true);
+				cube([th, 100, 100], center = true);
 		}		
 	}
 }

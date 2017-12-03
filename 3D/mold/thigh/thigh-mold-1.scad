@@ -1,6 +1,7 @@
 include <../../lib/moldFramework.scad>
 include <../../parts/thigh.scad>
 
+//$fn = 60;
 
 // intersection() {
 	union() {
