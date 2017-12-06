@@ -27,7 +27,7 @@ void initClockInternal() {
 				   RCC_AHBENR_GPIOFEN;					// enable clock for GPIOF
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
-				    RCC_APB2ENR_ADCEN |					// enable ADC
+				    //RCC_APB2ENR_ADCEN |					// enable ADC
 					RCC_APB2ENR_USART1EN |				// enable USART
 		            RCC_APB2ENR_SPI1EN;					// enable SPI
 }

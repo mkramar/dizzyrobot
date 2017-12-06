@@ -14,9 +14,6 @@ struct ConfigData
 	int calibZeros[maxPoles] = { 0 };
 	int calibRates[maxPoles] = { 0 };
 	int calibPoles = 0;
-	int calibZeroShift = 0;
-//	int calibHighestPole = 0;
-//	int calibLowestPole = 0;	
 };
 
 extern ConfigData* config;
@@ -59,8 +56,9 @@ void spiUpdateTorque();
 
 // usart ----------------------------------------------------------------------
 
-extern volatile bool usartPendingTorqueCommand;
 extern volatile int usartTorqueCommandValue;
+extern volatile bool usartDmaSendRequested;
+extern volatile bool usartDmaSendBusy;
 
 void initUsart();
 void usartSendAngle();

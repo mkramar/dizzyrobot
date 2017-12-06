@@ -50,7 +50,7 @@ int main(void) {
 	
 	//usartTorqueCommandValue = 20;	
 	
-	usartPendingTorqueCommand = false;
+	usartDmaSendRequested = false;
 	button1Pressed = false;
 	button2Pressed = false;
 
@@ -59,10 +59,10 @@ int main(void) {
 		spiCurrentAngle = spiReadAngle();
 		setPwmTorque();
 		
-		if (usartPendingTorqueCommand)
+		if (usartDmaSendRequested && !usartDmaSendBusy)
 		{
 			usartSendAngle();
-			usartPendingTorqueCommand = false;
+			usartDmaSendRequested = false;
 		}
 		
 		if (button1Pressed)
@@ -75,7 +75,7 @@ int main(void) {
 			calibrate(); 
 			button2Pressed = false;
 			usartTorqueCommandValue = 0;
-			usartPendingTorqueCommand = false;
+			usartDmaSendRequested = false;
 		}
 	}
 }
