@@ -9,11 +9,20 @@ extern const int maxPoles;
 
 int getElectricDegrees() {
 	int a = spiCurrentAngle - config->calibZeros[0];
-	if (a < 0) a += 0x4000;
-	int pole = a * config->calibPoles / 0x4000 ;
+	if (a > 0) 
+	{
+		int pole = a * config->calibPoles / 0x4000;
 	
-	int retval = ((spiCurrentAngle - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
-	return retval;	
+		int retval = ((a - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
+		return retval;
+	}
+	else
+	{
+		int pole = config->calibPoles - 1;
+		a = spiCurrentAngle + (0x4000 - config->calibZeros[pole]);
+		int retval = (a * sin_size / config->calibRates[pole]) % sin_size;
+		return retval;
+	}
 }
 
 void calibrate() {
