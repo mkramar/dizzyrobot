@@ -5,6 +5,7 @@
 **/.vs/**
 
 *.bak
+*.kicad_pcb-bak
 *.stl
 *.zip
 *.old
