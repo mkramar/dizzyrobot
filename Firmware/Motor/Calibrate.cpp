@@ -7,21 +7,82 @@ ConfigData* config = (ConfigData*)flashPageAddress;
 
 extern const int maxPoles;
 
+//int getElectricDegrees() {
+//	if (spiCurrentAngle > config->calibZeros[0]) 
+//	{
+//		int a = spiCurrentAngle - config->calibZeros[0];
+//		int pole = a * config->calibPoles / 0x4000;
+//	
+//		int retval = ((spiCurrentAngle - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
+//		return retval;
+//	}
+//	else
+//	{
+//		int a = spiCurrentAngle + 0x4000 - config->calibZeros[0];
+//		int pole = a * config->calibPoles / 0x4000;
+//		
+//		int retval = ((spiCurrentAngle - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
+//		return retval;
+//	}
+//}
+
+int currentPole = 0;
+//int currentOffset = 0;//config->calibZeros[0];
+
 int getElectricDegrees() {
-	int a = spiCurrentAngle - config->calibZeros[0];
-	if (a > 0) 
+	while (true)
 	{
-		int pole = a * config->calibPoles / 0x4000;
-	
-		int retval = ((a - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
-		return retval;
-	}
-	else
-	{
-		int pole = config->calibPoles - 1;
-		a = spiCurrentAngle + (0x4000 - config->calibZeros[pole]);
-		int retval = (a * sin_size / config->calibRates[pole]) % sin_size;
-		return retval;
+		if (config->calibSplitPole == currentPole)
+		{
+			int dl = config->calibZeros[currentPole] - spiCurrentAngle;
+			int dr = spiCurrentAngle - config->calibZeros[currentPole + 1];
+				
+			if (dl <= 0 || dr <= 0)
+			{
+				// all good
+				
+				int a = spiCurrentAngle - config->calibZeros[currentPole];
+				if (a < 0) a += 0x4000;
+				
+				int retval = (a * sin_size / config->calibRates[currentPole]) % sin_size;
+				return retval;
+			}
+			
+			if (dl < dr)
+			{
+				currentPole--;
+				if (currentPole < 0) 
+					currentPole = config->calibPoles - 1;
+			}
+			else
+			{
+				currentPole++;
+				if (currentPole >= config->calibPoles) 
+					currentPole = 0;				
+			}
+		}
+		else
+		{
+			if (spiCurrentAngle < config->calibZeros[currentPole]) 
+			{
+				currentPole--;
+				if (currentPole < 0) 
+					currentPole = config->calibPoles - 1;
+			}
+			else if ((currentPole == config->calibPoles - 1 ? config->calibZeros[0] : config->calibZeros[currentPole + 1]) < spiCurrentAngle) 
+			{
+				currentPole++;
+				if (currentPole >= config->calibPoles) 
+					currentPole = 0;
+			}			
+			else
+			{
+				// all good
+				
+				int retval = ((spiCurrentAngle - config->calibZeros[currentPole]) * sin_size / config->calibRates[currentPole]) % sin_size;
+				return retval;		
+			}
+		}
 	}
 }
 
@@ -130,6 +191,22 @@ void calibrate() {
 	
 	for (i = 0; i < lc.calibPoles; i++)
 		lc.calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
+	
+	// find split pole
+	
+	int maxIndex = 0;
+	int maxValue = lc.calibZeros[0];
+	
+	for (i = 1; i < lc.calibPoles; i++)
+	{
+		if (maxValue < lc.calibZeros[i])
+		{
+			maxValue = lc.calibZeros[i];
+			maxIndex = i;			
+		}
+	}
+	
+	lc.calibSplitPole = maxIndex;
 	
 	// rates
 	

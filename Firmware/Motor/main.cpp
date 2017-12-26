@@ -36,17 +36,17 @@ int ensureConfigured() {
 //
 
 int main(void) {
-	initClockInternal();
+	initClockExternal();
 	initButtons();
 	initPwm();
 	initUsart();
-	//initSpi();
+	initSpi();
 	initSysTick();
 	
 	//calibrate();
 	//delay(2000);
 	
-	//ensureConfigured();
+	ensureConfigured();
 	
 	usartTorqueCommandValue = 20;	
 	

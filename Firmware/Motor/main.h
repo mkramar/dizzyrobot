@@ -14,6 +14,7 @@ struct ConfigData
 	int calibZeros[maxPoles] = { 0 };
 	int calibRates[maxPoles] = { 0 };
 	int calibPoles = 0;
+	int calibSplitPole = 0;
 };
 
 extern ConfigData* config;
