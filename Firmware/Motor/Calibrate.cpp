@@ -1,33 +1,12 @@
 #include <main.h>
 
 const int calibPower = 20;
-//int calibCurrentPole = 0;
 
 ConfigData* config = (ConfigData*)flashPageAddress;
 
 extern const int maxPoles;
 
-//int getElectricDegrees() {
-//	if (spiCurrentAngle > config->calibZeros[0]) 
-//	{
-//		int a = spiCurrentAngle - config->calibZeros[0];
-//		int pole = a * config->calibPoles / 0x4000;
-//	
-//		int retval = ((spiCurrentAngle - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
-//		return retval;
-//	}
-//	else
-//	{
-//		int a = spiCurrentAngle + 0x4000 - config->calibZeros[0];
-//		int pole = a * config->calibPoles / 0x4000;
-//		
-//		int retval = ((spiCurrentAngle - config->calibZeros[pole]) * sin_size / config->calibRates[pole]) % sin_size;
-//		return retval;
-//	}
-//}
-
 int currentPole = 0;
-//int currentOffset = 0;//config->calibZeros[0];
 
 int getElectricDegrees() {
 	while (true)
