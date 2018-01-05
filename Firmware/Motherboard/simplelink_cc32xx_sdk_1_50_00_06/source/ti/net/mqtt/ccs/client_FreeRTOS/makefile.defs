@@ -1,0 +1,54 @@
+
+SIMPLELINK_CC32XX_SDK_INSTALL_DIR ?= $(abspath ../../../../../..)
+
+include $(SIMPLELINK_CC32XX_SDK_INSTALL_DIR)/imports.mak
+
+ROOT=$(SIMPLELINK_CC32XX_SDK_INSTALL_DIR)/source/ti/net/mqtt
+
+#
+# Source path
+#
+VPATH = $(ROOT)/client:$(ROOT)/common:$(ROOT)/interface:$(ROOT)/platform
+
+CC = "$(CCS_ARMCOMPILER)/bin/armcl"
+AR = "$(CCS_ARMCOMPILER)/bin/armar"
+
+STDINC = "$(CCS_ARMCOMPILER)/include"
+
+#
+# Include path
+#
+IPATH  = -I$(ROOT)
+IPATH += -I$(SIMPLELINK_CC32XX_SDK_INSTALL_DIR)/kernel/freertos/posix
+IPATH += -I$(ROOT)/client
+IPATH += -I$(ROOT)/common
+IPATH += -I$(ROOT)/interface
+IPATH += -I$(ROOT)/platform
+IPATH += -I$(ROOT)/../../../
+IPATH += -I$(ROOT)/../../drivers/net/wifi
+IPATH += -I$(STDINC)
+
+
+CFLAGS = -c -qq -pdsw225 -ms -g --endian=little -mv7M4 --float_support=vfplib --symdebug:dwarf -I$(IPATH)
+
+CFILES = \
+    cc32xx_sl_net.c \
+    client_core.c \
+    mqtt_client.c \
+    mqtt_common.c
+
+OBJCFILES = $(CFILES:.c=.obj)
+
+mqtt_client.a: $(OBJCFILES)
+	@ echo ar $@ ...
+	@ $(RM) $@ > $(DEVNULL) 2>&1
+	@ $(AR) rq $@ $(OBJCFILES)
+
+%.obj:%.c
+	@ echo cc $@ ...
+	@ $(CC) $(CFLAGS) $<
+
+clean:
+	@ echo cleaning ...
+	@ $(RM) *.obj > $(DEVNULL) 2>&1
+	@ $(RM) *.a > $(DEVNULL) 2>&1

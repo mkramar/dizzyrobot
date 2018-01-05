@@ -1,0 +1,25 @@
+[
+   {
+      "packages" : [],
+      "files" : [
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+CC3220SF_LAUNCHXL_TIRTOS.lds -> CC3220SF_LAUNCHXL_TIRTOS.lds",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md",
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../overview.rov.json -> overview.rov.json",
+         "+../console_tirtos.c -> tirtos/console_tirtos.c",
+         "+../temperature_tirtos.c -> tirtos/temperature_tirtos.c",
+         "+../../../../../../../source/ti/boards/CC3220SF_LAUNCHXL/Board.html -> Board.html"
+      ],
+      "default" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "name" : "na"
+   }
+]

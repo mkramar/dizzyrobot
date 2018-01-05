@@ -1,0 +1,24 @@
+[
+   {
+      "name" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "default" : "na",
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../at_commands.c -> at_commands.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_FREERTOS.icf -> at_commands_CC3220SF_LAUNCHXL_FREERTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ],
+      "packages" : []
+   }
+]

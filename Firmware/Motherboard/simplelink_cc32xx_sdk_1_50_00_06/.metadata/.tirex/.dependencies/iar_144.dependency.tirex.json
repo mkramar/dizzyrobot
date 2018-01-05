@@ -1,0 +1,22 @@
+[
+   {
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "packages" : [],
+      "files" : [
+         "+../../mailbox.c -> mailbox.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_TIRTOS.icf -> mailbox_CC3220S_LAUNCHXL_TIRTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../mailbox.cfg -> mailbox.cfg",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ]
+   }
+]

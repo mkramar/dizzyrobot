@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gep name="SYS/BIOS Overview" title="SYS/BIOS Overview" version="1">
+	<page name="TI-RTOS" title="TI-RTOS Configuration" DPI="2540">
+		<control type="bitmap" image="Overview.svg" width="14651" height="12135"/>
+		<control type="hotspot" link="ref:ti.uia.sysbios.LoggingSetup" align="center" tooltip="Unified Instrumentation Architecture (UIA) Configuration Settings" left="1446" top="2381" width="2540" height="1310" fontHeight="9" foreground="#0" background="#99ccff"/>
+		<control type="hotspot" link="ref:ti.sysbios.BIOS" align="center" tooltip="SYS/BIOS Configuration Settings" left="4286" top="5995" width="6350" height="1270" fontHeight="9" foreground="#0" background="#99ccff"/>
+		<control type="hotspot" link="ref:ti.mw.fatfs.FatFS" align="center" tooltip="FAT File System (FatFS) Configuration Settings" left="5963" top="9454" width="3036" height="1270" fontHeight="9" foreground="#0" background="#99ccff"/>
+		<control type="hotspot" link="ref:ti.tirtos.utils.UARTMon" align="center" tooltip="UART Monitor for GUI Composer" left="4145" top="2381" width="2540" height="1310" fontHeight="9" foreground="#0" background="#99ccff"/>
+		<control type="hotspot" link="ref:ti.drivers.Config" align="center" tooltip="TI-RTOS Drivers" left="10081" top="9483" width="3096" height="1270" fontHeight="9" foreground="#0" background="#99ccff"/>
+		<control type="hotspot" link="ref:ti.mw.Config" align="center" tooltip="TI-RTOS Middleware" left="1468" top="9458" width="3096" height="1270" fontHeight="9" foreground="#0" background="#99ccff"/>
+	</page>
+
+</gep>

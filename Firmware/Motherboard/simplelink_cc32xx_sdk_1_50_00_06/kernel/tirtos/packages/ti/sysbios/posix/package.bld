@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2015-2017, Texas Instruments Incorporated
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * *  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * *  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * *  Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+/*
+ *  ======== package.bld ========
+ *
+ */
+
+var BiosBuild = xdc.loadCapsule("ti/sysbios/Build.xs");
+
+/*
+ *  When adding source files to this list, please also remember to add
+ *  the file to the getCFiles() function in Settings.xs.  Also, choose
+ *  one of the functions in the .c file to add to the dummy function
+ *  in Settings.xdt.
+ */
+var objList = [
+    "pthread.c",
+    "pthread_barrier.c",
+    "pthread_cond.c",
+    "pthread_key.c",
+    "pthread_mutex.c",
+    "pthread_rwlock.c",
+    "pthread_util.c",
+    "clock.c",
+    "mqueue.c",
+    "sched.c",
+    "semaphore.c",
+    "sleep.c",
+    "timer.c",
+];
+
+/* generate makefiles */
+//BiosBuild.buildLibs(objList, undefined, trgFilter, arguments);
+BiosBuild.buildLibs(objList, undefined, null, arguments);
+
+/* generate smp makefiles */
+BiosBuild.buildLibs(objList, undefined, null, ["profile=smp"]);
+
+Pkg.otherFiles = [
+    "package.xdc",
+    "package.xs",
+    "package.bld",
+    "pthread.c",
+    "pthread_barrier.c",
+    "pthread_cond.c",
+    "pthread_key.c",
+    "pthread_mutex.c",
+    "pthread_rwlock.c",
+    "pthread_util.c",
+    "clock.c",
+    "mqueue.c",
+    "sched.c",
+    "sleep.c",
+    "semaphore.c",
+    "timer.c",
+    "pthread.h",
+    "_pthread.h",
+    "errno.h",
+    "_pthread_error.h",
+    "_time.h",
+    "mqueue.h",
+    "pthread_util.h",
+    "sched.h",
+    "signal.h",
+    "sys/time.h",
+    "sys/types.h",
+    "semaphore.h",
+    "time.h",
+    "types.h",
+    "unistd.h",
+    "Settings.xdc",
+    "Settings.xdt",
+    "Settings.xs",
+    "Settings.h"
+    ];
+
+/* include source files in the release package */
+Pkg.attrs.exportSrc = true;
+Pkg.attrs.exportCfg = true;

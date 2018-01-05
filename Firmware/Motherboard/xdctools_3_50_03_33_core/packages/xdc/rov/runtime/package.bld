@@ -1,0 +1,10 @@
+/*
+ *  ======== package.bld ========
+ */
+var cc3200 = xdc.loadCapsule("cc3200.bld");
+
+var SRCDIRS = [
+    "."
+];
+
+cc3200.addLibs(SRCDIRS);

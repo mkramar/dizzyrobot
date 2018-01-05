@@ -1,0 +1,18 @@
+#!/usr/bin/ksh -p
+#
+#  This shell script runs Linux executables from a  Windows system.  
+#
+#  Usage:  exec prog [arg ...]
+#
+#  where prog is the name of the program to run and the optional arg 
+#  list consists of arguments meaningful to prog.
+#
+usage="usage: exec prog [arg ...]"
+
+if [ $# -lt 1 ]; then
+    echo $usage
+    exit 1
+fi
+
+echo "error: $0: don't know how to run: $*"
+exit 1

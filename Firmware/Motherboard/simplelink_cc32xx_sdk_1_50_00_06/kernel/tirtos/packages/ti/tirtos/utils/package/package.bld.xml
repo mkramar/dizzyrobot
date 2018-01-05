@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.tirtos.utils" version="" producerId="undefined">
+    <units>
+        <module name="UARTMon"/>
+    </units>
+    <sources>
+        <srcFile name="package/package_ti.tirtos.utils.c"/>
+        <srcFile name="UARTMon.c"/>
+    </sources>
+    <configscripts>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="lib/release/ti.tirtos.utils.aem4.mak" src="package.bld"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/package/package_ti.tirtos.utils.oem4.dep" src="package/package_ti.tirtos.utils.c"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/UARTMon.oem4.dep" src="UARTMon.c"/>
+        <srcFile name="lib/release/ti.tirtos.utils.am4g.mak" src="package.bld"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/package/package_ti.tirtos.utils.om4g.dep" src="package/package_ti.tirtos.utils.c"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/UARTMon.om4g.dep" src="UARTMon.c"/>
+        <srcFile name="lib/release/ti.tirtos.utils.arm4.mak" src="package.bld"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/package/package_ti.tirtos.utils.orm4.dep" src="package/package_ti.tirtos.utils.c"/>
+        <srcFile name="package/lib/lib/release/ti.tirtos.utils/UARTMon.orm4.dep" src="UARTMon.c"/>
+        <srcFile name="package/rel/ti_tirtos_utils.tar.dep" src="package/rel/ti_tirtos_utils.xdc.inc"/>
+    </makefiles>
+    <targets>
+        <target name="ti.targets.arm.elf.M4"
+            version="ti.targets.arm.elf.M4{1,0,16.9,4"
+            rawVersion="16.9.4"
+            platform="ti.platforms.tiva:TM4C1294NCPDT:1"
+            isa="v7M4"
+            suffix="em4"
+            rootDir="/db/vendors/ti/arm/16.9.4.LTS/Linux"
+            os="undefined"
+            rts="ti.targets.arm.rtsarm">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+        <target name="gnu.targets.arm.M4"
+            version="gnu.targets.arm.M4{1,0,6.3,1"
+            rawVersion="6.3.1"
+            platform="ti.platforms.tiva:TM4C1294NCPDT"
+            isa="v7M4"
+            suffix="m4g"
+            rootDir="/db/vendors/linaro/gcc-arm-none-eabi-6-2017-q1-update"
+            os="undefined"
+            rts="gnu.targets.arm.rtsv7M">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+        <target name="iar.targets.arm.M4"
+            version="iar.targets.arm.M4{1,0,8.11,1"
+            rawVersion="8.11.1.47"
+            platform="ti.platforms.tiva:TM4C1294NCPDT:1"
+            isa="v7M4"
+            suffix="rm4"
+            rootDir="/db/vendors/iar/arm/8.11.1.47/Linux"
+            os="undefined"
+            rts="iar.targets.arm.rts">
+            <model endian="little"
+                codeModel="thumb2"
+                dataModel="undefined"/>
+        </target>
+    </targets>
+    <libraries>
+    <library name="lib/release/ti.tirtos.utils"
+        pname="lib/release/ti.tirtos.utils.aem4"
+        profile="release"
+        target="ti.targets.arm.elf.M4"/>
+    <library name="lib/release/ti.tirtos.utils"
+        pname="lib/release/ti.tirtos.utils.am4g"
+        profile="release"
+        target="gnu.targets.arm.M4"/>
+    <library name="lib/release/ti.tirtos.utils"
+        pname="lib/release/ti.tirtos.utils.arm4"
+        profile="release"
+        target="iar.targets.arm.M4"/>
+    </libraries>
+    <configurations>
+    </configurations>
+    <executables>
+    </executables>
+    <tests>
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_tirtos_utils"
+        pname="ti_tirtos_utils.tar"
+        label="default"
+    >
+        <file name="package/package.bld.xml"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package/package.cfg.xdc.inc"/>
+        <file name="lib/release/ti.tirtos.utils.aem4"/>
+        <file name="lib/release/ti.tirtos.utils.am4g"/>
+        <file name="lib/release/ti.tirtos.utils.arm4"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

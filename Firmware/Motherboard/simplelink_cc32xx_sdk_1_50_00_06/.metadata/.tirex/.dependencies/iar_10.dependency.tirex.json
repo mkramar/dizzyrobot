@@ -1,0 +1,22 @@
+[
+   {
+      "default" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na",
+      "packages" : [],
+      "files" : [
+         "+../main_nortos.c -> main_nortos.c",
+         "+../gpiointerrupt.c -> gpiointerrupt.c",
+         "+../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_NoRTOS.icf -> gpiointerrupt_CC3220S_LAUNCHXL_NoRTOS.icf",
+         "+../Board.h -> Board.h",
+         "+../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../README.md -> README.md",
+         "+../README.html -> README.html"
+      ]
+   }
+]

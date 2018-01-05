@@ -1,0 +1,22 @@
+[
+   {
+      "files" : [
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../gpiointerrupt.c -> gpiointerrupt.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_FREERTOS.icf -> gpiointerrupt_CC3220S_LAUNCHXL_FREERTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "packages" : [],
+      "compiler" : {
+         "effective" : "na",
+         "specified" : "na",
+         "location" : "na"
+      },
+      "name" : "na",
+      "default" : "na"
+   }
+]

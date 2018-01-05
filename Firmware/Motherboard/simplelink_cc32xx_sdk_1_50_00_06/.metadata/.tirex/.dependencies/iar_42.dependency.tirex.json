@@ -1,0 +1,22 @@
+[
+   {
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "location" : "na",
+         "specified" : "na"
+      },
+      "packages" : [],
+      "files" : [
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../capturepwmdisplay.c -> capturepwmdisplay.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_FREERTOS.icf -> capturepwmdisplay_CC3220SF_LAUNCHXL_FREERTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ]
+   }
+]

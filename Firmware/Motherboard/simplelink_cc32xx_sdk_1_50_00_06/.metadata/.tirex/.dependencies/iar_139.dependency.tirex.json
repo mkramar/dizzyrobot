@@ -1,0 +1,22 @@
+[
+   {
+      "packages" : [],
+      "files" : [
+         "+../../benchloop.c -> benchloop.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_TIRTOS.icf -> benchloop_CC3220S_LAUNCHXL_TIRTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../benchloop.cfg -> benchloop.cfg",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      }
+   }
+]

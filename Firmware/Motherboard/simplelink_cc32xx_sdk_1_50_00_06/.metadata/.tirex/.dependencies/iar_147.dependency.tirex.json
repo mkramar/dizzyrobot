@@ -1,0 +1,22 @@
+[
+   {
+      "files" : [
+         "+../../swi.c -> swi.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_TIRTOS.icf -> swi_CC3220S_LAUNCHXL_TIRTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../swi.cfg -> swi.cfg",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "packages" : [],
+      "name" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "default" : "na"
+   }
+]

@@ -1,0 +1,22 @@
+[
+   {
+      "files" : [
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../empty.c -> empty.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_TIRTOS.icf -> empty_CC3220SF_LAUNCHXL_TIRTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na",
+      "default" : "na"
+   }
+]

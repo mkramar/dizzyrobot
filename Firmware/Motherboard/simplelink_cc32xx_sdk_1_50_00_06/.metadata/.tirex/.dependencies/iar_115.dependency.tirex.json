@@ -1,0 +1,22 @@
+[
+   {
+      "files" : [
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../fatsdraw.c -> fatsdraw.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_FREERTOS.icf -> fatsdraw_CC3220S_LAUNCHXL_FREERTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "packages" : [],
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na",
+      "default" : "na"
+   }
+]
