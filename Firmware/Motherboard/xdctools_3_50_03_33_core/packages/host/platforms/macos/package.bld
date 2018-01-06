@@ -1,8 +1,0 @@
-Pkg.attrs.relScript = "xdc/release/filters/what.rel";
-
-Pkg.otherFiles = ['package.bld', 'linkcmd.xdt'];
-Pkg.otherSrcs = Pkg.otherFiles;
-/*
- *  @(#) host.platforms.macos; 1, 0, 0,0; 8-8-2017 17:29:17; /db/ztree/library/trees/xdc/xdc-D20/src/packages/
- */
-

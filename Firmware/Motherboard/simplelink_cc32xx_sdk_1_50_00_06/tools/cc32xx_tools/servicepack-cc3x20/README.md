@@ -8,16 +8,16 @@ This release include the ServicePack binary image to be programmed into CC3120/C
   
 | File |  Notes |
 | --- | --- | 
-| sp_3.6.0.0_2.0.0.0_2.2.0.5.bin | ServicePack binary for UniFlash |
-| sp_3.6.0.0_2.0.0.0_2.2.0.5.ucf | ServicePack UCF for host driver API |
-| sp_3.6.0.0_2.0.0.0_2.2.0.5.ucf.signed.bin | ServicePack UCF signature |
+| sp_3.5.0.0_2.0.0.0_2.2.0.5.bin | ServicePack binary for UniFlash |
+| sp_3.5.0.0_2.0.0.0_2.2.0.5.ucf | ServicePack UCF for host driver API |
+| sp_3.5.0.0_2.0.0.0_2.2.0.5.ucf.signed.bin | ServicePack UCF signature |
 
 
 **Version information**
 
 | Component |  Version |
 | --- | --- | 
-| NWP | 3.6.0.0 |
+| NWP | 3.5.0.0 |
 | MAC | 2.0.0.0 |
 | PHY | 2.2.0.5 |
 
@@ -26,12 +26,13 @@ Upon successful ServicePack programming, version can be retrieved using 'sl_Devi
 
 ## What's New
 
-* The fix for the WPA KRACK vulnerability has been applied.
-* Support for generating a certificate signing request (CSR) based on the installed device-unique key-pair and use the device unique key-pair for mutual authentication in TLS.
+* Support installing a certificate only in the crypto util module (until now private key is a must when installing a security element in the crypto util). the certificate is used only for verification of a buffer.
+* Support ECDSAwithSHA256 signature verification in the crypto util.
+* Support ECDSAwithDIGEST in the crypto util. this enables checking a message with a message digested in the application layer. 
 
 ## Upgrade and Compatibility Information
 
-The ServicePack can be programmed using UniFlash utility version v4.2 and up.
+The ServicePack can be programmed using UniFlash utility version v4.3 and up.
 Latest UniFlash utility can be downloaded from <http://www.ti.com/tool/UniFlash>. 
 
 The ServicePack can also be flushed using host driver API's or OTA application 
@@ -41,7 +42,7 @@ The ServicePack can also be flushed using host driver API's or OTA application
 
 This release requires the following software components and tools:
 
-* UniFlash utility v4.2 and up - [Download page](http://www.ti.com/tool/UniFlash).
+* UniFlash utility v4.3 and up - [Download page](http://www.ti.com/tool/UniFlash).
 * The ServicePack is bounded to host driver 2.0.1.22
 
 ## Device Support

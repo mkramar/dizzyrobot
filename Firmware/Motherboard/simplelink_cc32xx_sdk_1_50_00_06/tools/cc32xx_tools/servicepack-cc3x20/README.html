@@ -51,7 +51,7 @@
 <h2 id="introduction">Introduction</h2>
 <p>The SimpleLink™ Wi-Fi® CC3220 device is a single-chip microcontroller (MCU) with built-in Wi-Fi connectivity, created for the Internet of Things (IoT). The CC3220 device is a wireless MCU that integrates a high-performance ARM® Cortex®-M4 MCU, allowing customers to develop an entire application with a single IC.</p>
 <h2 id="content-and-documentation">Content and Documentation</h2>
-<p>This release includes the ServicePack binary image to be programmed into CC3120/CC3220 devices. <strong>The ServicePack must be applied both in production and development stage of the CC3120/CC3220 devices</strong></p>
+<p>This release include the ServicePack binary image to be programmed into CC3120/CC3220 devices. <strong>ServicePack must be applied both in production and development stage of the CC3120/CC3220 devices</strong></p>
 <table>
 <thead>
 <tr class="header">
@@ -61,15 +61,15 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td>sp_3.6.0.0_2.0.0.0_2.2.0.5.bin</td>
+<td>sp_3.5.0.0_2.0.0.0_2.2.0.5.bin</td>
 <td>ServicePack binary for UniFlash</td>
 </tr>
 <tr class="even">
-<td>sp_3.6.0.0_2.0.0.0_2.2.0.5.ucf</td>
+<td>sp_3.5.0.0_2.0.0.0_2.2.0.5.ucf</td>
 <td>ServicePack UCF for host driver API</td>
 </tr>
 <tr class="odd">
-<td>sp_3.6.0.0_2.0.0.0_2.2.0.5.ucf.signed.bin</td>
+<td>sp_3.5.0.0_2.0.0.0_2.2.0.5.ucf.signed.bin</td>
 <td>ServicePack UCF signature</td>
 </tr>
 </tbody>
@@ -85,7 +85,7 @@
 <tbody>
 <tr class="odd">
 <td>NWP</td>
-<td>3.6.0.0</td>
+<td>3.5.0.0</td>
 </tr>
 <tr class="even">
 <td>MAC</td>
@@ -97,19 +97,20 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> Upon successful ServicePack programming, the version can be retrieved using ‘sl_DeviceGet()’ API, with SL_DEVICE_GENERAL_VERSION option.</p>
+<p><strong>Note:</strong> Upon successful ServicePack programming, version can be retrieved using ‘sl_DeviceGet()’ API, with SL_DEVICE_GENERAL_VERSION option.</p>
 <h2 id="whats-new">What’s New</h2>
 <ul>
-<li>The fix for the WPA KRACK vulnerability has been applied.</li>
-<li>Support for generating a certificate signing request (CSR) based on the installed device-unique key-pair and use the device unique key-pair for mutual authentication in TLS.</li>
+<li>Support installing a certificate only in the crypto util module (until now private key is a must when installing a security element in the crypto util). the certificate is used only for verification of a buffer.</li>
+<li>Support ECDSAwithSHA256 signature verification in the crypto util.</li>
+<li>Support ECDSAwithDIGEST in the crypto util. this enables checking a message with a message digested in the application layer.</li>
 </ul>
 <h2 id="upgrade-and-compatibility-information">Upgrade and Compatibility Information</h2>
-<p>The ServicePack can be programmed using UniFlash utility version v4.2 and up. Latest UniFlash utility can be downloaded from <a href="http://www.ti.com/tool/UniFlash" class="uri">http://www.ti.com/tool/UniFlash</a>.</p>
+<p>The ServicePack can be programmed using UniFlash utility version v4.3 and up. Latest UniFlash utility can be downloaded from <a href="http://www.ti.com/tool/UniFlash" class="uri">http://www.ti.com/tool/UniFlash</a>.</p>
 <p>The ServicePack can also be flushed using host driver API’s or OTA application (please refer for the SimpleLink CC3x20 SDK for more information)</p>
 <h2 id="dependencies">Dependencies</h2>
 <p>This release requires the following software components and tools:</p>
 <ul>
-<li>UniFlash utility v4.2 and up - <a href="http://www.ti.com/tool/UniFlash">Download page</a>.</li>
+<li>UniFlash utility v4.3 and up - <a href="http://www.ti.com/tool/UniFlash">Download page</a>.</li>
 <li>The ServicePack is bounded to host driver 2.0.1.22</li>
 </ul>
 <h2 id="device-support">Device Support</h2>
@@ -127,24 +128,7 @@
 <li>CC3220SF_LAUNCHXL</li>
 </ul>
 <h2 id="fixed-issues">Fixed Issues</h2>
-<table>
-<thead>
-<tr class="header">
-<th align="center">ID</th>
-<th align="left">Summary</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">SL_WIFI_R2-1414</td>
-<td align="left"><span>WPA: wpa KRACK vulnerability</span></td>
-</tr>
-<tr class="even">
-<td align="center">SL_WIFI_R2-1413</td>
-<td align="left"><span>Crypto util: Create a CSR from installed key</span></td>
-</tr>
-</tbody>
-</table>
+<p>${GEN2_3500_FIXED}</p>
 <h2 id="known-issues">Known Issues</h2>
 <table>
 <thead>
