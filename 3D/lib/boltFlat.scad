@@ -11,8 +11,8 @@ module boltPlus(shaft)
 {
     cylinder(h = shaft, d = 12);
 	
-	mirror([0, 0, 1])
-		cylinder(d1 = 12, d2 = 0, h = 2);
+	//mirror([0, 0, 1])
+	//	cylinder(d1 = 12, d2 = 0, h = 2);
 }
 
 module boltMinus(bolt, shaft)
@@ -36,10 +36,10 @@ module boltMinus(bolt, shaft)
 module nutPlus(shaft)
 {
 	mirror([0, 0, 1])
-	difference() {
+	//difference() {
 		cylinder(h = shaft, d = 12);
-		cylinder(d1 = 12, d2 = 0, h = 2);
-	}
+	//	cylinder(d1 = 12, d2 = 0, h = 2);
+	//}
 }
 
 module nutMinus(bolt, shaft)
