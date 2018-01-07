@@ -1,0 +1,27 @@
+[
+   {
+      "files" : [
+         "+../uart_term.c -> uart_term.c",
+         "+../main_nortos.c -> main_nortos.c",
+         "+../platform.c -> platform.c",
+         "+../power_measure_nortos.c -> power_measure_nortos.c",
+         "+../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_NoRTOS.icf -> power_measurement_CC3220S_LAUNCHXL_NoRTOS.icf",
+         "+../uart_term.h -> uart_term.h",
+         "+../common.h -> common.h",
+         "+../platform.h -> platform.h",
+         "+../Board.h -> Board.h",
+         "+../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../README.html -> README.html",
+         "+../README.md -> README.md"
+      ],
+      "packages" : [],
+      "name" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "default" : "na"
+   }
+]

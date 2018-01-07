@@ -1,0 +1,28 @@
+[
+   {
+      "packages" : [],
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../cloud_ota.c -> cloud_ota.c",
+         "+../../platform.c -> platform.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_FREERTOS.icf -> cloud_ota_CC3220S_LAUNCHXL_FREERTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../appConfig.h -> appConfig.h",
+         "+../../cloud_ota.h -> cloud_ota.h",
+         "+../../platform.h -> platform.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ],
+      "default" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "location" : "na",
+         "specified" : "na"
+      },
+      "name" : "na"
+   }
+]

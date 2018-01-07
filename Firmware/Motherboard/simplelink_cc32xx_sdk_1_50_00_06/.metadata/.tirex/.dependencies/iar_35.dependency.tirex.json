@@ -1,0 +1,27 @@
+[
+   {
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "specified" : "na",
+         "location" : "na"
+      },
+      "packages" : [],
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../platform.c -> platform.c",
+         "+../../power_measure.c -> power_measure.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_TIRTOS.icf -> power_measurement_CC3220SF_LAUNCHXL_TIRTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../common.h -> common.h",
+         "+../../platform.h -> platform.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ]
+   }
+]

@@ -1,0 +1,26 @@
+[
+   {
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "packages" : [],
+      "files" : [
+         "+../uart_term.c -> uart_term.c",
+         "+../main_nortos.c -> main_nortos.c",
+         "+../mqueue_nortos.c -> mqueue_nortos.c",
+         "+../trigger_mode.c -> trigger_mode.c",
+         "+../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_NoRTOS.icf -> trigger_mode_CC3220S_LAUNCHXL_NoRTOS.icf",
+         "+../uart_term.h -> uart_term.h",
+         "+../mqueue.h -> mqueue.h",
+         "+../Board.h -> Board.h",
+         "+../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../README.html -> README.html",
+         "+../README.md -> README.md"
+      ]
+   }
+]

@@ -1,0 +1,23 @@
+[
+   {
+      "default" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na",
+      "packages" : [],
+      "files" : [
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../console.c -> console.c",
+         "+../../temperature.c -> temperature.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_FREERTOS.icf -> portable_CC3220SF_LAUNCHXL_FREERTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ]
+   }
+]

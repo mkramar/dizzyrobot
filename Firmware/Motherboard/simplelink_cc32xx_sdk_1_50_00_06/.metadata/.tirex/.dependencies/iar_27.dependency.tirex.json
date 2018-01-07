@@ -1,0 +1,39 @@
+[
+   {
+      "name" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "default" : "na",
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../cmd_parser.c -> cmd_parser.c",
+         "+../../netapp_cmd.c -> netapp_cmd.c",
+         "+../../network_terminal.c -> network_terminal.c",
+         "+../../radio_tool.c -> radio_tool.c",
+         "+../../socket_cmd.c -> socket_cmd.c",
+         "+../../str.c -> str.c",
+         "+../../transceiver_cmd.c -> transceiver_cmd.c",
+         "+../../wlan_cmd.c -> wlan_cmd.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_TIRTOS.icf -> network_terminal_CC3220SF_LAUNCHXL_TIRTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../cmd_parser.h -> cmd_parser.h",
+         "+../../netapp_cmd.h -> netapp_cmd.h",
+         "+../../network_terminal.h -> network_terminal.h",
+         "+../../radio_tool.h -> radio_tool.h",
+         "+../../socket_cmd.h -> socket_cmd.h",
+         "+../../str.h -> str.h",
+         "+../../transceiver_cmd.h -> transceiver_cmd.h",
+         "+../../wlan_cmd.h -> wlan_cmd.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ],
+      "packages" : []
+   }
+]

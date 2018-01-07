@@ -1,0 +1,30 @@
+[
+   {
+      "default" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na",
+      "packages" : [],
+      "files" : [
+         "+../uart_term.c -> uart_term.c",
+         "+../main_nortos.c -> main_nortos.c",
+         "+../mqueue_nortos.c -> mqueue_nortos.c",
+         "+../cloud_ota.c -> cloud_ota.c",
+         "+../platform.c -> platform.c",
+         "+../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_NoRTOS.icf -> cloud_ota_CC3220S_LAUNCHXL_NoRTOS.icf",
+         "+../uart_term.h -> uart_term.h",
+         "+../mqueue.h -> mqueue.h",
+         "+../appConfig.h -> appConfig.h",
+         "+../cloud_ota.h -> cloud_ota.h",
+         "+../platform.h -> platform.h",
+         "+../Board.h -> Board.h",
+         "+../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../README.html -> README.html",
+         "+../README.md -> README.md"
+      ]
+   }
+]

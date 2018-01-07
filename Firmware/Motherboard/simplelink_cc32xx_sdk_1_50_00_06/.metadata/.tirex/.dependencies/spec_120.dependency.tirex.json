@@ -1,0 +1,23 @@
+[
+   {
+      "files" : [
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+CC3220SF_LAUNCHXL_FREERTOS.cmd -> CC3220SF_LAUNCHXL_FREERTOS.cmd",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md",
+         "+../../fatsdraw.c -> fatsdraw.c",
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../../../../../../source/ti/boards/CC3220SF_LAUNCHXL/Board.html -> Board.html"
+      ],
+      "packages" : [],
+      "name" : "na",
+      "compiler" : {
+         "specified" : "na",
+         "location" : "na",
+         "effective" : "na"
+      },
+      "default" : "na"
+   }
+]

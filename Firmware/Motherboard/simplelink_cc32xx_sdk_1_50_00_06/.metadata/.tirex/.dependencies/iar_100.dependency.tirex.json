@@ -1,0 +1,23 @@
+[
+   {
+      "packages" : [],
+      "files" : [
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../console_tirtos.c -> tirtos/console_tirtos.c",
+         "+../temperature_tirtos.c -> tirtos/temperature_tirtos.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_TIRTOS.icf -> portableNative_CC3220S_LAUNCHXL_TIRTOS.icf",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "default" : "na",
+      "name" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "location" : "na",
+         "specified" : "na"
+      }
+   }
+]

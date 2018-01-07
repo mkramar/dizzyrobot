@@ -1,0 +1,28 @@
+[
+   {
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_freertos.c -> main_freertos.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+../../client_cbs.c -> client_cbs.c",
+         "+../../mqtt_client_app.c -> mqtt_client_app.c",
+         "+../../network_if.c -> network_if.c",
+         "+./CC3220S_LAUNCHXL_FREERTOS.icf -> mqtt_client_CC3220S_LAUNCHXL_FREERTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../client_cbs.h -> client_cbs.h",
+         "+../../network_if.h -> network_if.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ],
+      "packages" : [],
+      "name" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "location" : "na",
+         "specified" : "na"
+      },
+      "default" : "na"
+   }
+]

@@ -1,0 +1,24 @@
+[
+   {
+      "name" : "na",
+      "compiler" : {
+         "effective" : "na",
+         "location" : "na",
+         "specified" : "na"
+      },
+      "default" : "na",
+      "files" : [
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../UARTMon.c -> UARTMon.c",
+         "+../../uartmonitor.c -> uartmonitor.c",
+         "+../../CC3220S_LAUNCHXL.c -> CC3220S_LAUNCHXL.c",
+         "+./CC3220S_LAUNCHXL_TIRTOS.icf -> uartmonitor_CC3220S_LAUNCHXL_TIRTOS.icf",
+         "+../../UARTMon.h -> UARTMon.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220S_LAUNCHXL.h -> CC3220S_LAUNCHXL.h",
+         "+../../README.md -> README.md",
+         "+../../README.html -> README.html"
+      ],
+      "packages" : []
+   }
+]

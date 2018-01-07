@@ -1,0 +1,24 @@
+[
+    {
+        "version": "1.50.00.06",
+        "allowPartialDownload": "false",
+        "id": "com.ti.SIMPLELINK_CC32XX_SDK",
+        "type": "software",
+        "description": "The SimpleLink\u2122 Wi-Fi\u00ae CC3220 device is a single-chip microcontroller (MCU) with built-in Wi-Fi connectivity, created for the Internet of Things (IoT).</br><p>The CC3220 device is a wireless MCU that integrates a high-performance ARM\u00ae Cortex\u00ae-M4 MCU, allowing customers to develop an entire application with a single IC. The Texas Instruments royalty-free CC3220 Embedded Wi-Fi foundation software development kit (SDK) is a complete software platform for developing Wi-Fi applications. It is based on the CC3220, a complete Wi-Fi SoC (System-on-Chip) solution.</p><p>The CC3220 family of devices comes in following three variants:</br>CC3220-Base variant</br>CC3220S-CC3220 and MCU security</br>CC3220SF-CC3220S and internal flash</br><p></p><p>The CC3220 solution combines a 2.4-GHz Wi-Fi PHY/MAC and TCP/IP networking engine with a microcontroller, up to 256-kB on-chip RAM, 1-MB internal flash (for CC3220 SF), and a comprehensive range of peripherals.</p><p>For more information, visit <a href=\"http://www.ti.com/simplelink\">http://www.ti.com/simplelink</a>.</p>",
+        "image": "../../docs/images/simplelink_cc3220_sdk_logo.png",
+        "devices": [
+            "CC3220S",
+            "CC3220SF"
+        ],
+        "license": "../../license_simplelink_cc3220_sdk_1_50_00_06.txt",
+        "metadataVersion": "2.1.0",
+        "name": "SimpleLink CC3220 SDK",
+        "dependencies": [
+            {
+                "version": "3.50.03.33",
+                "packageId": "xdctools",
+                "require": "optional"
+            }
+        ]
+    }
+]

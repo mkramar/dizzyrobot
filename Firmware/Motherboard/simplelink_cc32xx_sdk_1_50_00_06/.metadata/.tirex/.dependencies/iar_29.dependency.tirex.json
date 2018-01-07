@@ -1,0 +1,41 @@
+[
+   {
+      "packages" : [],
+      "files" : [
+         "+../../uart_term.c -> uart_term.c",
+         "+../main_tirtos.c -> main_tirtos.c",
+         "+../../bma222drv.c -> bma222drv.c",
+         "+../../link_local_task.c -> link_local_task.c",
+         "+../../ota_archive.c -> ota_archive.c",
+         "+../../ota_json.c -> ota_json.c",
+         "+../../ota_task.c -> ota_task.c",
+         "+../../out_of_box.c -> out_of_box.c",
+         "+../../platform.c -> platform.c",
+         "+../../provisioning_task.c -> provisioning_task.c",
+         "+../../tmp006drv.c -> tmp006drv.c",
+         "+../../CC3220SF_LAUNCHXL.c -> CC3220SF_LAUNCHXL.c",
+         "+./CC3220SF_LAUNCHXL_TIRTOS.icf -> out_of_box_CC3220SF_LAUNCHXL_TIRTOS.icf",
+         "+../../uart_term.h -> uart_term.h",
+         "+../../bma222drv.h -> bma222drv.h",
+         "+../../link_local_task.h -> link_local_task.h",
+         "+../../ota_archive.h -> ota_archive.h",
+         "+../../ota_json.h -> ota_json.h",
+         "+../../ota_task.h -> ota_task.h",
+         "+../../out_of_box.h -> out_of_box.h",
+         "+../../platform.h -> platform.h",
+         "+../../provisioning_task.h -> provisioning_task.h",
+         "+../../tmp006drv.h -> tmp006drv.h",
+         "+../../Board.h -> Board.h",
+         "+../../CC3220SF_LAUNCHXL.h -> CC3220SF_LAUNCHXL.h",
+         "+../../README.html -> README.html",
+         "+../../README.md -> README.md"
+      ],
+      "default" : "na",
+      "compiler" : {
+         "location" : "na",
+         "specified" : "na",
+         "effective" : "na"
+      },
+      "name" : "na"
+   }
+]
