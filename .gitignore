@@ -7,7 +7,5 @@
 *.bak
 *.kicad_pcb-bak
 *.stl
-*.zip
 *.old
 *.user
-Firmware/Motherboard/.gitignore
