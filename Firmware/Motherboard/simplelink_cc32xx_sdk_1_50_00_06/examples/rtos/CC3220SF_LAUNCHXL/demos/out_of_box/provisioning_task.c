@@ -91,7 +91,7 @@ typedef enum
 /** By default, setting the provisioning mode to AP + Smart Config.
   * Other values could be PrvsnMode_SC or PrvsnMode_AP
   */
-#define PROVISIONING_MODE   PrvsnMode_APSC
+#define PROVISIONING_MODE   PrvsnMode_AP
 
 /*!
  *  \brief  Provisioning status
