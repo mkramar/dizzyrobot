@@ -1033,6 +1033,8 @@ static int32_t ReportSuccess(void)
 	}
 
 	GPIO_write(Board_LED0, Board_LED_ON);
+	GPIO_write(Board_LED1, Board_LED_OFF);
+	GPIO_write(Board_LED2, Board_LED_OFF);
 
 	/* signal to linklocal task */
 	sem_post(&Provisioning_ControlBlock.provisioningDoneSignal);
@@ -1407,6 +1409,8 @@ void * provisioningTask(void *pvParameters)
 
     /* Configure Provisioning Toggle LED  */
 	GPIO_write(Board_LED0, Board_LED_OFF);
+	GPIO_write(Board_LED1, Board_LED_OFF);
+	GPIO_write(Board_LED2, Board_LED_OFF);
 
 	Platform_TimerInit(LedTimerIntHandler, &gLedTimer);
 
@@ -1470,7 +1474,9 @@ void * provisioningTask(void *pvParameters)
 		/* it means a connection to AP has been established, no need to trigger provisioning */
 		if (retVal == 0)
 		{
-			GPIO_write(Board_LED0, Board_LED_ON);
+			GPIO_write(Board_LED0, Board_LED_OFF);
+			GPIO_write(Board_LED1, Board_LED_ON);
+			GPIO_write(Board_LED2, Board_LED_OFF);
 
 			/* signal to linklocal task */
 			sem_post(&Provisioning_ControlBlock.provisioningDoneSignal);
@@ -1487,7 +1493,9 @@ void * provisioningTask(void *pvParameters)
 
 	if ((retVal == 0) && (deviceRole == ROLE_AP))		/* it means device is initialized as AP, no need to trigger provisioning */
 	{
-		GPIO_write(Board_LED0, Board_LED_ON);
+		GPIO_write(Board_LED0, Board_LED_OFF);
+		GPIO_write(Board_LED1, Board_LED_OFF);
+		GPIO_write(Board_LED2, Board_LED_ON);
 		
 		/* signal to linklocal task */
 		sem_post(&Provisioning_ControlBlock.provisioningDoneSignal);

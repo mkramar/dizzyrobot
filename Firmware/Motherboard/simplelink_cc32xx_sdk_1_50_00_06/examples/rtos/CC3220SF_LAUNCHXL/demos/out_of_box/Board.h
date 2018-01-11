@@ -69,8 +69,8 @@ extern "C" {
  *  and PWM peripherals. In order for those examples to work, these LEDs are
  *  taken out of gpioPinCOnfig[]
  */
-#define Board_GPIO_LED1              CC3220SF_LAUNCHXL_GPIO_LED_D7
-#define Board_GPIO_LED2              CC3220SF_LAUNCHXL_GPIO_LED_D7
+#define Board_GPIO_LED1              CC3220SF_LAUNCHXL_GPIO_LED_D6
+#define Board_GPIO_LED2              CC3220SF_LAUNCHXL_GPIO_LED_D5
 
 #define Board_GPIO_BUTTON0           CC3220SF_LAUNCHXL_GPIO_SW2
 #define Board_GPIO_BUTTON1           CC3220SF_LAUNCHXL_GPIO_SW3
