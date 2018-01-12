@@ -249,6 +249,8 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t *pWlanEvent)
         case SL_WLAN_EVENT_PROVISIONING_PROFILE_ADDED:
         {
             UART_PRINT("[WLAN EVENT] Profile Added\r\n");
+			usleep(1000);
+			mcuReboot();
         }
         break;
 
@@ -1023,7 +1025,7 @@ void * mainThread( void *arg )
 
 	Board_initGPIO();
 	Board_initSPI();
-	Board_initI2C();
+	//Board_initI2C();
 
 	/* init Terminal, and print App name */
 	InitTerm();
@@ -1035,6 +1037,8 @@ void * mainThread( void *arg )
 
 	/* Switch off all LEDs on boards */
 	GPIO_write(Board_LED0, Board_LED_OFF);
+	GPIO_write(Board_LED1, Board_LED_OFF);
+	GPIO_write(Board_LED2, Board_LED_OFF);
 
 	/* initializes signals for all tasks */
 	sem_init(&Provisioning_ControlBlock.connectionAsyncEvent, 0, 0);
