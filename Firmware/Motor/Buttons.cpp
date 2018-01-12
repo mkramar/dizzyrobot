@@ -3,8 +3,9 @@
 volatile bool button1Pressed;
 volatile bool button2Pressed;
 
-const int BLINK_PERIOD = 0x100000;
-const int BLINK_DUTY_CYCLE = 0x40000;
+const int BLINK_PERIOD = 0x100;
+const int BLINK_DUTY_CYCLE = 0x40;
+const int BLINK_PRESCALER = 0x1000;
 
 extern "C"
 void EXTI2_3_IRQHandler(void) {
@@ -27,12 +28,13 @@ void initButtons() {
 	button1Pressed = false;
 	button2Pressed = false;
 	
-	// pin 11 - PA-0 configure as led blinker ---------------------------------
+	// pin 11 - PA-0 configure as led timer 2 blinker -------------------------
 		
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;					// enable clock for GPIOA
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;					// enable timer 2
 	
 	TIM2->ARR = BLINK_PERIOD;							// tim2 period
+	TIM2->PSC = BLINK_PRESCALER;						// prescaler
 
 	// tim2 config channel
 
@@ -54,7 +56,8 @@ void initButtons() {
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;					// enable clock for GPIOB
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;					// enable timer 3
 	
-	TIM3->ARR = BLINK_PERIOD;							// tim3 period
+	TIM3->ARR = BLINK_PERIOD;									// tim3 period
+	TIM3->PSC = BLINK_PRESCALER;						// prescaler
 
 	// tim3 config channel
 
@@ -65,7 +68,7 @@ void initButtons() {
 	
 	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER1_Pos);	// alternative function for pin B-1
 	GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR1;			// high speed for pin B-1
-	GPIOB->AFR[0] |= (0x02 << GPIO_AFRL_AFSEL1_Pos);	// alternative funciton 2 for pin B-1
+	GPIOB->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL1_Pos);	// alternative funciton 1 for pin B-1
 
 	TIM3->CCR4 = BLINK_DUTY_CYCLE;						// duty cycle of tim3 channel 4
 	TIM3->CCER |= TIM_CCER_CC4E;						// enable tim3 channel 4, positive
