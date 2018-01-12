@@ -12,8 +12,8 @@
     <import spec="${COM_TI_SIMPLELINK_CC32XX_SDK_INSTALL_DIR}/kernel/freertos/builds/CC3220SF_LAUNCHXL/release/gcc/freertos_builds_CC3220SF_LAUNCHXL_release_gcc.projectspec"/>
 
     <project
-        title="Out-Of-The-Box Demo"
-        name="out_of_box_CC3220SF_LAUNCHXL_freertos_gcc"
+        title="dizzyrobot"
+        name="host_driver"
         toolChain="GNU"
         connection="TIXDS110_Connection.xml"
         device="Cortex M.CC3220SF"
