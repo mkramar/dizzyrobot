@@ -249,6 +249,8 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t *pWlanEvent)
         case SL_WLAN_EVENT_PROVISIONING_PROFILE_ADDED:
         {
             UART_PRINT("[WLAN EVENT] Profile Added\r\n");
+			usleep(1000);
+			mcuReboot();
         }
         break;
 
