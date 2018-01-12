@@ -1,10 +1,10 @@
 #include <main.h>
 
 const uint sendBufferSize = 4;
-unsigned char sendBuffer[sendBufferSize] = { 0 };
+volatile unsigned char sendBuffer[sendBufferSize] = { 0 };
 
 const uint recvBufferSize = 6;
-unsigned char recvBuffer[recvBufferSize] = { 0 };
+volatile unsigned char recvBuffer[recvBufferSize] = { 0 };
 volatile unsigned int ringPosition = 0;
 
 volatile bool usartDmaSendRequested;
