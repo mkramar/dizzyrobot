@@ -42,10 +42,14 @@ int getElectricDegrees();
 	
 // buttons --------------------------------------------------------------------
 
-extern volatile bool button1Pressed;
-extern volatile bool button2Pressed;
+extern volatile bool buttonIdPressed;
+extern volatile bool buttonCalibPressed;
+extern volatile int buttonPressId;
 
 void initButtons();
+void blinkId(bool onOff);
+void blinkCalib(bool onOff);
+void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
@@ -67,5 +71,6 @@ void usartSendAngle();
 // flash ----------------------------------------------------------------------
 
 void writeFlash(uint16_t* data, int count);
+void memcpy(void *dst, const void *src, int count);
 
 #endif

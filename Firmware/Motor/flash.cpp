@@ -49,3 +49,12 @@ void writeFlash(uint16_t* data, int count) {
 	
 	FLASH->CR &= ~FLASH_CR_PG;										// disable programming
 }
+
+void memcpy(void *dst, const void *src, int count)
+{
+	char *d = (char*)dst;
+	const char *s = (const char*)src;
+
+	for (int i = 0; i < count; i++)
+		d[i] = s[i];
+}
