@@ -17,7 +17,6 @@ extern "C"
 void DMA1_Channel2_3_IRQHandler(){
 	if (DMA1->ISR & DMA_ISR_TCIF2)				// transfer complete on channel 2
 	{
-		//GPIOA->BRR |= 0b10;						// DriverEnable disable - pin A-1 low
 		DMA1->IFCR |= DMA_IFCR_CTCIF2;			// clear "transfer complete" flag of channel 2
 		DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable channel 2
 		usartDmaSendBusy = false;
@@ -109,36 +108,14 @@ void initUsart() {
 	GPIOA->AFR[0] |= (0b01 << GPIO_AFRL_AFSEL1_Pos);		// alternative funciton #1 for pin A-1
 	GPIOA->OSPEEDR |= (0b11 << GPIO_OSPEEDR_OSPEEDR1_Pos);	// high speed
 	
-	//TODO: for some reason RS485 hardware control is not working, so setting pin A-1 manually
-	//HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 0, 0)
 	USART1->CR3 |= USART_CR3_DEM;							// enable automatic DriverEnable mode
-	USART1->CR1 |= (2 << UART_CR1_DEAT_ADDRESS_LSB_POS) |	// 2/16th of a bit assertion time on DriverEnable output
-				   (2 << UART_CR1_DEDT_ADDRESS_LSB_POS);	// 2/16th of a bit de-assertion time on DriverEnable output	
+	USART1->CR1 |= (4 << UART_CR1_DEAT_ADDRESS_LSB_POS) |	// 4/16th of a bit assertion time on DriverEnable output
+				   (4 << UART_CR1_DEDT_ADDRESS_LSB_POS);	// 4/16th of a bit de-assertion time on DriverEnable output	
 	
 	USART1->CR1 |= USART_CR1_UE;							// enable usart	
 	
-//	UART_HandleTypeDef huart1;
-//  huart1.Instance = USART1;
-//  huart1.Init.BaudRate = 115200;
-//  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//  huart1.Init.StopBits = UART_STOPBITS_1;
-//  huart1.Init.Parity = UART_PARITY_NONE;
-//  huart1.Init.Mode = UART_MODE_TX_RX;
-//  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-//  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-//  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-//  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-//	HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 0, 0);
-//	  
-//	GPIO_InitTypeDef GPIO_InitStruct;
-//	GPIO_InitStruct.Pin = GPIO_PIN_1;
-//	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//	GPIO_InitStruct.Pull = GPIO_NOPULL;
-//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-//	GPIO_InitStruct.Alternate = GPIO_AF1_USART1;
-//	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	
 	//////////////////////////////
+	
 	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
 	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable
 	
@@ -189,7 +166,6 @@ void usartSendAngle() {
 	sendBuffer[2] = (uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU);
 	sendBuffer[3] = (uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU);
 
-	//GPIOA->BSRR |= 0b10;										// DriverEnable enable - pin A-1 high
 	DMA1_Channel2->CNDTR = sendBufferSize;						// buffer size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
 	usartDmaSendBusy = true;

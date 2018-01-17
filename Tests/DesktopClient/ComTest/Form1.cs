@@ -45,15 +45,21 @@ namespace ComTest
                 };
 
                 _port.Write(sendData, 0, sendData.Length);
-                Thread.Sleep(10);
+                Thread.Sleep(50);
 
-                var recvData = new byte[] { 0, 0, 0, 0 };
-                var read = _port.Read(recvData, 0, recvData.Length);
+                var recvData = new byte[] { 0, 0, 0, 0, 0, 0 };
+                var read = 0;
+                while (read < 4) read += _port.Read(recvData, 0, recvData.Length);
 
-                //recvData[0] should be 0 meaning addressed to mainboard
-                if (recvData[1] != i + 1) throw new Exception("expected message from controller #" + i);
-
-                labels[i].Text = string.Format("{0:X2}{1:X2}", recvData[2], recvData[3]);
+                if (recvData[0] != 0 ||     // should be targeted to ID=0 which is mainboard
+                    recvData[1] != i + 1)   // should come from current controller
+                {
+                    labels[i].Text = "ERROR";
+                }
+                else
+                {
+                    labels[i].Text = string.Format("{0:X2}{1:X2}", recvData[2], recvData[3]);
+                }
             }
         }
     }
