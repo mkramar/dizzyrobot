@@ -73,6 +73,7 @@ void calibrate() {
 	int zerosDn[maxPoles] = { 0 };
 	
 	ConfigData lc;
+	lc.controllerId = config->controllerId;
 
 	// gently set 0 angle
 	

@@ -1,13 +1,31 @@
 #include <main.h>
 
 int ensureConfigured() {
-	while (config->calibPoles == -1)
+	bool calibConfigured = config->calibPoles > 0;
+	bool idConfigured = config->controllerId != 0 && config->controllerId != -1;
+	
+	if (!calibConfigured) blinkCalib(true);
+	if (!idConfigured) blinkId(true);
+	
+	while (!calibConfigured || !idConfigured)
 	{
-		if (button2Pressed)
+		if (buttonCalibPressed)
 		{
 			calibrate();
-			button2Pressed = false;
+			blinkCalib(false);
+			
+			calibConfigured = true;
+			buttonCalibPressed = false;
 		}
+		
+		if (buttonIdPressed)
+		{
+			incrementIdAndSave();
+			blinkId(false);
+			
+			idConfigured = true;
+			buttonIdPressed = false;
+		}		
 	}
 }
 
@@ -29,8 +47,8 @@ int main(void) {
 	//usartTorqueCommandValue = 30;	
 	
 	usartDmaSendRequested = false;
-	button1Pressed = false;
-	button2Pressed = false;
+	buttonIdPressed = false;
+	buttonCalibPressed = false;
 
 	while (true){
 		//spiUpdateTorque();
@@ -43,15 +61,16 @@ int main(void) {
 			usartDmaSendRequested = false;
 		}
 		
-		if (button1Pressed)
+		if (buttonIdPressed)
 		{
-			button1Pressed = false;
+			incrementIdAndSave();
+			buttonIdPressed = false;
 		}
 		
-		if (button2Pressed)
+		if (buttonCalibPressed)
 		{
 			calibrate(); 
-			button2Pressed = false;
+			buttonCalibPressed = false;
 			usartTorqueCommandValue = 0;
 			usartDmaSendRequested = false;
 		}
