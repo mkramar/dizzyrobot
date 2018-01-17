@@ -58,7 +58,7 @@ namespace ComTest
                 }
                 else
                 {
-                    labels[i].Text = string.Format("{0:X2}{1:X2}", recvData[2], recvData[3]);
+                    labels[i].Text = string.Format("{0:X2}{1:X2}", recvData[3], recvData[2]);
                 }
             }
         }
