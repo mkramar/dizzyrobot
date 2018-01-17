@@ -81,6 +81,7 @@ void blinkId(bool onOff) {
 
 		// GPIOB
 	
+		GPIOB->MODER &= ~GPIO_MODER_MODER1_Msk;		
 		GPIOB->MODER |= (0x02 << GPIO_MODER_MODER1_Pos);	// alternative function for pin B-1
 		GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR1;			// high speed for pin B-1
 		GPIOB->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL1_Pos);	// alternative funciton 1 for pin B-1
@@ -113,6 +114,7 @@ void blinkCalib(bool onOff){
 
 		// GPIOA
 	
+		GPIOA->MODER &= ~GPIO_MODER_MODER0_Msk;
 		GPIOA->MODER |= (0x02 << GPIO_MODER_MODER0_Pos);	// alternative function for pin A-0
 		GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR0;			// high speed for pin A-0
 		GPIOA->AFR[0] |= (0x02 << GPIO_AFRL_AFSEL0_Pos);	// alternative funciton 2 for pin A-0
