@@ -52,7 +52,7 @@
 //****************************************************************************
 
 /* Example/Board Header files */
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 #include "provisioning_task.h"
 #include "link_local_task.h"
 #include "ota_task.h"

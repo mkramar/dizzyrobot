@@ -53,7 +53,7 @@
 /* Example/Board Header files */
 #include "link_local_task.h"
 #include "provisioning_task.h"
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 #include "ota_archive.h"
 
 #define NETAPP_MAX_RX_FRAGMENT_LEN     SL_NETAPP_REQUEST_MAX_DATA_LEN

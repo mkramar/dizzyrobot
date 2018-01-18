@@ -54,7 +54,7 @@
 /* Example/Board Header files */
 #include "ota_task.h"
 #include "link_local_task.h"
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 
 
 #define OTA_REPORT_SERVER_PORT       (5432)

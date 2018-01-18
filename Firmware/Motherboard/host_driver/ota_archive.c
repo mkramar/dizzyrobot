@@ -44,7 +44,7 @@
 /* Example/Board Header files */
 #include "ota_json.h"
 #include "ota_archive.h"
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 
 /* Tar header format */
 #define TAR_FILE_NAME_OFFSET     (0)

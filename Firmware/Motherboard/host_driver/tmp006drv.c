@@ -46,7 +46,7 @@
 
 /* Example/Board Header files */
 #include "tmp006drv.h"
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 
 
 #define FAILURE                 -1

@@ -59,7 +59,7 @@
 /* Example/Board Header files */
 #include "provisioning_task.h"
 #include "platform.h"
-#include "out_of_box.h"
+#include "simplelink_handler.h"
 #include "link_local_task.h"
 #include "ota_archive.h"
 

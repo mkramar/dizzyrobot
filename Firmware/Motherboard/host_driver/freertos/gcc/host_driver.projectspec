@@ -54,9 +54,9 @@
         </file>
         <file path="../../ota_task.h" openOnCreation="false" excludeFromBuild="false" action="copy">
         </file>
-        <file path="../../out_of_box.c" openOnCreation="false" excludeFromBuild="false" action="copy">
+        <file path="../../simplelink_handler.c" openOnCreation="false" excludeFromBuild="false" action="copy">
         </file>
-        <file path="../../out_of_box.h" openOnCreation="false" excludeFromBuild="false" action="copy">
+        <file path="../../simplelink_handler.h" openOnCreation="false" excludeFromBuild="false" action="copy">
         </file>
         <file path="../../platform.c" openOnCreation="false" excludeFromBuild="false" action="copy">
         </file>
