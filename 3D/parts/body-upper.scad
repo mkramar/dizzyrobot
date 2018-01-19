@@ -13,6 +13,11 @@ module bodyUpperAssembly(){
 	color("white")
 		bodyUpperMotors();
 	
+	color("red")
+	translate(headOffset)
+	translate([0, 0, 85])
+		cube([60, 60, 2], center=true);
+		
 	%translate(headOffset)
 		sphere(d = headD);
 		

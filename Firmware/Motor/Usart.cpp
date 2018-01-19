@@ -50,9 +50,9 @@ void USART1_IRQHandler(void) {
 				i %= recvBufferSize;
 				
 				unsigned char torqueValue = recvBuffer[i];
-				if (torqueValue > 60)
+				if (torqueValue > 40)
 				{
-					torqueValue = 60;
+					torqueValue = 40;
 				}
 
 				usartTorqueCommandValue = (int)torqueValue;
