@@ -60,6 +60,8 @@
 /* TI-DRIVERS Header files */
 #include <ti/drivers/net/wifi/simplelink.h>
 #include <ti/drivers/SPI.h>
+#include <ti/drivers/UART.h>
+
 #include <Board.h>
 
 /* driverlib Header files */
@@ -904,6 +906,9 @@ static void InitializeAppVariables(void)
 //! \return None
 //!
 //***********************************************************************************************
+
+static UART_Handle      uart1Handle;
+
 void * controlTask(void *pvParameters)
 {
 	ControlMessageType 			queueMsg;
@@ -911,7 +916,12 @@ void * controlTask(void *pvParameters)
 	uint32_t						ocpRegVal;
 	mq_attr 						attr;
 	struct timespec 				ts;
+	//char str[] = {'B', 'B', 'B', 'B', 'B'};
+	char str[] = {'1', '2','3','4','5','6'};
+	//char rec_str[10];
 
+	UART_Params   		uart1Params;
+	
 	/* initializes mailbox for http messages */
 	attr.mq_maxmsg = 10;         // queue size
 	attr.mq_msgsize = sizeof( ControlMessageType );      // Size of message
@@ -926,12 +936,31 @@ void * controlTask(void *pvParameters)
 	GPIO_setCallback(Board_BUTTON0, pushButtonInterruptHandler2);
 	GPIO_enableInt(Board_BUTTON0);
 
+    // Board_initUART(); // This is already called in InitTerm()
+    UART_Params_init(&uart1Params);
+
+    uart1Params.writeDataMode    = UART_DATA_BINARY;
+    uart1Params.readDataMode     = UART_DATA_BINARY;
+    uart1Params.readReturnMode   = UART_RETURN_FULL;
+    uart1Params.readEcho         = UART_ECHO_OFF;
+    uart1Params.baudRate         = 115200;
+	
+    uart1Handle = UART_open(Board_UART1, &uart1Params);
+	
 	while (1)
 	{
+		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 1);
+		UART_writePolling(uart1Handle, &str, sizeof(str));
+		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
+		
+		//UART_readPolling(uart1Handle, &rec_str, sizeof(str));
+		//UART_PRINT(" %d ", &rec_str[0]);
+
+		
 		queueMsg = ControlMessageType_ControlMessagesMax;
 
 		clock_gettime(CLOCK_REALTIME, &ts);
-       	ts.tv_sec += 2;
+       	ts.tv_sec += 0;
 
 		retVal = mq_timedreceive(controlMQueue, (char *)&queueMsg, sizeof( ControlMessageType ), NULL,&ts);
 
@@ -1039,6 +1068,9 @@ void * mainThread( void *arg )
 	GPIO_write(Board_LED0, Board_LED_OFF);
 	GPIO_write(Board_LED1, Board_LED_OFF);
 	GPIO_write(Board_LED2, Board_LED_OFF);
+	
+	/* Uart RTS */
+	GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
 
 	/* initializes signals for all tasks */
 	sem_init(&Provisioning_ControlBlock.connectionAsyncEvent, 0, 0);
