@@ -908,7 +908,8 @@ static void InitializeAppVariables(void)
 //***********************************************************************************************
 
 static UART_Handle      uart1Handle;
-
+char rec_str[10];
+	
 void * controlTask(void *pvParameters)
 {
 	ControlMessageType 			queueMsg;
@@ -917,8 +918,7 @@ void * controlTask(void *pvParameters)
 	mq_attr 						attr;
 	struct timespec 				ts;
 	//char str[] = {'B', 'B', 'B', 'B', 'B'};
-	char str[] = {'1', '2','3','4','5','6'};
-	//char rec_str[10];
+	char str[] = {1,2,3,4,5,6};
 
 	UART_Params   		uart1Params;
 	
@@ -953,9 +953,11 @@ void * controlTask(void *pvParameters)
 		UART_writePolling(uart1Handle, &str, sizeof(str));
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
 		
-		//UART_readPolling(uart1Handle, &rec_str, sizeof(str));
-		//UART_PRINT(" %d ", &rec_str[0]);
-
+		UART_readPolling(uart1Handle, &rec_str, 4);
+		UART_PRINT(" Data received: %d ", rec_str[0]);
+		UART_PRINT(" %d ", rec_str[1]);
+		UART_PRINT(" %d ", rec_str[2]);
+		UART_PRINT(" %d ", rec_str[3]);
 		
 		queueMsg = ControlMessageType_ControlMessagesMax;
 
