@@ -944,16 +944,17 @@ void * controlTask(void *pvParameters)
     uart1Params.readReturnMode   = UART_RETURN_FULL;
     uart1Params.readEcho         = UART_ECHO_OFF;
     uart1Params.baudRate         = 115200;
+    //uart1Params.readMode         = UART_MODE_CALLBACK;
 	
     uart1Handle = UART_open(Board_UART1, &uart1Params);
 	
 	while (1)
 	{
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 1);
-		UART_writePolling(uart1Handle, &str, sizeof(str));
+		UART_write(uart1Handle, &str, sizeof(str));
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
 		
-		UART_readPolling(uart1Handle, &rec_str, 4);
+		UART_read(uart1Handle, &rec_str, 4);
 		UART_PRINT(" Data received: %d ", rec_str[0]);
 		UART_PRINT(" %d ", rec_str[1]);
 		UART_PRINT(" %d ", rec_str[2]);
