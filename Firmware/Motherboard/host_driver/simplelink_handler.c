@@ -908,7 +908,21 @@ static void InitializeAppVariables(void)
 //***********************************************************************************************
 
 static UART_Handle      uart1Handle;
+//char str[] = {'B', 'B', 'B', 'B', 'B'};
+char str[] = {1,2,3,4,5,6};
 char rec_str[10];
+
+bool writeCompleted = 0;
+bool readCompleted = 0;
+void write_call_back(UART_Handle handle, void *buf, size_t count)
+{
+	writeCompleted = 1;
+}
+
+void read_call_back(UART_Handle handle, void *buf, size_t count)
+{
+	readCompleted = 1;
+}
 	
 void * controlTask(void *pvParameters)
 {
@@ -917,8 +931,6 @@ void * controlTask(void *pvParameters)
 	uint32_t						ocpRegVal;
 	mq_attr 						attr;
 	struct timespec 				ts;
-	//char str[] = {'B', 'B', 'B', 'B', 'B'};
-	char str[] = {1,2,3,4,5,6};
 
 	UART_Params   		uart1Params;
 	
@@ -944,17 +956,24 @@ void * controlTask(void *pvParameters)
     uart1Params.readReturnMode   = UART_RETURN_FULL;
     uart1Params.readEcho         = UART_ECHO_OFF;
     uart1Params.baudRate         = 115200;
-    //uart1Params.readMode         = UART_MODE_CALLBACK;
+    uart1Params.readMode         = UART_MODE_CALLBACK;
+    uart1Params.writeMode        = UART_MODE_CALLBACK;
+    uart1Params.writeCallback    = write_call_back;
+    uart1Params.readCallback    = read_call_back;
 	
     uart1Handle = UART_open(Board_UART1, &uart1Params);
 	
 	while (1)
 	{
+		writeCompleted = 0;
+		readCompleted = 0;
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 1);
 		UART_write(uart1Handle, &str, sizeof(str));
+		while(!writeCompleted);
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
 		
 		UART_read(uart1Handle, &rec_str, 4);
+		while(!readCompleted);
 		UART_PRINT(" Data received: %d ", rec_str[0]);
 		UART_PRINT(" %d ", rec_str[1]);
 		UART_PRINT(" %d ", rec_str[2]);
