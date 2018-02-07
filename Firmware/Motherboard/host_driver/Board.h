@@ -64,6 +64,8 @@ extern "C" {
 #define Board_GPIO_LED_ON            CC3220SF_LAUNCHXL_GPIO_LED_ON
 #define Board_GPIO_LED_OFF           CC3220SF_LAUNCHXL_GPIO_LED_OFF
 #define Board_GPIO_LED0              CC3220SF_LAUNCHXL_GPIO_LED_D7
+
+#define Board_UART_RTS				 CC3220SF_LAUNCHXL_GPIO_RTS
 /*
  *  CC3220SF_LAUNCHXL_GPIO_LED_D5 and CC3220SF_LAUNCHXL_GPIO_LED_D6 are shared with the I2C
  *  and PWM peripherals. In order for those examples to work, these LEDs are
