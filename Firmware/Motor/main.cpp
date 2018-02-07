@@ -40,11 +40,11 @@ int main(void) {
 	initSysTick();
 	
 	//calibrate();
-	//delay(2000);
+	delay(2000);
 	
-	ensureConfigured();
+	//ensureConfigured();
 	
-	//usartTorqueCommandValue = 30;	
+	//usartTorqueCommandValue = 80;	
 	
 	usartDmaSendRequested = false;
 	buttonIdPressed = false;
