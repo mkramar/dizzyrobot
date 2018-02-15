@@ -1,0 +1,144 @@
+/*
+ * Copyright (c) 2013-2017, Texas Instruments Incorporated
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * *  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * *  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * *  Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * */
+
+/*
+ *  ======== package.bld ========
+ */
+
+var commonBld = xdc.loadCapsule("ti/uia/build/common.bld");
+
+var objList = [
+//    "IpcMP",  // Doesn't build with xdctools 3.50
+    "TransportFile",
+    "TransportNdk",
+    "Adaptor",
+    "LoggerStreamer",
+    "LoggerStreamer2",
+    "LoggerIdle",
+];
+
+var trgFilter = {
+    field: "isa",
+    list: [
+        "64", "64P", "64T", "66", "674","v5T", "v7A", "v7M", "v7M4",
+        "v7A8", "v7A9", "v7A15", "v7R", "v6M"
+    ],
+};
+
+/* File list for building with NDK support, but no Ipc (eg, for TivaC) */
+var objListNDK = [
+//    "IpcMP",
+    "TransportFile",
+    "TransportNdk",
+    "Adaptor",
+    "LoggerStreamer",
+    "LoggerStreamer2",
+    "LoggerIdle",
+];
+
+var objList2 = [
+//    "IpcMP",
+//    "TransportFile",
+//    "TransportNdk",
+//    "Adaptor",
+    "LoggerStreamer",
+    "LoggerStreamer2",
+    "LoggerIdle",
+];
+
+var ipc = null;
+var ndk = null;
+
+var trgFilter2 = {
+    field: "isa",
+    list: [
+        "28",
+        "28FP",
+        "arp32",
+        "430X"
+    ],
+};
+
+/*
+ *  If ipc or ndk are not in the package path, don't add the
+ *  NDK transport to the library.
+ */
+try {
+    ipc = xdc.getPackageRepository('ti.sdo.ipc');
+}
+catch (e) {
+    /*
+     * Non-fatal remark.  Ipc is not in the package path.
+     */
+    print("Remark:  ti.sdo.ipc package not found." /* + e */);
+};
+
+try {
+    ndk = xdc.getPackageRepository('ti.ndk');
+
+    /* Reference the NDK headers */
+    Pkg.uses = ["ti/ndk/inc"];
+}
+catch (e) {
+    /*
+     * Non-fatal remark.  Ipc is not in the package path.
+     */
+    print("Remark:  ti.sdo.ndk package not found." /* + e */);
+};
+
+if (ndk && ipc) {
+    print("***** Building ti.uia.sysbios with NDK and IPC support");
+    commonBld.buildLibs(objList, undefined, trgFilter, arguments);
+}
+else if (ndk) {
+    print("***** Building ti.uia.sysbios with NDK support");
+    commonBld.buildLibs(objListNDK, undefined, trgFilter, arguments);
+}
+else {
+    print("***** Building ti.uia.sysbios WITHOUT NDK support");
+    commonBld.buildLibs(objList2, undefined, trgFilter, arguments);
+}
+
+/* generate makefiles */
+commonBld.buildLibs(objList2, undefined, trgFilter2, arguments);
+
+Pkg.otherFiles = [ "package.bld", "TransportFile.h", "TransportNdk.h",
+                   "LoggingSetup.xml", "LoggerIdle.xml", "LoggerStreamer.xml",
+                   "LoggerStreamer2.xml",
+		   "java/package.jar"];
+
+/* Include custom.mak for building Java code. */
+Pkg.makeEpilogue = "include custom.mak";
+
+/* include source files in the release package */
+Pkg.attrs.exportSrc = true;
+Pkg.attrs.exportCfg = true;

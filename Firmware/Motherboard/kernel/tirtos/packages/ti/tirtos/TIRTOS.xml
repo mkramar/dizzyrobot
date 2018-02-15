@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<gep name="TI-RTOS" title="TI-RTOS" version="1">
+
+<page name="Welcome" title="Welcome" DPI="2540">
+  <instance href="Welcome.html"/>
+</page>
+
+<page name="System Overview" title="System Overview" DPI="2540">
+  <instance href="ti/tirtos/Overview.xml"/>
+</page>
+
+</gep>

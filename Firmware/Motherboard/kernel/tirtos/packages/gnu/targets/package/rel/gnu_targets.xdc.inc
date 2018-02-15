@@ -1,0 +1,9 @@
+package/package.bld.xml
+package/build.cfg
+package/package.xdc.inc
+runh
+linkcmd.xdt
+linkUtils.xs
+std.h
+_utils.xs
+package/package.cfg.xdc.inc
