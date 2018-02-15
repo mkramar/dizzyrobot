@@ -909,13 +909,14 @@ static void InitializeAppVariables(void)
 
 static UART_Handle      uart1Handle;
 //char str[] = {'B', 'B', 'B', 'B', 'B'};
-char str[] = {1,2,3,4,5,6};
+char str[] = {1,1,20};
 char rec_str[10];
 
 bool writeCompleted = 0;
 bool readCompleted = 0;
 void write_call_back(UART_Handle handle, void *buf, size_t count)
 {
+	*(uint32_t *)0x40007040 = (*(uint32_t *)0x40007040) & (0xFFFFFFEF);
 	writeCompleted = 1;
 }
 
@@ -968,21 +969,32 @@ void * controlTask(void *pvParameters)
 		writeCompleted = 0;
 		readCompleted = 0;
 		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 1);
+		str[0] = 1;
 		UART_write(uart1Handle, &str, sizeof(str));
-		while(!writeCompleted);
-		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 0);
+		// GPIO will be cleared in Transfer complete interrupt
+		//while(!writeCompleted);
+		
+		UART_read(uart1Handle, &rec_str, 4);		
+		while(!readCompleted);
+		UART_PRINT("\nData received: %d %d %d %d", rec_str[0], rec_str[1], rec_str[2], rec_str[3]);
+		
+		writeCompleted = 0;
+		readCompleted = 0;
+		GPIO_write(CC3220SF_LAUNCHXL_GPIO_RTS, 1);
+		str[0] = 2;
+		UART_write(uart1Handle, &str, sizeof(str));
+		//while(!writeCompleted);
+		// GPIO will be cleared in Transfer complete interrupt
 		
 		UART_read(uart1Handle, &rec_str, 4);
 		while(!readCompleted);
-		UART_PRINT(" Data received: %d ", rec_str[0]);
-		UART_PRINT(" %d ", rec_str[1]);
-		UART_PRINT(" %d ", rec_str[2]);
-		UART_PRINT(" %d ", rec_str[3]);
+		UART_PRINT("\nData received: %d %d %d %d", rec_str[0], rec_str[1], rec_str[2], rec_str[3]);
+				
 		
 		queueMsg = ControlMessageType_ControlMessagesMax;
 
 		clock_gettime(CLOCK_REALTIME, &ts);
-       	ts.tv_sec += 0;
+       	ts.tv_sec += 2;
 
 		retVal = mq_timedreceive(controlMQueue, (char *)&queueMsg, sizeof( ControlMessageType ), NULL,&ts);
 
