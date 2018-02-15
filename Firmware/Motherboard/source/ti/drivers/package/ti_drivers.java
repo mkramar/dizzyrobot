@@ -256,14 +256,10 @@ public class ti_drivers
             sb.append("pkg.packageRepository = xdc.om['ti.drivers$$stat$root'];\n");
         sb.append("}\n");
         sb.append("pkg.build.libraries = [\n");
-            sb.append("'lib/drivers_cc32xx.aem4',\n");
             sb.append("'lib/drivers_cc32xx.am4g',\n");
-            sb.append("'lib/drivers_cc32xx.arm4',\n");
         sb.append("];\n");
         sb.append("pkg.build.libDesc = [\n");
-            sb.append("['lib/drivers_cc32xx.aem4', {target: 'ti.targets.arm.elf.M4', suffix: 'em4'}],\n");
             sb.append("['lib/drivers_cc32xx.am4g', {target: 'gnu.targets.arm.M4', suffix: 'm4g'}],\n");
-            sb.append("['lib/drivers_cc32xx.arm4', {target: 'iar.targets.arm.M4', suffix: 'rm4'}],\n");
         sb.append("];\n");
         Global.eval(sb.toString());
     }

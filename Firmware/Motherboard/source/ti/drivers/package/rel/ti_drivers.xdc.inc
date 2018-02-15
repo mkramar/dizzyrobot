@@ -59,7 +59,7 @@ Watchdog.h
 ./uart/UARTCC32XXDMA.h
 ./watchdog/WatchdogCC32XX.h
 package/package.cfg.xdc.inc
-lib/drivers_cc32xx.aem4
+lib/drivers_cc32xx.am4g
 package/package_ti.drivers.c
 ADC.c
 ADCBuf.c
@@ -93,7 +93,7 @@ Watchdog.c
 ./i2c/I2CCC32XX.c
 ./i2s/I2SCC32XXDMA.c
 ./power/PowerCC32XX.c
-./power/PowerCC32XX_asm.sem4
+./power/PowerCC32XX_asm.sm4g
 ./pwm/PWMTimerCC32XX.c
 ./sdspi/SDSPICC32XX.c
 ./sd/SDHostCC32XX.c
@@ -102,7 +102,3 @@ Watchdog.c
 ./uart/UARTCC32XX.c
 ./uart/UARTCC32XXDMA.c
 ./watchdog/WatchdogCC32XX.c
-lib/drivers_cc32xx.am4g
-./power/PowerCC32XX_asm.sm4g
-lib/drivers_cc32xx.arm4
-./power/PowerCC32XX_asm.asm
