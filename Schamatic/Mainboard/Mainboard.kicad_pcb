@@ -35,7 +35,7 @@
     (46 B.CrtYd user hide)
     (47 F.CrtYd user hide)
     (48 B.Fab user)
-    (49 F.Fab user)
+    (49 F.Fab user hide)
   )
 
   (setup
@@ -8047,6 +8047,16 @@
       (pts
         (xy 143.473 90.473) (xy 133.526973 90.473) (xy 133.525366 82.799973) (xy 133.51535 82.750565) (xy 133.4869 82.708947)
         (xy 133.4445 82.681676) (xy 133.398366 82.673) (xy 108.327 82.673) (xy 108.327 76.727) (xy 143.473 76.727)
+      )
+    )
+  )
+  (zone (net 69) (net_name "Net-(J2-Pad1)") (layer B.Cu) (tstamp 0) (hatch edge 0.508)
+    (connect_pads (clearance 0.4))
+    (min_thickness 0.254)
+    (fill yes (arc_segments 16) (thermal_gap 0.508) (thermal_bridge_width 0.508))
+    (polygon
+      (pts
+        (xy 108.2 84.6) (xy 117.8 84.6) (xy 117.8 89.6) (xy 108.2 89.6)
       )
     )
   )

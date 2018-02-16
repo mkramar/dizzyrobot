@@ -1,7 +1,7 @@
 #include <main.h>
 
 int ensureConfigured() {
-	bool calibConfigured = config->calibPoles > 0;
+	bool calibConfigured = config->calibRate > 0;
 	bool idConfigured = config->controllerId != 0 && config->controllerId != -1;
 	
 	if (!calibConfigured) blinkCalib(true);
@@ -42,9 +42,9 @@ int main(void) {
 	//calibrate();
 	delay(2000);
 	
-	//ensureConfigured();
+	ensureConfigured();
 	
-	//usartTorqueCommandValue = 80;	
+	//usartTorqueCommandValue = -50;	
 	
 	usartDmaSendRequested = false;
 	buttonIdPressed = false;

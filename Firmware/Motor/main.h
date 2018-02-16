@@ -11,10 +11,8 @@ struct ConfigData
 {
 	int controllerId = 0;
 	
-	int calibZeros[maxPoles] = { 0 };
-	int calibRates[maxPoles] = { 0 };
-	int calibPoles = 0;
-	int calibSplitPole = 0;
+	int calibZero = 0;
+	int calibRate = 0;
 };
 
 extern ConfigData* config;

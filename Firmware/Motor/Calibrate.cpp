@@ -9,60 +9,8 @@ extern const int maxPoles;
 int currentPole = 0;
 
 int getElectricDegrees() {
-	while (true)
-	{
-		if (config->calibSplitPole == currentPole)
-		{
-			int dl = config->calibZeros[currentPole] - spiCurrentAngle;
-			int dr = spiCurrentAngle - config->calibZeros[currentPole + 1];
-				
-			if (dl <= 0 || dr <= 0)
-			{
-				// all good
-				
-				int a = spiCurrentAngle - config->calibZeros[currentPole];
-				if (a < 0) a += 0x4000;
-				
-				int retval = (a * sin_size / config->calibRates[currentPole]) % sin_size;
-				return retval;
-			}
-			
-			if (dl < dr)
-			{
-				currentPole--;
-				if (currentPole < 0) 
-					currentPole = config->calibPoles - 1;
-			}
-			else
-			{
-				currentPole++;
-				if (currentPole >= config->calibPoles) 
-					currentPole = 0;				
-			}
-		}
-		else
-		{
-			if (spiCurrentAngle < config->calibZeros[currentPole]) 
-			{
-				currentPole--;
-				if (currentPole < 0) 
-					currentPole = config->calibPoles - 1;
-			}
-			else if ((currentPole == config->calibPoles - 1 ? config->calibZeros[0] : config->calibZeros[currentPole + 1]) < spiCurrentAngle) 
-			{
-				currentPole++;
-				if (currentPole >= config->calibPoles) 
-					currentPole = 0;
-			}			
-			else
-			{
-				// all good
-				
-				int retval = ((spiCurrentAngle - config->calibZeros[currentPole]) * sin_size / config->calibRates[currentPole]) % sin_size;
-				return retval;		
-			}
-		}
-	}
+	int x = (spiCurrentAngle - config->calibZero) % config->calibRate;
+	return x * sin_size / config->calibRate;
 }
 
 void calibrate() {
@@ -72,8 +20,9 @@ void calibrate() {
 	int zerosUp[maxPoles] = { 0 };
 	int zerosDn[maxPoles] = { 0 };
 	
-	ConfigData lc;
-	lc.controllerId = config->controllerId;
+	int calibZeros[maxPoles] = { 0 };
+	int calibRates[maxPoles] = { 0 };
+	int calibPoles = 0;
 
 	// gently set 0 angle
 	
@@ -124,7 +73,7 @@ void calibrate() {
 		setPwm(a, calibPower);
 	}
 	
-	lc.calibPoles = i;
+	calibPoles = i;
 	
 	// a bit more up then back down
 	
@@ -169,36 +118,41 @@ void calibrate() {
 	
 	// calc average zeros
 	
-	for (i = 0; i < lc.calibPoles; i++)
-		lc.calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
+	for (i = 0; i < calibPoles; i++)
+		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
-	// find split pole
+	// sort zeros
 	
-	int maxIndex = 0;
-	int maxValue = lc.calibZeros[0];
-	
-	for (i = 1; i < lc.calibPoles; i++)
+	bool swap;
+	do
 	{
-		if (maxValue < lc.calibZeros[i])
+		swap = false;
+		
+		for (int i = 0; i < calibPoles - 1; i++)
 		{
-			maxValue = lc.calibZeros[i];
-			maxIndex = i;			
+			if (calibZeros[i] > calibZeros[i + 1])
+			{
+				int tmp = calibZeros[i];
+				calibZeros[i] = calibZeros[i + 1];
+				calibZeros[i + 1] = tmp;
+				swap = true;
+			}
 		}
 	}
+	while (swap);
 	
-	lc.calibSplitPole = maxIndex;
+	// calc average zero
 	
-	// rates
-	
-	for (int i = 1; i < lc.calibPoles; i++)
+	int sum = 0;
+	for (int i = 0; i < calibPoles; i++)
 	{
-		lc.calibRates[i] = lc.calibZeros[i] - lc.calibZeros[i - 1];
-		
-		if (/*calibGoUp && */lc.calibZeros[i] < lc.calibZeros[i - 1]) 
-			lc.calibRates[i] += 0x4000;
+		int delta = calibZeros[i] - 0x4000 * i / calibPoles;
+		sum += delta;
 	}
 	
-	lc.calibRates[0] = lc.calibRates[lc.calibPoles - 1];
+	ConfigData lc;
+	lc.calibZero = sum / calibPoles;
+	lc.calibRate = 0x4000 / calibPoles;
 
 	// store in flash
 	
