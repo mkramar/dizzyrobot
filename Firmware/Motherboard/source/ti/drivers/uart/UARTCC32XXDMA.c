@@ -772,7 +772,10 @@ static void UARTCC32XXDMA_configDMA(UART_Handle handle, bool isWrite)
         MAP_uDMAChannelEnable(hwAttrs->txChannelIndex);
 
         MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_DMATX);
-        MAP_UARTIntEnable(hwAttrs->baseAddr, UART_INT_DMATX);
+		
+		MAP_UARTTxIntModeSet(hwAttrs->baseAddr, UART_TXINT_MODE_EOT);
+		MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_TX);
+        MAP_UARTIntEnable(hwAttrs->baseAddr, UART_INT_TX);
     }
     else {
         channelControlOptions = UDMA_SIZE_8 | UDMA_SRC_INC_NONE |
@@ -830,11 +833,18 @@ static void UARTCC32XXDMA_hwiIntFxn(uintptr_t arg)
      *    UARTIntStatus(base, true)  - read masked interrupt status
      */
     status = MAP_UARTIntStatus(hwAttrs->baseAddr, false);
-    if (status & UART_INT_DMATX) {
-        MAP_UARTIntDisable(hwAttrs->baseAddr, UART_INT_DMATX);
-        MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_DMATX);
+    // if (status & UART_INT_DMATX) {
+        // MAP_UARTIntDisable(hwAttrs->baseAddr, UART_INT_DMATX);
+        // MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_DMATX);
+    // }
+	
+	if (status & UART_INT_TX) 
+	{
+		*(uint32_t *)0x40007040 = (*(uint32_t *)0x40007040) & (0xFFFFFFEF);
+        MAP_UARTIntDisable(hwAttrs->baseAddr, UART_INT_TX);
+        MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_TX);
     }
-
+	
     if (status & UART_INT_DMARX) {
         MAP_UARTIntDisable(hwAttrs->baseAddr, UART_INT_DMARX);
         MAP_UARTIntClear(hwAttrs->baseAddr, UART_INT_DMARX);
@@ -868,7 +878,8 @@ static void UARTCC32XXDMA_hwiIntFxn(uintptr_t arg)
          *  + 4 because it is 4 bytes left in TX FIFO when the TX FIFO
          *  threshold interrupt occurs.
          */
-        startTxFifoEmptyClk((UART_Handle)arg, 4);
+        //startTxFifoEmptyClk((UART_Handle)arg, 4);
+        startTxFifoEmptyClk((UART_Handle)arg, 0);
 
         DebugP_log2("UART:(%p) Write finished, %d bytes written",
                     hwAttrs->baseAddr, object->writeCount);

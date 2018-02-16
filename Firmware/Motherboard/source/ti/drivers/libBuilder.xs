@@ -45,7 +45,7 @@ function makeLibs(name, targets, objects, cOpts)
     var target;
     var attrs = {
         copts: "",
-        profile: "release"
+        profile: "debug"
     };
 
     for each (var targetName in targets) {
