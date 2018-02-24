@@ -100,7 +100,7 @@ void initPwm() {
 	TIM1->BDTR |= TIM_BDTR_MOE |						// main output enable
 		          TIM_BDTR_OSSR |						// Off-state selection for Run mode
 				  TIM_BDTR_OSSI |						// Off-state selection for Idle mode
-		          0x08;									// 1uS dead-time //0b10000
+		          0x08;									// 0b10000 = 1uS dead-time
 	
 	TIM1->CR1 |= TIM_AUTORELOAD_PRELOAD_ENABLE;			// enable timer 1
 	
@@ -133,11 +133,11 @@ void setPwmTorque() {
 	if (usartTorqueCommandValue > 0)
 	{
 		a = getElectricDegrees() + ninetyDeg;
+		setPwm(a, usartTorqueCommandValue);
 	}
 	else
 	{
 		a = getElectricDegrees() - ninetyDeg;
+		setPwm(a, -usartTorqueCommandValue);
 	}
-	
-	setPwm(a, usartTorqueCommandValue);
 }
