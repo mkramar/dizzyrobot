@@ -59,7 +59,7 @@
 #define NETAPP_MAX_RX_FRAGMENT_LEN     SL_NETAPP_REQUEST_MAX_DATA_LEN
 #define NETAPP_MAX_METADATA_LEN        (100)
 #define NETAPP_MAX_ARGV_TO_CALLBACK    SL_FS_MAX_FILE_NAME_LENGTH+50
-#define NUMBER_OF_URI_SERVICES         (6)
+#define NUMBER_OF_URI_SERVICES         (7)
 
 #define LED_TOGGLE_OTA_PROCESS_TIMEOUT (100)   /* In msecs */
 
@@ -263,6 +263,23 @@ int32_t lightPostCallback(uint8_t requestIdx, uint8_t *argcCallback, uint8_t **a
 
 //*****************************************************************************
 //
+//! \brief This is a torque service callback function for HTTP POST
+//!
+//! \param[in]  requestIdx            request index to indicate the message
+//!
+//! \param[in]  argcCallback        count of input params to the service callback
+//!
+//! \param[in]  argvCallback        set of input params to the service callback
+//!
+//! \param[in] netAppRequest        netapp request structure
+//!
+//! \return 0 on success else negative
+//!
+//****************************************************************************
+int32_t torquePostCallback(uint8_t requestIdx, uint8_t *argcCallback, uint8_t **argvCallback, SlNetAppRequest_t *netAppRequest);
+
+//*****************************************************************************
+//
 //! \brief This is a sensors service callback function for HTTP GET
 //!
 //! \param[in]  requestIdx            request index to indicate the message
@@ -455,6 +472,7 @@ http_RequestObj_t    httpRequest[NUMBER_OF_URI_SERVICES] =
         {3, SL_NETAPP_REQUEST_HTTP_POST, "/light", {{NULL}}, NULL},
         {4, SL_NETAPP_REQUEST_HTTP_GET, "/sensor", {{NULL}}, NULL},
         {5, SL_NETAPP_REQUEST_HTTP_GET, "/device", {{NULL}}, NULL},
+        {6, SL_NETAPP_REQUEST_HTTP_POST, "/torque", {{NULL}}, NULL},
 };
 
 http_headerFieldType_t g_HeaderFields [] = 
@@ -1079,6 +1097,94 @@ int32_t lightGetCallback(uint8_t requestIdx, uint8_t *argcCallback, uint8_t **ar
 //!
 //****************************************************************************
 int32_t lightPostCallback(uint8_t requestIdx, uint8_t *argcCallback, uint8_t **argvCallback, SlNetAppRequest_t *netAppRequest)
+{
+    uint8_t *argvArray;
+    uint16_t metadataLen, elementType;
+    uint16_t ledState = 0xFF;
+    uint16_t ledIdx = Board_LED0;
+    argvArray = *argvCallback;
+
+    while (*argcCallback > 0)
+    {
+        elementType = setElementType(1, requestIdx, CONTENT_LEN_TYPE);
+        if ( *((uint16_t *)argvArray) != elementType)        /* content length is irrelevant for POST */
+        {
+            if (*(argvArray + 1) & 0x80)    /* means it is the value, not the parameter */
+            {
+                /* get the light operation    */
+                switch (*(argvArray + ARGV_VALUE_OFFSET))
+                {
+                    case LedValues_Off:
+
+                        ledState = Board_LED_OFF;
+
+                        break;
+
+                    case LedValues_On:
+
+                        ledState = Board_LED_ON;
+
+                        break;
+
+                    case LedValues_Toggle:
+
+                        ledState = 0xFF;
+
+                        break;
+                }
+
+                if (ledState == 0xFF)
+                {
+                    GPIO_toggle(ledIdx);
+                }
+                else
+                {
+                    GPIO_write(ledIdx, ledState);
+                }
+            }
+            else    /* means it is the parameter, not the value */
+            {
+                /*    apply to the right light    */
+                switch (*(argvArray + ARGV_VALUE_OFFSET))
+                {
+                    case LedIdx_RedLed:
+
+                        ledIdx = Board_LED0;
+
+                        break;
+                }
+            }
+        }
+
+        (*argcCallback)--;
+        argvArray += ARGV_LEN_OFFSET;        /* skip the type */
+        argvArray += *argvArray;    /* add the length */
+        argvArray++;        /* skip the length */
+    }
+
+    metadataLen = preparePostMetadata(0);
+
+    sl_NetAppSend (netAppRequest->Handle, metadataLen, gMetadataBuffer, SL_NETAPP_REQUEST_RESPONSE_FLAGS_METADATA);
+
+    return 0;
+}
+
+//*****************************************************************************
+//
+//! \brief This is a torque service callback function for HTTP POST
+//!
+//! \param[in]  requestIdx            request index to indicate the message
+//!
+//! \param[in]  argcCallback        count of input params to the service callback
+//!
+//! \param[in]  argvCallback        set of input params to the service callback
+//!
+//! \param[in] netAppRequest        netapp request structure
+//!
+//! \return 0 on success else negative
+//!
+//****************************************************************************
+int32_t torquePostCallback(uint8_t requestIdx, uint8_t *argcCallback, uint8_t **argvCallback, SlNetAppRequest_t *netAppRequest)
 {
     uint8_t *argvArray;
     uint16_t metadataLen, elementType;
@@ -1805,6 +1911,10 @@ void initLinkLocalDB(void)
     httpRequest[5].charValues[2].characteristic = "macaddress";
     httpRequest[5].charValues[3].characteristic = "appname";
     httpRequest[5].serviceCallback = deviceGetCallback;
+	
+	httpRequest[6].charValues[0].characteristic = "tor1";
+	httpRequest[6].charValues[1].characteristic = "tor2";
+    httpRequest[6].serviceCallback = torquePostCallback;
 
 }
 
