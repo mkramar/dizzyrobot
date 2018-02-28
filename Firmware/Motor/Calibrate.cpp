@@ -1,6 +1,6 @@
 #include <main.h>
 
-const int calibPower = 20;
+const int calibPower = 80;
 
 ConfigData* config = (ConfigData*)flashPageAddress;
 
