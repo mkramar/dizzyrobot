@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<gep name="UARTMon" title="UART Monitor Configuration Options" version="1">
+
+<page name="Basic" title="Basic">
+<html><body><table>
+
+  <tr>
+    <td>
+      <form>
+        <p>The UART monitor module enables target communication with a client GUI Composer application.</p>
+        <p> </p>
+      </form>
+    </td>
+  </tr>
+
+  <tr><td>
+    <control type="checkbox" label="Add UARTMon to my configuration" value="value:this.$used" bold="true"/></td>
+  </tr>
+
+  <tr>
+    <td>
+    <h1>UART Monitor Options</h1>
+    <table>
+      <tr>
+        <td><control type="label" label="UART Index" align="left"/></td>
+        <td><control type="editbox" 
+             value="value:this.index"
+             tooltip="value:this.index.$summary"/></td>
+      </tr>
+      <tr>
+        <td><control type="label" label="UART baudrate" align="left"/></td>
+        <td><control type="editbox" 
+             value="value:this.baudRate"
+             tooltip="value:this.baudRate.$summary"/></td>
+      </tr>
+      <tr>
+        <td><control type="label" label="Monitor task priority" align="left"/></td>
+        <td><control type="editbox" 
+             value="value:this.priority"
+             tooltip="value:this.priority.$summary"/></td>
+      </tr>
+      <tr>
+        <td><control type="label" label="Monitor task stack size(set to 0 to use device default)" align="left"/></td>
+        <td><control type="editbox" 
+             value="value:this.stackSize"
+             tooltip="value:this.stackSize.$summary"/></td>
+      </tr>        
+    </table>
+    </td>
+  </tr>
+
+</table></body></html>
+</page>
+
+<properties name="Advanced" title="All Options" enabled="true" visible="true" link="ti.tirtos.utils.UARTMon"/>
+</gep>

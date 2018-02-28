@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  This file conforms to the DTD xdc/bld/build.dtd -->
+<package name="ti.sysbios.rts.ti" version="1, 0, 0, 0" producerId="undefined">
+    <units>
+        <module name="ThreadLocalStorage"/>
+    </units>
+    <sources>
+    </sources>
+    <configscripts>
+    </configscripts>
+    <makefiles>
+        <srcFile name="package.mak" src="package.bld"/>
+        <srcFile name="package/package.xdc.dep" src="package.xdc"/>
+        <srcFile name="package/package.cfg.dep" src="package.xdc"/>
+        <srcFile name="package/rel/ti_sysbios_rts_ti.tar.dep" src="package/rel/ti_sysbios_rts_ti.xdc.inc"/>
+    </makefiles>
+    <targets>
+    </targets>
+    <libraries>
+    </libraries>
+    <configurations>
+    </configurations>
+    <executables>
+    </executables>
+    <tests>
+    </tests>
+    <releases relDir="package/rel/">
+    <release name="ti_sysbios_rts_ti"
+        pname="ti_sysbios_rts_ti.tar"
+        label="default"
+    >
+        <file name="package/package.bld.xml"/>
+        <file name="package/build.cfg"/>
+        <file name="package/package.xdc.inc"/>
+        <file name="package.xdc"/>
+        <file name="package.xs"/>
+        <file name="package.bld"/>
+        <file name="ThreadLocalStorage.xdc"/>
+        <file name="ThreadLocalStorage.xs"/>
+        <file name="ThreadLocalStorage.c"/>
+        <file name="ThreadLocalStorage.h"/>
+        <file name="tls_get_tp.asm"/>
+        <file name="linkcmd.xdt"/>
+        <file name="package/package.cfg.xdc.inc"/>
+    </release>
+    </releases>
+    <repositories>
+    </repositories>
+</package>

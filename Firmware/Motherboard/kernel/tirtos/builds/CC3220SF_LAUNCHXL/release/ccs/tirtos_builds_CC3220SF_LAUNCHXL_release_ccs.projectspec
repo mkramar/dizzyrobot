@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectSpec>
+    <applicability>
+        <when>
+            <context
+                deviceFamily="ARM"
+                deviceId="Cortex M.CC3220SF"
+            />
+        </when>
+    </applicability>
+
+    <project
+        title="TI-RTOS build release configuration"
+        name="tirtos_builds_CC3220SF_LAUNCHXL_release_ccs"
+        outputType="rtscConfiguration"
+        toolChain="TI"
+        device="Cortex M.CC3220SF"
+        description="TI-RTOS release configuration project">
+
+        <property name="products" value="com.ti.SIMPLELINK_CC32XX_SDK"/>
+        <property name="xdcToolsVersion" value="3_50_01_12_core"/>
+        <property name="target" value="ti.targets.arm.elf.M4"/>
+        <property name="platform" value="ti.platforms.simplelink:CC3220SF"/>
+        <property name="buildProfile" value="release"/>
+        <group id="CC32XX_SDK.CC3220SF_LAUNCHXL.release.ccs"/>
+        <file path="makefile.defs" openOnCreation="false" excludeFromBuild="false" action="copy" ></file>
+        <file path="../release.cfg" openOnCreation="false" excludeFromBuild="false" action="copy" >
+        </file>
+        <file path="../README.md" openOnCreation="false" excludeFromBuild="false" action="copy" >
+        </file>
+        <file path="../README.html" openOnCreation="false" excludeFromBuild="false" action="copy" >
+        </file>
+    </project>
+</projectSpec>
+

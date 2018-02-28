@@ -1,0 +1,13 @@
+package/package.bld.xml
+package/build.cfg
+package/package.xdc.inc
+package.bld
+linkcmd.xdt
+Core_link.xdt
+Core.xdt
+Core__epilogue.h
+Core__prologue.h
+Hwi_link.xdt
+Hwi__epilogue.h
+Hwi__prologue.h
+package/package.cfg.xdc.inc
