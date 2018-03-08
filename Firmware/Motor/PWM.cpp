@@ -77,19 +77,6 @@ void initPwm() {
 	GPIOB->AFR[1] |= (0x02 << GPIO_AFRH_AFSEL13_Pos) |	// for pin B-13 alternative funciton 2
 		             (0x02 << GPIO_AFRH_AFSEL14_Pos) |	// for pin B-14 alternative funciton 2
 	                 (0x02 << GPIO_AFRH_AFSEL15_Pos);	// for pin B-15 alternative funciton 2
-
-	// GPIOF
-	
-	GPIOF->MODER |= (0x01 << GPIO_MODER_MODER6_Pos) |	// output mode for pin F-6 (standby mode)
-		            (0x01 << GPIO_MODER_MODER7_Pos);	// output mode for pin F-7 (standby mode)
-	
-	GPIOF->PUPDR |= (0x01 << GPIO_PUPDR_PUPDR6_Pos) |	// pull-up for pin F-6
-			        (0x01 << GPIO_PUPDR_PUPDR7_Pos);	// pull-up for pin F-7
-	
-	// over-current config (pin A-11)
-
-	GPIOA->BRR = (1 << 11);								// reset pin 11 (overcurrent does not effect gate driver directly)
-	GPIOF->BSRR = (1 << 7);								// disable stand-by mode
 	
 	//
 	
@@ -112,7 +99,24 @@ void initPwm() {
 		          TIM_CCER_CC2NE |						// enable channel 2, negative
 		          TIM_CCER_CC3NE;						// enable channel 3, negative
 
-	TIM1->CR1 |= TIM_CR1_CEN;							// enable timer 1	
+	TIM1->CCR1 = 0;										// zero duty-cycle on all channels
+	TIM1->CCR2 = 0;
+	TIM1->CCR3 = 0;
+	
+	TIM1->CR1 |= TIM_CR1_CEN;							// enable timer 1
+	
+	// GPIOF
+	
+	GPIOF->MODER |= (0x01 << GPIO_MODER_MODER6_Pos) |	// output mode for pin F-6 (standby mode)
+		            (0x01 << GPIO_MODER_MODER7_Pos);	// output mode for pin F-7 (standby mode)
+	
+	GPIOF->PUPDR |= (0x01 << GPIO_PUPDR_PUPDR6_Pos) |	// pull-up for pin F-6
+			        (0x01 << GPIO_PUPDR_PUPDR7_Pos);	// pull-up for pin F-7
+	
+	// over-current config (pin A-11)
+
+	GPIOA->BRR = (1 << 11);								// reset pin 11 (overcurrent does not effect gate driver directly)
+	GPIOF->BSRR = (1 << 7);								// disable stand-by mode	
 }
 void setPwm(int angle, int power) {
 	int a1 = angle % sin_size;

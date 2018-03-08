@@ -44,7 +44,7 @@ int main(void) {
 	
 	ensureConfigured();
 	
-	//usartTorqueCommandValue = 100;	
+	usartTorqueCommandValue = -100;	
 	
 	usartDmaSendRequested = false;
 	buttonIdPressed = false;

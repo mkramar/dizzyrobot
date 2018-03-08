@@ -51,11 +51,22 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
+#define AS5048A
+//#ifdef TLE_5012B
+
+#ifdef AS5048A
+	#define SENSOR_MAX 0x2000
+#endif
+
+#ifdef TLE_5012B
+#define SENSOR_MAX 0x4000
+#endif
+
 extern int spiCurrentAngle;
 
 void initSpi();
 int spiReadAngle();
-void spiUpdateTorque();
+//void spiUpdateTorque();
 
 // usart ----------------------------------------------------------------------
 

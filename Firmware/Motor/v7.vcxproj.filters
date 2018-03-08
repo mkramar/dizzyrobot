@@ -212,9 +212,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="SpiTle5012B.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="Usart.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -231,6 +228,15 @@
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="flash.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spi.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiTLE5012B.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiAS5048A.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>

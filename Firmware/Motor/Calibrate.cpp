@@ -146,13 +146,13 @@ void calibrate() {
 	int sum = 0;
 	for (int i = 0; i < calibPoles; i++)
 	{
-		int delta = calibZeros[i] - 0x4000 * i / calibPoles;
+		int delta = calibZeros[i] - SENSOR_MAX * i / calibPoles;
 		sum += delta;
 	}
 	
 	ConfigData lc;
 	lc.calibZero = sum / calibPoles;
-	lc.calibRate = 0x4000 / calibPoles;
+	lc.calibRate = SENSOR_MAX / calibPoles;
 
 	// store in flash
 	

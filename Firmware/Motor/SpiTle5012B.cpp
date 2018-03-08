@@ -1,5 +1,10 @@
 #include <main.h>
 
+#ifdef TLE_5012B
+
+int spiCurrentAngle = 0;
+int spiUpdateSequence = 0;
+
 #define READ_STATUS				0x8001			//8000
 #define READ_ANGLE_VALUE		0x8021			//8020
 #define READ_SPEED_VALUE		0x8031			//8030
@@ -20,16 +25,6 @@
 #define IFAB_VALUE				0x000D
 
 //
-
-extern "C"
-void SPI1_IRQHandler() {
-	// should be empty
-}
-
-//
-
-int spiCurrentAngle = 0;
-int spiUpdateSequence = 0;
 
 void initSpi() {
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
@@ -84,6 +79,7 @@ void initSpi() {
 //	hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
 //	HAL_SPI_Init(&hspi1);
 }
+
 uint16_t spiGetRegister(uint16_t wr) {
 	uint16_t data = 0;
 	
@@ -112,32 +108,34 @@ int spiReadAngle() {
 	reg &= ~0xC000;
 	return reg;
 }
-void spiUpdateTorque() {
-	switch (spiUpdateSequence)
-	{
-	case 0:
-		GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
-		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
-	
-		while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
-		*((__IO uint16_t *)&SPI1->DR) = READ_ANGLE_VALUE;	// write command
-		break;
-		
-	case 1:
-		while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
-		SPI1->CR1 &= ~SPI_CR1_BIDIOE;						// input mode			
-		break;
-		
-	case 2:
-		while ((SPI1->SR & SPI_SR_RXNE) != SPI_SR_RXNE) {}	// wait for input buffer
-		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
-		GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
-	
-		int data = SPI1->DR;
-		spiCurrentAngle = data & ~0xC000;					// clear "new value" flag which we don't need
-		setPwmTorque();
-	}
+//void spiUpdateTorque() {
+//	switch (spiUpdateSequence)
+//	{
+//	case 0:
+//		GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
+//		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
+//	
+//		while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
+//		*((__IO uint16_t *)&SPI1->DR) = READ_ANGLE_VALUE;	// write command
+//		break;
+//		
+//	case 1:
+//		while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
+//		SPI1->CR1 &= ~SPI_CR1_BIDIOE;						// input mode			
+//		break;
+//		
+//	case 2:
+//		while ((SPI1->SR & SPI_SR_RXNE) != SPI_SR_RXNE) {}	// wait for input buffer
+//		SPI1->CR1 |= SPI_CR1_BIDIOE;						// output mode
+//		GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
+//	
+//		int data = SPI1->DR;
+//		spiCurrentAngle = data & ~0xC000;					// clear "new value" flag which we don't need
+//		setPwmTorque();
+//	}
+//
+//	spiUpdateSequence++;
+//	spiUpdateSequence = spiUpdateSequence % 3;
+//}
 
-	spiUpdateSequence++;
-	spiUpdateSequence = spiUpdateSequence % 3;
-}
+#endif

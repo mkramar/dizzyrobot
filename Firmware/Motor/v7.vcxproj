@@ -127,7 +127,9 @@
     <ClCompile Include="flash.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PWM.cpp" />
-    <ClCompile Include="SpiTle5012B.cpp" />
+    <ClCompile Include="Spi.cpp" />
+    <ClCompile Include="SpiAS5048A.cpp" />
+    <ClCompile Include="SpiTLE5012B.cpp" />
     <ClCompile Include="system_stm32f0xx.c" />
     <ClCompile Include="Usart.cpp" />
   </ItemGroup>
