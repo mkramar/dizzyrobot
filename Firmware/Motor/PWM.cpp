@@ -105,7 +105,7 @@ void initPwm() {
 	
 	TIM1->CR1 |= TIM_CR1_CEN;							// enable timer 1
 	
-	// GPIOF
+	// GPIOF - turn MOSFET driver on
 	
 	GPIOF->MODER |= (0x01 << GPIO_MODER_MODER6_Pos) |	// output mode for pin F-6 (standby mode)
 		            (0x01 << GPIO_MODER_MODER7_Pos);	// output mode for pin F-7 (standby mode)

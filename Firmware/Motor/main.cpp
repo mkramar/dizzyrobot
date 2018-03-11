@@ -34,17 +34,18 @@ int ensureConfigured() {
 int main(void) {
 	initClockExternal();
 	initButtons();
-	initPwm();
 	initUsart();
 	initSpi();
 	initSysTick();
+	//delay(100);
+	initPwm();
 	
 	//calibrate();
 	delay(2000);
 	
 	ensureConfigured();
 	
-	usartTorqueCommandValue = -100;	
+	//usartTorqueCommandValue = -250;	
 	
 	usartDmaSendRequested = false;
 	buttonIdPressed = false;
