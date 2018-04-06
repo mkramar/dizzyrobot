@@ -2,7 +2,7 @@
 
   (general
     (links 178)
-    (no_connects 3)
+    (no_connects 0)
     (area 75.424999 37.406666 141.335 70.205)
     (thickness 1.6)
     (drawings 9)
@@ -42,7 +42,7 @@
     (user_trace_width 0.25)
     (user_trace_width 0.5)
     (trace_clearance 0.13)
-    (zone_clearance 0.2)
+    (zone_clearance 0.3)
     (zone_45_only no)
     (trace_min 0.1)
     (segment_width 0.2)
@@ -3753,7 +3753,7 @@
       )
     )
   )
-  (zone (net 32) (net_name VIN) (layer F.Cu) (tstamp 0) (hatch edge 0.508)
+  (zone (net 10) (net_name "Net-(D2-Pad2)") (layer F.Cu) (tstamp 0) (hatch edge 0.508)
     (priority 1)
     (connect_pads yes (clearance 0.3))
     (min_thickness 0.254)
@@ -3761,6 +3761,11 @@
     (polygon
       (pts
         (xy 88.6 67.6) (xy 100.1 67.6) (xy 100.1 64.2) (xy 88.6 64.2)
+      )
+    )
+    (filled_polygon
+      (pts
+        (xy 99.973 67.473) (xy 88.727 67.473) (xy 88.727 64.327) (xy 99.973 64.327)
       )
     )
   )

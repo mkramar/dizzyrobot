@@ -1,4 +1,6 @@
-#include <main.h>#ifdef AS5048A
+#include <main.h>
+
+#ifdef AS5048A
 
 int spiCurrentAngle = 0;
 int spiUpdateSequence = 0;
@@ -10,7 +12,8 @@ int spiUpdateSequence = 0;
 #define SPI_REG_DATA 0x3fff // data register when using SPI
 #define SPI_REG_CLRERR 0x1 // clear error register when using SPI
 #define SPI_REG_ZEROPOS_HI 0x0016 // zero position register high byte
-#define SPI_REG_ ZEROPOS_LO 0x0017 // zero position register low byte
+#define SPI_REG_ ZEROPOS_LO 0x0017 // zero position register low byte
+
 void initSpi() {
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
