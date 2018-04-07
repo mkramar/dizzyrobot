@@ -10,7 +10,7 @@
 #include "main.h"
 
 extern SPI_HandleTypeDef hspi1;
-extern void _Error_Handler(char *, int);
+extern void _Error_Handler(const char *, int);
 
 void HandleSpiRx();
 void MX_SPI1_Init();

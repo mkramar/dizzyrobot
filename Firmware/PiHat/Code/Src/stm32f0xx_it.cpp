@@ -5,7 +5,8 @@
 #include "stm32f0xx_it.h"
 #include "spi.h"
 
-/* External variables --------------------------------------------------------*/
+extern bool flagSpiDataReceived;
+
 extern DMA_HandleTypeDef hdma_i2c1_rx;
 extern I2C_HandleTypeDef hi2c1;
 extern DMA_HandleTypeDef hdma_spi1_rx;
@@ -55,6 +56,15 @@ void SysTick_Handler(void)
 {
   HAL_IncTick();
   HAL_SYSTICK_IRQHandler();
+}
+
+/**
+* @brief This function handles EXTI line 4 to 15 interrupts.
+*/
+extern "C" void EXTI4_15_IRQHandler(void)
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+	flagSpiDataReceived = true;			// will be processed in main
 }
 
 /******************************************************************************/

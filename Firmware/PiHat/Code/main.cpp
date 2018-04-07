@@ -11,9 +11,14 @@
 #include "clock.h"
 
 #define spiBufferSize  512
-uint8_t spiBuffer[spiBufferSize];
+static uint8_t spiBuffer[spiBufferSize];
 
-void StateSpiAcceptCommand();
+#define STATE_INITIAL	0
+#define STATE_READING	1
+
+int state = STATE_INITIAL;
+bool flagSpiDataReceived = false;
+void ProcessIncoming();
 
 int main(void)
 {
@@ -30,24 +35,45 @@ int main(void)
 
 	while (1)
 	{
-		StateSpiAcceptCommand();
+		if (flagSpiDataReceived)
+		{
+			SPI1->CR1 &= ~SPI_CR1_SPE;			// disable SPI
+			DMA1_Channel2->CCR &= ~DMA_CCR_EN;	// disable DMI
+			
+			GPIOB->BRR |= PIN_READY_TO_WRITE;
+			GPIOB->BRR |= PIN_READY_TO_READ;
+			
+			ProcessIncoming();
+			
+			flagSpiDataReceived = false;
+		}
+		
+		switch (state)
+		{
+		case STATE_INITIAL:
+			GPIOB->BRR |= PIN_READY_TO_WRITE;
+			GPIOB->BSRR |= PIN_READY_TO_READ;
+	
+			StartSpiDmaRead(spiBuffer, spiBufferSize);
+			state = STATE_READING;
+			break;
+			
+		case STATE_READING:
+			// nothing. DMA is doing its job.
+			break;
+		}
 	}
 }
 
-void StateSpiAcceptCommand()
-{
-	// set "ready to read" pin
+void ProcessIncoming() {
 	
-	GPIOB->BRR |= PIN_READY_TO_WRITE;
-	GPIOB->BSRR |= PIN_READY_TO_READ;
-	
-	StartSpiDmaRead(spiBuffer, spiBufferSize);
 }
 
-void _Error_Handler(char * file, int line)
+void _Error_Handler(const char * file, int line)
 {
 	while (1) 
 	{
+		asm("bkpt 255");
 	}
 }
 

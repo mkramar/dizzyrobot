@@ -2,7 +2,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 
-extern void _Error_Handler(char *, int);
+extern void _Error_Handler(const char *, int);
 
 void HAL_MspInit(void)
 {

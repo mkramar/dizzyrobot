@@ -13,7 +13,8 @@ void HandleSpiRx() {
 }
 
 void StartSpiDmaRead(uint8_t* dataRx, uint32_t bufferSize) {
-	HAL_DMA_Start(&hdma_spi1_rx, (uint32_t)(&(SPI1->DR)), (uint32_t)(&dataRx), bufferSize);
+	SPI1->CR1 |= SPI_CR1_SPE;	// enable SPI
+	HAL_DMA_Start(&hdma_spi1_rx, (uint32_t)(&(SPI1->DR)), (uint32_t)(dataRx), bufferSize);
 }
 
 /* SPI1 init function */
@@ -36,6 +37,9 @@ void MX_SPI1_Init(void) {
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+	
+	SPI1->CR2 |= SPI_CR2_RXDMAEN;
+	SPI1->CR2 |= SPI_CR2_TXDMAEN;	
 }
 void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle) {
 
@@ -70,7 +74,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle) {
     hdma_spi1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_spi1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_spi1_rx.Init.Mode = DMA_NORMAL;
-    hdma_spi1_rx.Init.Priority = DMA_PRIORITY_LOW;
+	hdma_spi1_rx.Init.Priority = DMA_PRIORITY_HIGH;
     if (HAL_DMA_Init(&hdma_spi1_rx) != HAL_OK)
     {
       _Error_Handler(__FILE__, __LINE__);

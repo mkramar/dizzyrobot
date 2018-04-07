@@ -11,7 +11,7 @@
 extern UART_HandleTypeDef huart1;
 
 
-extern void _Error_Handler(char *, int);
+extern void _Error_Handler(const char *, int);
 
 void MX_USART1_UART_Init(void);
 
