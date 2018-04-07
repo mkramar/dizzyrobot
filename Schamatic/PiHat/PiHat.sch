@@ -1468,7 +1468,7 @@ F 3 "" H 7150 4000 50  0001 C CNN
 $EndComp
 Text GLabel 6600 2250 0    60   Input ~ 0
 MCU_ADCI
-Text GLabel 7350 2850 3    60   Input ~ 0
+Text GLabel 7950 2850 3    60   Input ~ 0
 MCU_ADCV
 Text GLabel 7050 2850 3    60   Input ~ 0
 MCU_TX
@@ -1655,4 +1655,8 @@ Text GLabel 7650 1050 1    60   Input ~ 0
 GPIO19
 Text GLabel 7800 1050 1    60   Input ~ 0
 GPIO26
+Text GLabel 7350 2850 3    60   Input ~ 0
+MCU_CS
+Text GLabel 2100 2250 2    60   Input ~ 0
+MCU_CS
 $EndSCHEMATC
