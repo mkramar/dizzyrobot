@@ -10,8 +10,8 @@
 #include "stm32f0xx_hal.h"
 #include "main.h"
 
-#define PIN_READY_TO_READ	GPIO_PIN_6;
-#define PIN_READY_TO_WRITE	GPIO_PIN_7;
+#define PIN_READY_TO_RECEIVE	GPIO_PIN_5
+#define PIN_READY_TO_RESPOND	GPIO_PIN_6
 
 void MX_GPIO_Init(void);
 

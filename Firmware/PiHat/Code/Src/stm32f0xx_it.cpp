@@ -5,7 +5,7 @@
 #include "stm32f0xx_it.h"
 #include "spi.h"
 
-extern bool flagSpiDataReceived;
+extern bool flagSpiFrameReceived;
 
 extern DMA_HandleTypeDef hdma_i2c1_rx;
 extern I2C_HandleTypeDef hi2c1;
@@ -64,7 +64,7 @@ void SysTick_Handler(void)
 extern "C" void EXTI4_15_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-	flagSpiDataReceived = true;			// will be processed in main
+	flagSpiFrameReceived = true;			// will be processed in main
 }
 
 /******************************************************************************/
