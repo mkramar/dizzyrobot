@@ -15,8 +15,8 @@
 //#define PARSE_END		2
 
 #define spiBufferSize  512
-static char spiInBuffer[spiBufferSize];
-static char spiOutBuffer[spiBufferSize];
+static char spiInBuffer[spiBufferSize] = { 0 };
+static char spiOutBuffer[spiBufferSize] = { 0 };
 char* inp;
 char* outp;
 
@@ -53,7 +53,8 @@ int main(void)
 		{
 			if (state == STATE_RECEIVING)
 			{
-				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
+				// master has finished sending command
+				
 				SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
 				DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable receive DMI
 			
@@ -62,6 +63,11 @@ int main(void)
 			
 				ProcessIncoming();
 			
+				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
+				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
+				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;				
+				//MX_SPI1_Init();
+					
 				StartSpiDmaWrite(spiOutBuffer, outp - spiOutBuffer);
 				
 				GPIOB->BSRR |= PIN_READY_TO_RESPOND;	// signal ready to respond
@@ -71,10 +77,14 @@ int main(void)
 			else
 			{
 				// master has finished reading SPI buffer
-				
-				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
+								
 				SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
 				DMA1_Channel3->CCR &= ~DMA_CCR_EN;		// disable respond DMI
+				
+				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
+				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
+				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;
+				//MX_SPI1_Init();
 				
 				StartSpiDmaRead(spiInBuffer, spiBufferSize);
 				

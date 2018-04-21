@@ -22,6 +22,9 @@ void StartSpiDmaRead(char* dataRx, uint32_t bufferSize) {
 	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;					// enable SPI clock
 	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	
+	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR);}// clear any pending input
+	//while (SPI1->SR & SPI_SR_BSY) {}
+	
 	DMA1->IFCR = DMA_FLAG_GL2;							// clear flags
 	DMA1_Channel2->CNDTR = bufferSize;					// set buffer size
 	DMA1_Channel2->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
@@ -31,7 +34,11 @@ void StartSpiDmaRead(char* dataRx, uint32_t bufferSize) {
 
 void StartSpiDmaWrite(char* dataTx, uint32_t bufferSize) {
 	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;					// enable SPI clock
+	
 	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
+	
+	while (!(SPI1->SR & SPI_SR_TXE)) {}					// send any pending output
+	//while (SPI1->SR & SPI_SR_BSY) {}
 	
 	DMA1->IFCR = DMA_FLAG_GL3;							// clear flags
 	DMA1_Channel3->CNDTR = bufferSize;					// set buffer size
