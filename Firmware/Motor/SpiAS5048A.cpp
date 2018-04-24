@@ -86,19 +86,23 @@ uint16_t spiGetRegister(uint16_t wr) {
 int spiReadAngle() {
 	uint16_t dat;
 	
-	dat = SPI_CMD_READ | SPI_REG_DATA;
-	dat |= spiCalcEvenParity(dat) << 15;
+	dat = 0xFFFF;
+	
+//	dat = SPI_CMD_READ | SPI_REG_DATA;
+//	dat |= spiCalcEvenParity(dat) << 15;
+	
 	int reg = spiGetRegister(dat);
 
-	if (reg & 0x4000)
-	{
-		// error flag set - need to reset it
-		dat = SPI_CMD_READ | SPI_REG_CLRERR;
-		dat |= spiCalcEvenParity(dat) << 15;
-		int error = spiGetRegister(dat);
-	}
+//	if (reg & 0x4000)
+//	{
+//		// error flag set - need to reset it
+//		dat = SPI_CMD_READ | SPI_REG_CLRERR;
+//		dat |= spiCalcEvenParity(dat) << 15;
+//		int error = spiGetRegister(dat);
+//	}
 	
 	reg &= 0x1FFF;	// clear parity and error bits
+	
 	//reg &= (16384 - 31 - 1);
 	//if (reg & 0x2000) reg |= 0xFFFFC000;
 	return reg;

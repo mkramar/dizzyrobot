@@ -82,7 +82,8 @@ void initUsart() {
 		
 	int baud = 115200;
 	
-	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 69)
+	//USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 69)
+	USART1->BRR = (48000000U + baud / 2U) / baud;			// baud rate (should be 0x1A1)
 	
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
 	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));

@@ -8,13 +8,13 @@
 #include "stm32f0xx_hal.h"
 #include "main.h"
 
-extern UART_HandleTypeDef huart1;
+//extern UART_HandleTypeDef huart1;
 
 
 extern void _Error_Handler(const char *, int);
 
 void MX_USART1_UART_Init(void);
-
+void StartUsartDmaWrite(uint8_t* dataTx, uint32_t bufferSize);
 
 #ifdef __cplusplus
 }
