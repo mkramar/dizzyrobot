@@ -9,13 +9,18 @@
 #include "stm32f0xx_hal.h"
 #include "main.h"
 
+#define spiBufferSize		512
+	 
+extern volatile char spiInBuffer[spiBufferSize];
+extern volatile char spiOutBuffer[spiBufferSize];
+	 
 extern SPI_HandleTypeDef hspi1;
 extern void _Error_Handler(const char *, int);
 
 void HandleSpiRx();
 void MX_SPI1_Init();
-void StartSpiDmaRead(char* dataRx, uint32_t bufferSize);
-void StartSpiDmaWrite(char* dataRx, uint32_t bufferSize);
+void StartSpiDmaRead();
+void StartSpiDmaWrite(uint32_t bufferSize);
 
 #ifdef __cplusplus
 }

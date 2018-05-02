@@ -12,32 +12,36 @@
 
 
 
-void StartSpiDmaRead(char* dataRx, uint32_t bufferSize) {
-	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;					// enable SPI clock
+void StartSpiDmaRead() {
+	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
 	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	
 	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR);}// clear any pending input
 	//while (SPI1->SR & SPI_SR_BSY) {}
 	
+	DMA1_Channel3->CCR &= ~DMA_CCR_DIR;					// peripheral to memory
+	
 	DMA1->IFCR = DMA_FLAG_GL2;							// clear flags
-	DMA1_Channel2->CNDTR = bufferSize;					// set buffer size
+	DMA1_Channel2->CNDTR = spiBufferSize;				// set buffer size
 	DMA1_Channel2->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
-	DMA1_Channel2->CMAR = (uint32_t)(dataRx);			// memory address
+	DMA1_Channel2->CMAR = (uint32_t)(spiInBuffer);		// memory address
 	DMA1_Channel2->CCR |= DMA_CCR_EN;  					// start
 }
 
-void StartSpiDmaWrite(char* dataTx, uint32_t bufferSize) {
-	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;					// enable SPI clock
+void StartSpiDmaWrite(uint32_t bufferSize) {
+	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
 	
 	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	
 	while (!(SPI1->SR & SPI_SR_TXE)) {}					// send any pending output
 	//while (SPI1->SR & SPI_SR_BSY) {}
 	
+	DMA1_Channel3->CCR |= DMA_CCR_DIR;					// memory to peripheral
+	
 	DMA1->IFCR = DMA_FLAG_GL3;							// clear flags
 	DMA1_Channel3->CNDTR = bufferSize;					// set buffer size
 	DMA1_Channel3->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
-	DMA1_Channel3->CMAR = (uint32_t)(dataTx);			// memory address
+	DMA1_Channel3->CMAR = (uint32_t)(spiOutBuffer);		// memory address
 	DMA1_Channel3->CCR |= DMA_CCR_EN;  					// start
 }
 
@@ -51,10 +55,10 @@ void MX_SPI1_Init(void) {
 	PA7     ------> SPI1_MOSI 
 	*/
 	
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;		// enable SPI clock
-	SPI1->CR2 |= SPI_CR2_FRXTH;				// FIFO threshold = 8 bit
-	SPI1->CR2 |= SPI_CR2_RXDMAEN;			// enable RX DMA
-	SPI1->CR2 |= SPI_CR2_TXDMAEN;			// enable TX DMA
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;						// enable SPI clock
+	SPI1->CR2 |= SPI_CR2_FRXTH |							// FIFO threshold = 8 bit
+	             SPI_CR2_RXDMAEN |							// enable RX DMA
+	             SPI_CR2_TXDMAEN;							// enable TX DMA
 	
 	// configure pins
 	

@@ -16,13 +16,14 @@ extern __IO uint32_t uwTick;
 //#define PARSE_OK		1
 //#define PARSE_END		2
 
-#define usartReadTimeout	10										// this many ms before give up listening
-#define maxLineLength		10
-#define spiBufferSize		512
-static char spiInBuffer[spiBufferSize] = { 0 };
-static char spiOutBuffer[spiBufferSize] = { 0 };
-char* inp;
-char* outp;
+volatile char spiInBuffer[spiBufferSize] = { 0 };
+volatile char spiOutBuffer[spiBufferSize] = { 0 };
+
+volatile char usartInBuffer[usartBufferSize] = { 0 };
+volatile char usartOutBuffer[usartBufferSize] = { 0 };
+
+volatile char* inp;
+volatile char* outp;
 
 #define STATE_INITIAL	0
 #define STATE_RECEIVING	1
@@ -48,7 +49,7 @@ int main(void)
 	GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
 	GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
 	
-	StartSpiDmaRead(spiInBuffer, spiBufferSize);
+	StartSpiDmaRead();
 	state = STATE_RECEIVING;
 	
 	while (1)
@@ -72,7 +73,7 @@ int main(void)
 				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;				
 				//MX_SPI1_Init();
 					
-				StartSpiDmaWrite(spiOutBuffer, outp - spiOutBuffer);
+				StartSpiDmaWrite(outp - spiOutBuffer);
 				
 				GPIOB->BSRR |= PIN_READY_TO_RESPOND;	// signal ready to respond
 				
@@ -90,7 +91,7 @@ int main(void)
 				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;
 				//MX_SPI1_Init();
 				
-				StartSpiDmaRead(spiInBuffer, spiBufferSize);
+				StartSpiDmaRead();
 				
 				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// clear respond flag
 				GPIOB->BSRR |= PIN_READY_TO_RECEIVE;	// raize receive flag
@@ -155,8 +156,8 @@ void ToEndOfLine(){
 	while (*inp && *inp != '\r' && *inp != '\n' && (inp - spiInBuffer < spiBufferSize)) inp++;
 }
 
-void UsartTransaction(int n, uint8_t* buffer, uint32_t len) {
-	buffer[0] = n;													// first byte is the ID of the recipient
+void UsartTransaction(int n, uint32_t length) {
+	usartOutBuffer[0] = n;											// first byte is the ID of the recipient
 	
 	// send
 	
@@ -166,32 +167,30 @@ void UsartTransaction(int n, uint8_t* buffer, uint32_t len) {
 //		USART1->TDR = buffer[i];
 //	}
 	
-	StartUsartDmaWrite(buffer, len);
+	StartUsartDmaWrite(length);
+	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
 	
 	// receive
 	
-	uint32_t firstTick = uwTick;
-	uint8_t inBuffer[4];
+	StartUsartDmaRead();
 	
-	for (int i = 0; i < 4; i++)
+	uint32_t firstTick = uwTick;
+	
+	while (!idleLineReceived)
 	{
 		if (uwTick - firstTick > usartReadTimeout)
 		{
+			USART1->CR1 &= ~USART_CR1_UE;							// disable usart	
 			Output("timeout\r\n");
 			return;
 		}
-		
-		if ((USART1->ISR & USART_ISR_RXNE) == USART_ISR_RXNE)
-		{
-			inBuffer[i] = (uint8_t)(USART1->RDR);
-		}
 	}
 	
-	if (inBuffer[0] == 0 &&											// to main controller (this)
-		inBuffer[1] == n)											// from ID=n
+	if (usartInBuffer[0] == 0 &&										// to main controller (this)
+		usartInBuffer[1] == n)											// from ID=n
 	{
-		WriteByte(inBuffer[2]);
-		WriteByte(inBuffer[3]);
+		WriteByte(usartInBuffer[2]);
+		WriteByte(usartInBuffer[3]);
 		Output("\r\n");
 	}
 	else
@@ -204,7 +203,6 @@ void ProcessIncoming() {
 	inp = spiInBuffer;
 	outp = spiOutBuffer;
 
-	uint8_t buffer[maxLineLength];
 	int line = 0;
 	int col = 1;
 	uint8_t b = 0;
@@ -216,7 +214,7 @@ void ProcessIncoming() {
 			line++;
 			inp++;
 			
-			UsartTransaction(line, buffer, col);
+			UsartTransaction(line, col);
 			col = 1;
 		}
 		
@@ -228,8 +226,8 @@ void ProcessIncoming() {
 		
 		if (ReadByte(&b)) 
 		{
-			if (col < maxLineLength - 1)
-				buffer[col++] = b;
+			if (col < usartBufferSize - 1)
+				usartOutBuffer[col++] = b;
 		}
 		else
 		{

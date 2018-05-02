@@ -38,11 +38,13 @@ namespace ComTest
                 if (torque > 40) torque = 40;
                 if (torque < 0) torque = 0;
 
-                var sendData = new byte[] {
-                    (byte)(i + 1),  // controller ID
-                    1,              // command = set torque
-                    torque          // torque value
-                };
+                //var sendData = new byte[] {
+                //    (byte)(i + 1),  // controller ID
+                //    1,              // command = set torque
+                //    torque          // torque value
+                //};
+
+                var sendData = Encoding.ASCII.GetBytes("010114\n");
 
                 _port.Write(sendData, 0, sendData.Length);
                 Thread.Sleep(50);
