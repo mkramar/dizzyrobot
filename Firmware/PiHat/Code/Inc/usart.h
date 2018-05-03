@@ -11,7 +11,7 @@
 	//extern UART_HandleTypeDef huart1;
 	 
 	#define usartBufferSize		10
-	#define usartReadTimeout	10										// this many ms before give up listening
+	#define usartReadTimeout	3										// this many ms before give up listening
 
 	extern volatile char usartInBuffer[usartBufferSize];
 	extern volatile char usartOutBuffer[usartBufferSize];

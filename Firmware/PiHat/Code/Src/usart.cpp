@@ -9,18 +9,23 @@ volatile bool idleLineReceived;
 
 extern "C"
 void USART1_IRQHandler(void) {
+//	if (USART1->ISR & USART_ISR_IDLE)
+//	{
+//		
+//		
+//	}
 	// idle line
 	
-	if (USART1->ISR & USART_ISR_IDLE)
-	{
-		USART1->ICR |= USART_ICR_IDLECF;		// clear IDLE flag bit
-		
-		idleLineReceived = true;
-	}
+//	if (USART1->ISR & USART_ISR_IDLE)
+//	{
+//		USART1->ICR |= USART_ICR_IDLECF;		// clear IDLE flag bit
+//		
+//		idleLineReceived = true;
+//	}
 }
 
 void StartUsartDmaWrite(uint32_t length) {
-	USART1->CR1 &= ~USART_CR1_IDLEIE;						// disable IDLE LINE detection interrupt
+	//USART1->CR1 &= ~USART_CR1_IDLEIE;						// disable IDLE LINE detection interrupt
 	USART1->CR1 |= USART_CR1_UE;							// enable usart		
 	
 	DMA1->IFCR = DMA_FLAG_GL2;								// clear flags
@@ -43,7 +48,7 @@ void StartUsartDmaRead(){
 	READ_REG(USART1->RDR);
 	idleLineReceived = false;
 	
-	USART1->CR1 |= USART_CR1_IDLEIE;						// enanle IDLE LINE detection interrupt
+	//USART1->CR1 |= USART_CR1_IDLEIE;						// enanle IDLE LINE detection interrupt
 	
 	DMA1_Channel3->CCR &= ~DMA_CCR_DIR;						// peripheral to memory	
 	
@@ -115,6 +120,7 @@ void MX_USART1_UART_Init(void){
 	
 	USART1->CR1 |= USART_CR1_TE |							// enable transmitter
 		           USART_CR1_RE;							// enable receiver
+		           //USART_CR1_TCIE;							// transmission complete interrupt enable
 				   //USART_CR1_UE;							// enable usart
 				   //USART_CR1_RXNEIE |						// interrupt on receive
 				   //USART_CR1_IDLEIE;						// enable IDLE LINE detection interrupt	
@@ -123,8 +129,8 @@ void MX_USART1_UART_Init(void){
 	USART1->CR1 |= (16 << UART_CR1_DEAT_ADDRESS_LSB_POS) |	// 4/16th of a bit assertion time on DriverEnable output
 				   (16 << UART_CR1_DEDT_ADDRESS_LSB_POS);	// 4/16th of a bit de-assertion time on DriverEnable output	
 	
-	NVIC_EnableIRQ(USART1_IRQn);
-	NVIC_SetPriority(USART1_IRQn, 0);
+//	NVIC_EnableIRQ(USART1_IRQn);
+//	NVIC_SetPriority(USART1_IRQn, 1);
 	
 	//USART1->CR1 |= USART_CR1_UE;							// enable usart		
 	

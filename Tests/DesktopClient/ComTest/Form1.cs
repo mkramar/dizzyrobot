@@ -44,7 +44,7 @@ namespace ComTest
                 //    torque          // torque value
                 //};
 
-                var sendData = Encoding.ASCII.GetBytes("010114\n");
+                var sendData = Encoding.ASCII.GetBytes("01010014\n");
 
                 _port.Write(sendData, 0, sendData.Length);
                 Thread.Sleep(50);

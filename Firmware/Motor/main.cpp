@@ -62,6 +62,12 @@ int main(void) {
 			usartDmaSendRequested = false;
 		}
 		
+		if (usartCommandReceived)
+		{
+			processUsartCommand();
+			usartCommandReceived = false;
+		}
+		
 		if (buttonIdPressed)
 		{
 			incrementIdAndSave();

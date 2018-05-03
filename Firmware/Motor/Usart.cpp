@@ -1,15 +1,18 @@
 #include <main.h>
 
-const uint sendBufferSize = 4;
+const uint sendBufferSize = 10;
 volatile unsigned char sendBuffer[sendBufferSize] = { 0 };
 
-const uint recvBufferSize = 6;
+const uint recvBufferSize = 32;
 volatile unsigned char recvBuffer[recvBufferSize] = { 0 };
-volatile unsigned int ringPosition = 0;
+char* recvBufferEnd = (char*)recvBuffer + recvBufferSize - 1;
+volatile char* inp = (char*)recvBuffer;
+volatile char* outp;
 
 volatile bool usartDmaSendRequested;
 volatile bool usartDmaSendBusy;
 volatile int usartTorqueCommandValue;
+volatile bool usartCommandReceived;
 
 const int COMMAND_TORQUE = 1;
 
@@ -19,46 +22,18 @@ void DMA1_Channel2_3_IRQHandler(){
 	{
 		DMA1->IFCR |= DMA_IFCR_CTCIF2;			// clear "transfer complete" flag of channel 2
 		DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable channel 2
+		USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
 		usartDmaSendBusy = false;
 	}
 }
 
 extern "C"
 void USART1_IRQHandler(void) {
-	// idle line
-	
-	if (USART1->ISR & USART_ISR_IDLE)
+	if (USART1->ISR & USART_ISR_CMF)
 	{
-		USART1->ICR |= USART_ICR_IDLECF;		// clear IDLE flag bit	
-		
-		uint bufferPosition = recvBufferSize - DMA1_Channel3->CNDTR;
-		uint i = bufferPosition - 3;
-		if (bufferPosition < 3) i += recvBufferSize;
-		
-		if (recvBuffer[i] == config->controllerId)
-		{
-			// message addressed to this controller
-			
-			i++;
-			i %= recvBufferSize;
-
-			if (recvBuffer[i] == 1)
-			{
-				// command is "set torque"
-				
-				i++;
-				i %= recvBufferSize;
-				
-				unsigned char torqueValue = recvBuffer[i];
-				if (torqueValue > 40)
-				{
-					torqueValue = 40;
-				}
-
-				usartTorqueCommandValue = (int)torqueValue;
-				usartDmaSendRequested = true;				
-			}
-		}
+		USART1->ICR |= USART_ICR_CMCF;			// clear CMF flag bit
+		USART1->CR1 &= ~USART_CR1_RE;			// disable receiver TODO: not needed once RE connected to DE
+		usartCommandReceived = true;
 	}
 }
 
@@ -96,7 +71,10 @@ void initUsart() {
 		           USART_CR1_RE |							// enable receiver
 				   //USART_CR1_UE |							// enable usart
 				   //USART_CR1_RXNEIE |						// interrupt on receive
-				   USART_CR1_IDLEIE;						// enanle IDLE LINE detection interrupt
+				   //USART_CR1_IDLEIE |						// enanle IDLE LINE detection interrupt
+		           USART_CR1_CMIE;							// char match interrupt enable
+	
+	USART1->CR2 |= ('\n' << USART_CR2_ADD_Pos);				// stop char is '\n'
 	
 	// config A-1 pin as DE (manual)
 
@@ -160,14 +138,102 @@ void initUsart() {
 	HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
 }
+void usartSendError(){
+	sendBuffer[0] = 'e';
+	sendBuffer[1] = 'r';
+	sendBuffer[2] = 'r';
+	sendBuffer[3] = 'o';
+	sendBuffer[4] = 'r';
+	sendBuffer[5] = '\n';
+
+	//USART1->CR1 &= ~USART_CR1_RE;								// disable receiver
+	USART1->CR1 &= ~USART_CR1_CMIE;								// disable char match interrupt
+	DMA1_Channel2->CNDTR = 6;									// buffer size	
+	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
+	usartDmaSendBusy = true;	
+}
+bool readByte(uint8_t* output) {
+	uint8_t b1;
+	uint8_t b2;
+	
+	*output = 0;
+	
+	if (*inp >= '0' && *inp <= '9') b1 = *inp - '0';
+	else if (*inp >= 'A' && *inp <= 'F') b1 = *inp - 'A';
+	else if (*inp >= 'a' && *inp <= 'f') b1 = *inp - 'a';
+	else return false;
+	
+	inp++;
+	if (inp > recvBufferEnd) inp = (char*)recvBuffer;
+		
+	if (*inp >= '0' && *inp <= '9') b2 = *inp - '0';
+	else if (*inp >= 'A' && *inp <= 'F') b2 = *inp - 'A';
+	else if (*inp >= 'a' && *inp <= 'f') b2 = *inp - 'a';
+	else return false;
+	
+	inp++;
+	if (inp > recvBufferEnd) inp = (char*)recvBuffer;
+
+	*output = (b1 << 4) | b2;
+	return true;
+}
+bool writeByte(uint8_t byte) {
+	uint8_t b1 = (byte >> 4) & 0x0F;
+	uint8_t b2 = byte & 0x0F;
+	
+	if (b1 <= 9) *outp++ = '0' + b1;
+	else *outp++ = 'A' + b1;
+	
+	if (b2 <= 9) *outp++ = '0' + b2;
+	else *outp++ = 'A' + b2;	
+}
+void processUsartCommand(){
+	uint8_t b;
+	bool success = false;
+	
+	if (readByte(&b) && b == config->controllerId)
+	{
+		// message addressed to this controller
+		
+		if (readByte(&b) && b == 1)
+		{
+			// command is TORQUE
+				
+			if (readByte(&b))
+			{
+				uint8_t b2;
+					
+				if (readByte(&b2))
+				{
+					usartTorqueCommandValue = (int)b << 8 | b2;
+					usartDmaSendRequested = true;		
+					success = true;
+				}
+			}				
+		}
+	}
+	
+	if (!success) usartSendError();
+	
+	uint bufferPosition = recvBufferSize - DMA1_Channel3->CNDTR;
+	inp = (char*)recvBuffer + bufferPosition;
+}
 
 void usartSendAngle() {
-	sendBuffer[0] = 0;											// to main controller
-	sendBuffer[1] = config->controllerId;						// id of the sender	
-	sendBuffer[2] = (uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU);
-	sendBuffer[3] = (uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU);
+	outp = (char*)sendBuffer;
+	writeByte(0);												// to main controller
+	writeByte(config->controllerId);							// id of the sender	
+	writeByte((uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU));
+	writeByte((uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU));
+	*outp++ = '\n';
+	
+	uint32_t cnt = outp - (char*)sendBuffer;
+	if (cnt % 2) {
+		*outp++;
+		cnt++;													// todo: find out why it breaks without alignment
+	}
 
-	DMA1_Channel2->CNDTR = sendBufferSize;						// buffer size	
+	DMA1_Channel2->CNDTR = cnt;									// transmit size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
 	usartDmaSendBusy = true;
 }

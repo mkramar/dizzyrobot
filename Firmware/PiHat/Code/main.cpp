@@ -126,6 +126,13 @@ void Output(const char *src){
 		*outp++ = ch = *p++;
 	} while (ch && (outp - spiOutBuffer) < spiBufferSize);
 }
+void OutputUsartLine() {
+	const char *p = (const char*)usartInBuffer;
+	char ch;
+	do {
+		*outp++ = ch = *p++;
+	} while (ch && ch != '\n' && (p - usartInBuffer) < usartBufferSize && (outp - spiOutBuffer) < spiBufferSize);
+}
 void WriteByte(uint8_t byte){
 	*outp++ = '0' + (byte >> 4) & 0x0F;
 }
@@ -156,20 +163,14 @@ void ToEndOfLine(){
 	while (*inp && *inp != '\r' && *inp != '\n' && (inp - spiInBuffer < spiBufferSize)) inp++;
 }
 
-void UsartTransaction(int n, uint32_t length) {
-	usartOutBuffer[0] = n;											// first byte is the ID of the recipient
+void UsartTransaction(uint32_t length) {
 	
 	// send
 	
-//	for (int i = 0; i < len; i++)
-//	{
-//		while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}		// wait till end of transmission
-//		USART1->TDR = buffer[i];
-//	}
-	
 	StartUsartDmaWrite(length);
 	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
-	
+	USART1->ICR |= USART_ICR_TCCF;									// clear transmission complete flag
+		
 	// receive
 	
 	StartUsartDmaRead();
@@ -180,61 +181,41 @@ void UsartTransaction(int n, uint32_t length) {
 	{
 		if (uwTick - firstTick > usartReadTimeout)
 		{
-			USART1->CR1 &= ~USART_CR1_UE;							// disable usart	
-			Output("timeout\r\n");
+			//USART1->CR1 &= ~USART_CR1_UE;							// disable usart	
+			Output("timeout\n");
 			return;
 		}
 	}
 	
-	if (usartInBuffer[0] == 0 &&										// to main controller (this)
-		usartInBuffer[1] == n)											// from ID=n
-	{
-		WriteByte(usartInBuffer[2]);
-		WriteByte(usartInBuffer[3]);
-		Output("\r\n");
-	}
-	else
-	{
-		Output("communication error\r\n");
-	}
+	OutputUsartLine();
 }
 
 void ProcessIncoming() {
 	inp = spiInBuffer;
 	outp = spiOutBuffer;
 
-	int line = 0;
-	int col = 1;
+	int col = 0;
 	uint8_t b = 0;
 	
-	while (*inp && (inp - spiInBuffer < spiBufferSize))
+	while (*inp && (inp - spiInBuffer < spiBufferSize) && (col < usartBufferSize - 1))
 	{
-		if (*inp == '\n') 
-		{
-			line++;
-			inp++;
-			
-			UsartTransaction(line, col);
-			col = 1;
-		}
-		
 		if (*inp == '\r') 
 		{
 			inp++;
 			continue;
 		}
 		
-		if (ReadByte(&b)) 
+		usartOutBuffer[col++] = *inp++;
+		
+		if (*inp == '\n') 
 		{
-			if (col < usartBufferSize - 1)
-				usartOutBuffer[col++] = b;
-		}
-		else
-		{
-			Output("parse error\r\n");
-			ToEndOfLine();
+			usartOutBuffer[col++] = '\n';
+			
+			UsartTransaction(col);
+			col = 0;
+			
 			continue;
-		}
+		}		
 	}
 }
 

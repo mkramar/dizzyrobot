@@ -73,9 +73,11 @@ int spiReadAngle();
 extern volatile int usartTorqueCommandValue;
 extern volatile bool usartDmaSendRequested;
 extern volatile bool usartDmaSendBusy;
+extern volatile bool usartCommandReceived;
 
 void initUsart();
 void usartSendAngle();
+void processUsartCommand();
 
 // flash ----------------------------------------------------------------------
 
