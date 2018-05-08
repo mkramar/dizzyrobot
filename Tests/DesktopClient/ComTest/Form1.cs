@@ -14,7 +14,14 @@ namespace ComTest
 {
     public partial class frmMain : Form
     {
-        SerialPort _port;
+        private const int Motors = 2;
+        private const int ReadTimeout = 100;
+
+        private SerialPort _port;
+
+        private TextBox[] _texts;
+        private Label[] _labels;
+        private AutoResetEvent _startSequence = new AutoResetEvent(false);
 
         public frmMain()
         {
@@ -22,47 +29,111 @@ namespace ComTest
 
             string[] ports = SerialPort.GetPortNames();
             _port = new SerialPort(ports[0], 115200);
+            _port.ReadTimeout = ReadTimeout;
             _port.Open();
+
+            _texts = new[] { txt1, txt2 };
+            _labels = new[] { lbl1, lbl2 };
+
+            new Thread(WorkThread) { IsBackground = true }.Start();
+        }
+
+        private void MotorTransaction(int motor)
+        {
+            byte torque = 0;
+            byte.TryParse(_texts[motor].Text, out torque);
+
+            if (torque > 40) torque = 40;
+            if (torque < 0) torque = 0;
+
+            var command = string.Format("{0:X2}01{1:X4}\n", motor + 1, torque);
+            var sendData = Encoding.ASCII.GetBytes(command);
+
+            _port.Write(sendData, 0, sendData.Length);
+
+            var state = new TransactionState(motor);
+            var ar = ScheduleRead(state);
+
+            if (!state.Done.WaitOne(ReadTimeout))
+            {
+                state.Canceled = true;
+                this.PerformSafely(() => _labels[state.Motor].Text = "timeout");
+            }
+        }
+
+        private IAsyncResult ScheduleRead(TransactionState state)
+        {
+            return _port.BaseStream.BeginRead(state.Buffer, state.Read, state.Buffer.Length - state.Read, HandleResponse, state);
+        }
+        private void HandleResponse(IAsyncResult ar)
+        {
+            try
+            {
+                var state = (TransactionState)ar.AsyncState;
+
+                state.Read += _port.BaseStream.EndRead(ar);
+
+                if (state.Canceled) return;
+
+                for (int i = 0; i < state.Read; i++)
+                {
+                    if (state.Buffer[i] == '\r' || state.Buffer[i] == '\n')
+                    {
+                        this.PerformSafely(() => _labels[state.Motor].Text = Encoding.ASCII.GetString(state.Buffer, 0, i));
+                        state.Done.Set();
+
+                        //if (state.Motor < Motors - 1)
+                        //    MotorTransaction(state.Motor + 1);
+
+                        return;
+                    }
+                }
+
+                ScheduleRead(state);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void WorkThread()
+        {
+            while (true)
+            {
+                _startSequence.WaitOne();
+
+                for (int i = 0; i < Motors; i++)
+                {
+                    MotorTransaction(i);
+                }
+
+                this.PerformSafely(() => btnSend.Enabled = true);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var texts = new[] { txt1, txt2 };
-            var labels = new[] { lbl1, lbl2 };
+            foreach (var label in _labels)
+                label.Text = "";
 
-            for (byte i = 0; i < 2; i++)
-            {
-                byte torque = 0;
-                byte.TryParse(texts[i].Text, out torque);
+            btnSend.Enabled = false;
 
-                if (torque > 40) torque = 40;
-                if (torque < 0) torque = 0;
-
-                //var sendData = new byte[] {
-                //    (byte)(i + 1),  // controller ID
-                //    1,              // command = set torque
-                //    torque          // torque value
-                //};
-
-                var sendData = Encoding.ASCII.GetBytes("01010014\n");
-
-                _port.Write(sendData, 0, sendData.Length);
-                Thread.Sleep(50);
-
-                var recvData = new byte[] { 0, 0, 0, 0, 0, 0 };
-                var read = 0;
-                while (read < 4) read += _port.Read(recvData, 0, recvData.Length);
-
-                if (recvData[0] != 0 ||     // should be targeted to ID=0 which is mainboard
-                    recvData[1] != i + 1)   // should come from current controller
-                {
-                    labels[i].Text = "ERROR";
-                }
-                else
-                {
-                    labels[i].Text = string.Format("{0:X2}{1:X2}", recvData[3], recvData[2]);
-                }
-            }
+            _startSequence.Set();
         }
+    }
+
+    class TransactionState
+    {
+        public TransactionState(int motor)
+        {
+            this.Motor = motor;
+        }
+
+        public int Motor { get; set; }
+        public byte[] Buffer { get; set; } = new byte[50];
+        public int Read { get; set; }
+        public ManualResetEvent Done { get; set; } = new ManualResetEvent(false);
+        public bool Canceled { get; set; }
     }
 }

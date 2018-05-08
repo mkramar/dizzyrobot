@@ -147,7 +147,7 @@ void usartSendError(){
 	sendBuffer[5] = '\n';
 
 	//USART1->CR1 &= ~USART_CR1_RE;								// disable receiver
-	USART1->CR1 &= ~USART_CR1_CMIE;								// disable char match interrupt
+	//USART1->CR1 &= ~USART_CR1_CMIE;								// disable char match interrupt
 	DMA1_Channel2->CNDTR = 6;									// buffer size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
 	usartDmaSendBusy = true;	
@@ -182,10 +182,10 @@ bool writeByte(uint8_t byte) {
 	uint8_t b2 = byte & 0x0F;
 	
 	if (b1 <= 9) *outp++ = '0' + b1;
-	else *outp++ = 'A' + b1;
+	else *outp++ = '7' + b1;
 	
 	if (b2 <= 9) *outp++ = '0' + b2;
-	else *outp++ = 'A' + b2;	
+	else *outp++ = '7' + b2;	
 }
 void processUsartCommand(){
 	uint8_t b;
@@ -211,9 +211,13 @@ void processUsartCommand(){
 				}
 			}				
 		}
+		
+		if (!success) usartSendError();
 	}
-	
-	if (!success) usartSendError();
+	else
+	{
+		USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
+	}
 	
 	uint bufferPosition = recvBufferSize - DMA1_Channel3->CNDTR;
 	inp = (char*)recvBuffer + bufferPosition;
@@ -225,6 +229,7 @@ void usartSendAngle() {
 	writeByte(config->controllerId);							// id of the sender	
 	writeByte((uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU));
 	writeByte((uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU));
+	*outp++ = '\r';
 	*outp++ = '\n';
 	
 	uint32_t cnt = outp - (char*)sendBuffer;
