@@ -129,6 +129,7 @@
     <ClCompile Include="PWM.cpp" />
     <ClCompile Include="Spi.cpp" />
     <ClCompile Include="SpiAS5048A.cpp" />
+    <ClCompile Include="SpiMA700.cpp" />
     <ClCompile Include="SpiTLE5012B.cpp" />
     <ClCompile Include="system_stm32f0xx.c" />
     <ClCompile Include="Usart.cpp" />

@@ -51,8 +51,9 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
-#define AS5048A
+//#define AS5048A
 //#ifdef TLE_5012B
+#define MA700
 
 #ifdef AS5048A
 	#define SENSOR_MAX 0x2000
@@ -60,6 +61,10 @@ void incrementIdAndSave();
 
 #ifdef TLE_5012B
 #define SENSOR_MAX 0x4000
+#endif
+
+#ifdef MA700
+#define SENSOR_MAX 0x800
 #endif
 
 extern int spiCurrentAngle;

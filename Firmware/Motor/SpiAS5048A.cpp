@@ -2,9 +2,6 @@
 
 #ifdef AS5048A
 
-int spiCurrentAngle = 0;
-int spiUpdateSequence = 0;
-
 #define SPI_CMD_READ 0x4000 // flag indicating read attempt
 #define SPI_CMD_WRITE 0x8000 // flag indicating write attempt
 #define SPI_REG_AGC 0x3ffd // agc register when using SPI

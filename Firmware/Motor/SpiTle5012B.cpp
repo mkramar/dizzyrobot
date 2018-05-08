@@ -2,9 +2,6 @@
 
 #ifdef TLE_5012B
 
-int spiCurrentAngle = 0;
-int spiUpdateSequence = 0;
-
 #define READ_STATUS				0x8001			//8000
 #define READ_ANGLE_VALUE		0x8021			//8020
 #define READ_SPEED_VALUE		0x8031			//8030
