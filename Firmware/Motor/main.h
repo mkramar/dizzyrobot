@@ -5,14 +5,20 @@
 #define MAIN_H
 
 const unsigned int flashPageAddress = 0x08007800;
-const int maxPoles = 25;
+const int numQuadrants = 16;
+
+struct QuadrantData
+{
+	unsigned int maxAngle;
+	unsigned int minAngle;
+	unsigned int range;
+};
 
 struct ConfigData
 {
 	int controllerId = 0;
-	
-	int calibZero = 0;
-	int calibRate = 0;
+	QuadrantData quadrants[numQuadrants] = { 0 };
+	bool calibrated = false;
 };
 
 extern ConfigData* config;
@@ -64,7 +70,7 @@ void incrementIdAndSave();
 #endif
 
 #ifdef MA700
-#define SENSOR_MAX 0x800
+#define SENSOR_MAX 0x1000
 #endif
 
 extern int spiCurrentAngle;

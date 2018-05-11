@@ -1,7 +1,9 @@
 #include <main.h>
 
 const int calibPower = 80;
-
+const int quadrantDiv = SENSOR_MAX / numQuadrants;
+//const int quadrantSize = SENSOR_MAX / quadrantDiv;
+	
 ConfigData* config = (ConfigData*)flashPageAddress;
 
 extern const int maxPoles;
@@ -9,20 +11,34 @@ extern const int maxPoles;
 int currentPole = 0;
 
 int getElectricDegrees() {
-	int x = (spiCurrentAngle - config->calibZero) % config->calibRate;
-	return x * sin_size / config->calibRate;
+	int q = spiCurrentAngle / quadrantDiv;
+	int qstart = q * quadrantDiv;
+	int max = config->quadrants[q].maxAngle;
+	int min = config->quadrants[q].minAngle;
+	int a = min + (spiCurrentAngle - qstart) * (max - min) / quadrantDiv;
+	return a;
 }
 
 void calibrate() {
 	int a = 0;
 	int i = 0;
 	int sensor;
-	int zerosUp[maxPoles] = { 0 };
-	int zerosDn[maxPoles] = { 0 };
+	int prevSensor;
 	
-	int calibZeros[maxPoles] = { 0 };
-	int calibRates[maxPoles] = { 0 };
-	int calibPoles = 0;
+	bool up;
+	int q = 0;
+	int prevQ = -1;
+	int firstQ = -1;
+	int quadrantsLeft = numQuadrants;
+	
+	QuadrantData qUp[numQuadrants] = { 0 };
+	QuadrantData qDn[numQuadrants] = { 0 };
+	
+	for (i = 0; i < numQuadrants; i++)
+	{
+		qUp[i].minAngle = 0xFFFF;
+		qDn[i].minAngle = 0xFFFF;
+	}
 
 	// gently set 0 angle
 	
@@ -31,80 +47,135 @@ void calibrate() {
 		delay(1);
 		setPwm(0, p/10);
 	}
-
-	for (a = 0; a < sin_size; a++)
-	{
-		delay(1);
-		setPwm(a, calibPower);
-	}
 	
-	// full turn up
-		
+	// find the edge of the quadrant, detect direction
+	
+	int sensorFirst = spiReadAngle();
+	int q1 = -1;
+	int q2 = -1;
 	while (true)
 	{
-		a = a % sin_size;
-		if (a == 0)
+		sensor = spiReadAngle();
+		prevSensor = sensor;
+		q = sensor / quadrantDiv;
+			
+		if (q1 == -1) q1 = q;
+		else if (q2 == -1 && q1 != q) q2 = q;
+		else if (q1 != q && q2 != q) break;
+		
+		a++;
+		delay(1);
+		setPwm(a, calibPower);		
+	}
+	
+	up = (sensor > sensorFirst);
+
+	// full turn forward
+
+	bool awayFromFirst = false;
+	bool backToFirst = false;
+	prevQ = -1;
+	while (true)
+	{
+		sensor = spiReadAngle();
+		q = sensor / quadrantDiv;
+		if (firstQ == -1) firstQ = q;
+		if (prevQ != -1)
 		{
-			int sensor = spiReadAngle();
-			
-			if (i > 2)
+			// noice on the quadrant edges
+			if (up)
 			{
-				int d1 = zerosUp[1] - zerosUp[0];
-				int d2 = zerosUp[2] - zerosUp[1];
-				int d3 = zerosUp[0] - sensor;
-				
-				if (d1 < 0) d1 = -d1;
-				if (d2 < 0) d2 = -d2;
-				if (d3 < 0) d3 = -d3;
-				
-				if (d1 > d2) d1 = d2;
-				
-				if (d3 < d1 / 4) {
-					break;
-				}
+				if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
+				//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
 			}
-			
-			zerosUp[i] = sensor;
-			i++;			
+			else
+			{
+				if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
+				//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+			}
 		}
+		if (q != prevQ)
+		{
+			prevQ = q;			
+		}
+		prevQ = q;		
+		
+		awayFromFirst |= (q - firstQ > 4) || (firstQ - q > 4);
+		backToFirst |= awayFromFirst && (q == firstQ);
+		if (backToFirst) break;
+		
+		if (qUp[q].minAngle > a) qUp[q].minAngle = a;
+		if (qUp[q].maxAngle < a) qUp[q].maxAngle = a;
 		
 		a+=2;
 		delay(1);
 		setPwm(a, calibPower);
 	}
 	
-	calibPoles = i;
+	for (int i = 0; i < numQuadrants; i++)
+		qUp[i].range = qUp[i].maxAngle - qUp[i].minAngle;
 	
-	// a bit more up then back down
+	//  up and down
 	
-	for (; a < sin_size; a++)
+	int aFrom = a;
+	int aTo = a + sin_size;
+	
+	while (a < aTo)
 	{
+		a++;
 		delay(1);
-		setPwm(a, calibPower);
-	}
-	
-	for (; a > 0; a--)
-	{
-		delay(1);
-		setPwm(a, calibPower);
+		setPwm(a, calibPower);		
 	}
 
-	// full turn down
-	
-	while (i >= 0)
+	while (a > aFrom)
 	{
-		if (a == 0)
+		a--;
+		delay(1);
+		setPwm(a, calibPower);		
+	}
+	
+	// full turn back
+	
+	awayFromFirst = false;
+	backToFirst = false;
+	firstQ = -1;
+	prevQ = -1;
+	while (true)
+	{
+		sensor = spiReadAngle();
+		q = sensor / quadrantDiv;
+		if (firstQ == -1) firstQ = q;
+		if (prevQ != -1)
 		{
-			int sensor = spiReadAngle();			
-			zerosDn[i] = sensor;
-			i--;
+			// noice on the quadrant edges
+			if (up)
+			{
+				if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
+				//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+			}
+			else
+			{
+				if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
+				//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
+			}
 		}
+		if (q != prevQ)
+		{
+			prevQ = q;
+		}
+		prevQ = q;
 		
-		a-=2;
-		if (a < 0) a += sin_size;
+		awayFromFirst |= (q - firstQ > 4) || (firstQ - q > 4);
+		backToFirst |= awayFromFirst && (q == firstQ);
+		if (backToFirst) break;
+		
+		if (qDn[q].minAngle > a) qDn[q].minAngle = a;
+		if (qDn[q].maxAngle < a) qDn[q].maxAngle = a;
+		
+		a -= 2;
 		delay(1);
 		setPwm(a, calibPower);
-	}	
+	}
 	
 	// gently release
 	
@@ -116,99 +187,52 @@ void calibrate() {
 
 	setPwm(0, 0);
 	
-	// calc average zeros
-	
-	for (i = 0; i < calibPoles; i++)
-		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
-	
-	// sort zeros
-	
-	bool swap;
-	do
-	{
-		swap = false;
-		
-		for (int i = 0; i < calibPoles - 1; i++)
-		{
-			if (calibZeros[i] > calibZeros[i + 1])
-			{
-				int tmp = calibZeros[i];
-				calibZeros[i] = calibZeros[i + 1];
-				calibZeros[i + 1] = tmp;
-				swap = true;
-			}
-		}
-	}
-	while (swap);
-	
-	// calc average zero
-	
-	int sum = 0;
-	for (int i = 0; i < calibPoles; i++)
-	{
-		int delta = calibZeros[i] - SENSOR_MAX * i / calibPoles;
-		sum += delta;
-	}
-	
 	ConfigData lc;
-	lc.calibZero = sum / calibPoles;
-	lc.calibRate = SENSOR_MAX / calibPoles;
+	lc.controllerId = config->controllerId;	
+	
+//	if (!up)
+//	{
+//		int tmp;
+//		
+//		for (int i = 0; i < numQuadrants; i++)
+//		{
+//			tmp = qUp[i].minAngle;
+//			qUp[i].minAngle = qUp[i].maxAngle;
+//			qUp[i].maxAngle = tmp;
+//			
+//			tmp = qDn[i].minAngle;
+//			qDn[i].minAngle = qDn[i].maxAngle;
+//			qDn[i].maxAngle = tmp;			
+//		}
+//	}
+	
+	// calc average quadrants
+	
+	for (int i = 0; i < numQuadrants; i++)
+	{
+		lc.quadrants[i].minAngle = (qUp[i].minAngle + qDn[i].minAngle) / 2;
+		lc.quadrants[i].maxAngle = (qUp[i].maxAngle + qDn[i].maxAngle) / 2;
+	}
+	
+//	for (int i = 0; i < numQuadrants - 1; i++)
+//	{
+//		if (up)
+//		{
+//			int avg = (lc.quadrants[i].maxAngle + lc.quadrants[i + 1].minAngle) / 2;
+//		
+//			lc.quadrants[i].maxAngle = avg;
+//			lc.quadrants[i + 1].minAngle = avg;
+//		}
+//		else
+//		{
+//			int avg = (lc.quadrants[i].minAngle + lc.quadrants[i + 1].maxAngle) / 2;
+//		
+//			lc.quadrants[i].minAngle = avg;
+//			lc.quadrants[i + 1].maxAngle = avg; 
+//		}
+//	}	
 
 	// store in flash
-	
-	lc.controllerId = config->controllerId;	
+	lc.calibrated = true;
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData)/sizeof(uint16_t));
 }
-
-#if OLD
-
-void calibrate() {
-	const int turns = 5;
-	const int power = 20;
-	int a = 0;
-	
-	// set 0 angle
-	
-	for (a = 0; a < power * 10; a++)
-	{
-		delay(1);
-		setPwm(0, a / 10);
-	}
-
-	delay(500);
-	int adcStart1 = SpiReadAngle();
-
-	// 3 forward
-	
-	a = 0;
-	for (a = 0; a <= sin_size * turns; a += 2)
-	{
-		delay(1);
-		setPwm(a, power);
-	}
-		
-	delay(500);	
-	int adcEnd1 = SpiReadAngle();
-	int ratio1 = (adcEnd1 - adcStart1) / turns;
-	
-	// 3 backwards
-
-	for (; a >= 0; a -= 2)
-	{
-		delay(1);
-		setPwm(a, power);
-	}
-	
-	delay(500);	
-	int adcStart2 = SpiReadAngle();
-	int ratio2 = (adcEnd1 - adcStart2) / turns;
-	
-	setPwm(a, 0);	
-
-	//
-	
-	calibZeroAngle = (adcStart1 + adcStart2) / 2;
-	calibAglePerElecTurn = (ratio1 + ratio2) / 2;
-}
-
-#endif

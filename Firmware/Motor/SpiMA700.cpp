@@ -36,6 +36,20 @@ void initSpi() {
 		         (0b1111 << SPI_CR2_DS_Pos);	// data size = 16 bit
 //		
 	SPI1->CR1 |= SPI_CR1_SPE;					// SPI enable
+	
+	// send calibration value
+	
+	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
+	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
+	*((__IO uint16_t *)&SPI1->DR) = 0b0010001110100000;	// correction value=165
+	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
+	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
+	
+	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
+	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
+	*((__IO uint16_t *)&SPI1->DR) = 0b0010010100100000;	// correction axis=x
+	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
+	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 	
 }
 
 int spiReadAngle() {

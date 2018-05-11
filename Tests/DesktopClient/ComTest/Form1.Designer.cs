@@ -44,7 +44,7 @@
             this.txt1.Name = "txt1";
             this.txt1.Size = new System.Drawing.Size(100, 26);
             this.txt1.TabIndex = 0;
-            this.txt1.Text = "20";
+            this.txt1.Text = "100";
             // 
             // txt2
             // 
@@ -53,7 +53,7 @@
             this.txt2.Name = "txt2";
             this.txt2.Size = new System.Drawing.Size(100, 26);
             this.txt2.TabIndex = 1;
-            this.txt2.Text = "20";
+            this.txt2.Text = "100";
             // 
             // lbl1
             // 

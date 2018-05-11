@@ -1,7 +1,7 @@
 #include <main.h>
 
 int ensureConfigured() {
-	bool calibConfigured = config->calibRate > 0;
+	bool calibConfigured = config->calibrated;
 	bool idConfigured = config->controllerId != 0 && config->controllerId != -1;
 	
 	if (!calibConfigured) blinkCalib(true);
