@@ -53,6 +53,7 @@ void calibrate() {
 	int sensorFirst = spiReadAngle();
 	int q1 = -1;
 	int q2 = -1;
+	int q3 = -1;
 	while (true)
 	{
 		sensor = spiReadAngle();
@@ -61,46 +62,64 @@ void calibrate() {
 			
 		if (q1 == -1) q1 = q;
 		else if (q2 == -1 && q1 != q) q2 = q;
-		else if (q1 != q && q2 != q) break;
+		else if (q3 == -1 && q1 != q && q2 != q) q3 = q;
+		else if (q1 != q && q2 != q && q3 != q) break;
 		
 		a++;
 		delay(1);
 		setPwm(a, calibPower);		
 	}
 	
-	up = (sensor > sensorFirst);
+	if (sensor > sensorFirst)
+	{
+		if (sensor - sensorFirst < sensorFirst + (SENSOR_MAX - sensor))
+			up = true;
+		else
+			up = false;
+	}
+	else
+	{
+		if (sensorFirst - sensor < sensor + (SENSOR_MAX - sensorFirst))
+			up = false;
+		else
+			up = true;
+	}
 
 	// full turn forward
 
 	bool awayFromFirst = false;
 	bool backToFirst = false;
-	prevQ = -1;
+	prevQ = q;
 	while (true)
 	{
 		sensor = spiReadAngle();
 		q = sensor / quadrantDiv;
-		if (firstQ == -1) firstQ = q;
-		if (prevQ != -1)
+		if (q != prevQ)
 		{
-			// noice on the quadrant edges
-			if (up)
-			{
-				if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
-				//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
-			}
-			else
-			{
-				if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
-				//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
-			}
+			q1 = q;
 		}
+
+		// noice on the quadrant edges
+		if (up)
+		{
+			if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
+			//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
+		}
+		else
+		{
+			if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
+			//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+		}
+
 		if (q != prevQ)
 		{
 			prevQ = q;			
 		}
+		if (firstQ == -1) firstQ = q;
 		prevQ = q;		
 		
-		awayFromFirst |= (q - firstQ > 4) || (firstQ - q > 4);
+		//awayFromFirst |= q != 0 && (q != numQuadrants - 1) && ((q - firstQ > 4) || (firstQ - q > 4));
+		awayFromFirst |= (q - firstQ  == numQuadrants / 2) || (firstQ - q == numQuadrants / 2);
 		backToFirst |= awayFromFirst && (q == firstQ);
 		if (backToFirst) break;
 		
@@ -111,61 +130,134 @@ void calibrate() {
 		delay(1);
 		setPwm(a, calibPower);
 	}
-	
+		
 	for (int i = 0; i < numQuadrants; i++)
+	{
+//		int off = qUp[i].minAngle - qUp[i].minAngle % sin_size;
+//		qUp[i].minAngle -= off;
+//		qUp[i].maxAngle -= off;
 		qUp[i].range = qUp[i].maxAngle - qUp[i].minAngle;
+	}
 	
 	//  up and down
 	
-	int aFrom = a;
-	int aTo = a + sin_size;
+	int qForth, qBack;
+	if (up)
+	{
+		qForth = q + 1;
+		if (qForth == numQuadrants) qForth = 0;
+		
+		qBack = q - 1;
+		if (qBack == -1) qBack = numQuadrants - 1;
+	}
+	else
+	{
+		qForth = q - 1;
+		if (qForth == -1) qForth = numQuadrants - 1;
+		
+		qBack = q + 1;
+		if (qBack == numQuadrants) qBack = 0;
+	}
 	
-	while (a < aTo)
+	while (true)
 	{
-		a++;
+		sensor = spiReadAngle();
+		q = sensor / quadrantDiv;
+		
+		if (q == qForth) break;
+		
+		a += 2;
 		delay(1);
-		setPwm(a, calibPower);		
+		setPwm(a, calibPower);
 	}
+	
+	while (true)
+	{
+		sensor = spiReadAngle();
+		q = sensor / quadrantDiv;
+		
+		if (q == qBack) break;
+		
+		a -= 2;
+		delay(1);
+		setPwm(a, calibPower);
+	}
+		
+//	int aFrom = a;
+//	int aTo = a + sin_size * 2;
+//	
+//	while (a < aTo)
+//	{
+//		a++;
+//		delay(1);
+//		setPwm(a, calibPower);		
+//	}
 
-	while (a > aFrom)
-	{
-		a--;
-		delay(1);
-		setPwm(a, calibPower);		
-	}
+//	while (a > aFrom)
+//	{
+//		a--;
+//		delay(1);
+//		setPwm(a, calibPower);		
+//	}
+	
+	// find the edge of the quadrant
+	
+//	spiReadAngle();	// refresh sensor position
+//	q1 = -1;
+//	q2 = -1;
+//	q3 = -1;
+//	while (true)
+//	{
+//		sensor = spiReadAngle();
+//		prevSensor = sensor;
+//		q = sensor / quadrantDiv;
+//			
+//		if (q1 == -1) q1 = q;
+//		else if (q2 == -1 && q1 != q) q2 = q;
+//		else if (q3 == -1 && q1 != q && q2 != q) q3 = q;
+//		else if (q1 != q && q2 != q && q3 != q) break;
+//		
+//		a--;
+//		delay(1);
+//		setPwm(a, calibPower);		
+//	}
 	
 	// full turn back
 	
 	awayFromFirst = false;
 	backToFirst = false;
 	firstQ = -1;
-	prevQ = -1;
+	prevQ = q;
 	while (true)
 	{
 		sensor = spiReadAngle();
 		q = sensor / quadrantDiv;
-		if (firstQ == -1) firstQ = q;
-		if (prevQ != -1)
+		if (q != prevQ)
 		{
-			// noice on the quadrant edges
-			if (up)
-			{
-				if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
-				//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
-			}
-			else
-			{
-				if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
-				//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
-			}
+			q1 = q;
 		}
+
+		// noice on the quadrant edges
+		if (up)
+		{
+			if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
+			//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+		}
+		else
+		{
+			if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
+			//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
+		}
+
 		if (q != prevQ)
 		{
 			prevQ = q;
 		}
+		if (firstQ == -1) firstQ = q;
 		prevQ = q;
 		
-		awayFromFirst |= (q - firstQ > 4) || (firstQ - q > 4);
+		//awayFromFirst |= q != 0 && (q != numQuadrants - 1) && ((q - firstQ > 4) || (firstQ - q > 4));
+		awayFromFirst |= (q - firstQ  == numQuadrants / 2) || (firstQ - q == numQuadrants / 2);
 		backToFirst |= awayFromFirst && (q == firstQ);
 		if (backToFirst) break;
 		
@@ -206,12 +298,21 @@ void calibrate() {
 //		}
 //	}
 	
+	for (int i = 0; i < numQuadrants; i++)
+	{
+//		int off = qDn[i].minAngle - qDn[i].minAngle % sin_size;
+//		qDn[i].minAngle -= off;
+//		qDn[i].maxAngle -= off;
+		qDn[i].range = qDn[i].maxAngle - qDn[i].minAngle;
+	}	
+	
 	// calc average quadrants
 	
 	for (int i = 0; i < numQuadrants; i++)
 	{
 		lc.quadrants[i].minAngle = (qUp[i].minAngle + qDn[i].minAngle) / 2;
 		lc.quadrants[i].maxAngle = (qUp[i].maxAngle + qDn[i].maxAngle) / 2;
+		lc.quadrants[i].range = lc.quadrants[i].maxAngle - lc.quadrants[i].minAngle;
 	}
 	
 //	for (int i = 0; i < numQuadrants - 1; i++)
