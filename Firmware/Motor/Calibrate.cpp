@@ -2,7 +2,6 @@
 
 const int calibPower = 80;
 const int quadrantDiv = SENSOR_MAX / numQuadrants;
-//const int quadrantSize = SENSOR_MAX / quadrantDiv;
 	
 ConfigData* config = (ConfigData*)flashPageAddress;
 
@@ -11,11 +10,24 @@ extern const int maxPoles;
 int currentPole = 0;
 
 int getElectricDegrees() {
+	int a;
 	int q = spiCurrentAngle / quadrantDiv;
-	int qstart = q * quadrantDiv;
-	int max = config->quadrants[q].maxAngle;
-	int min = config->quadrants[q].minAngle;
-	int a = min + (spiCurrentAngle - qstart) * (max - min) / quadrantDiv;
+	int range = config->quadrants[q].range;
+	int qstart;
+	
+	if (config->up)
+	{
+		int min = config->quadrants[q].minAngle;
+		qstart = q * quadrantDiv;
+		a = min + (spiCurrentAngle - qstart) * range / quadrantDiv;
+	}
+	else
+	{
+		int max = config->quadrants[q].maxAngle;
+		qstart = q * quadrantDiv;
+		a = max - (spiCurrentAngle - qstart) * range / quadrantDiv;
+	}
+	
 	return a;
 }
 
@@ -103,12 +115,12 @@ void calibrate() {
 		if (up)
 		{
 			if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
-			//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
+			else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
 		}
 		else
 		{
 			if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
-			//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+			else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
 		}
 
 		if (q != prevQ)
@@ -118,7 +130,6 @@ void calibrate() {
 		if (firstQ == -1) firstQ = q;
 		prevQ = q;		
 		
-		//awayFromFirst |= q != 0 && (q != numQuadrants - 1) && ((q - firstQ > 4) || (firstQ - q > 4));
 		awayFromFirst |= (q - firstQ  == numQuadrants / 2) || (firstQ - q == numQuadrants / 2);
 		backToFirst |= awayFromFirst && (q == firstQ);
 		if (backToFirst) break;
@@ -133,9 +144,6 @@ void calibrate() {
 		
 	for (int i = 0; i < numQuadrants; i++)
 	{
-//		int off = qUp[i].minAngle - qUp[i].minAngle % sin_size;
-//		qUp[i].minAngle -= off;
-//		qUp[i].maxAngle -= off;
 		qUp[i].range = qUp[i].maxAngle - qUp[i].minAngle;
 	}
 	
@@ -182,45 +190,6 @@ void calibrate() {
 		delay(1);
 		setPwm(a, calibPower);
 	}
-		
-//	int aFrom = a;
-//	int aTo = a + sin_size * 2;
-//	
-//	while (a < aTo)
-//	{
-//		a++;
-//		delay(1);
-//		setPwm(a, calibPower);		
-//	}
-
-//	while (a > aFrom)
-//	{
-//		a--;
-//		delay(1);
-//		setPwm(a, calibPower);		
-//	}
-	
-	// find the edge of the quadrant
-	
-//	spiReadAngle();	// refresh sensor position
-//	q1 = -1;
-//	q2 = -1;
-//	q3 = -1;
-//	while (true)
-//	{
-//		sensor = spiReadAngle();
-//		prevSensor = sensor;
-//		q = sensor / quadrantDiv;
-//			
-//		if (q1 == -1) q1 = q;
-//		else if (q2 == -1 && q1 != q) q2 = q;
-//		else if (q3 == -1 && q1 != q && q2 != q) q3 = q;
-//		else if (q1 != q && q2 != q && q3 != q) break;
-//		
-//		a--;
-//		delay(1);
-//		setPwm(a, calibPower);		
-//	}
 	
 	// full turn back
 	
@@ -241,12 +210,12 @@ void calibrate() {
 		if (up)
 		{
 			if ((q != numQuadrants - 1 || prevQ != 0) && q > prevQ) q = prevQ;
-			//else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
+			else if (q == 0 && prevQ == numQuadrants - 1) q = prevQ;
 		}
 		else
 		{
 			if ((q != 0 || prevQ != numQuadrants - 1) && q < prevQ) q = prevQ;
-			//else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
+			else if (q == numQuadrants - 1 && prevQ == 0) q = prevQ;
 		}
 
 		if (q != prevQ)
@@ -256,7 +225,6 @@ void calibrate() {
 		if (firstQ == -1) firstQ = q;
 		prevQ = q;
 		
-		//awayFromFirst |= q != 0 && (q != numQuadrants - 1) && ((q - firstQ > 4) || (firstQ - q > 4));
 		awayFromFirst |= (q - firstQ  == numQuadrants / 2) || (firstQ - q == numQuadrants / 2);
 		backToFirst |= awayFromFirst && (q == firstQ);
 		if (backToFirst) break;
@@ -282,27 +250,8 @@ void calibrate() {
 	ConfigData lc;
 	lc.controllerId = config->controllerId;	
 	
-//	if (!up)
-//	{
-//		int tmp;
-//		
-//		for (int i = 0; i < numQuadrants; i++)
-//		{
-//			tmp = qUp[i].minAngle;
-//			qUp[i].minAngle = qUp[i].maxAngle;
-//			qUp[i].maxAngle = tmp;
-//			
-//			tmp = qDn[i].minAngle;
-//			qDn[i].minAngle = qDn[i].maxAngle;
-//			qDn[i].maxAngle = tmp;			
-//		}
-//	}
-	
 	for (int i = 0; i < numQuadrants; i++)
 	{
-//		int off = qDn[i].minAngle - qDn[i].minAngle % sin_size;
-//		qDn[i].minAngle -= off;
-//		qDn[i].maxAngle -= off;
 		qDn[i].range = qDn[i].maxAngle - qDn[i].minAngle;
 	}	
 	
@@ -315,25 +264,8 @@ void calibrate() {
 		lc.quadrants[i].range = lc.quadrants[i].maxAngle - lc.quadrants[i].minAngle;
 	}
 	
-//	for (int i = 0; i < numQuadrants - 1; i++)
-//	{
-//		if (up)
-//		{
-//			int avg = (lc.quadrants[i].maxAngle + lc.quadrants[i + 1].minAngle) / 2;
-//		
-//			lc.quadrants[i].maxAngle = avg;
-//			lc.quadrants[i + 1].minAngle = avg;
-//		}
-//		else
-//		{
-//			int avg = (lc.quadrants[i].minAngle + lc.quadrants[i + 1].maxAngle) / 2;
-//		
-//			lc.quadrants[i].minAngle = avg;
-//			lc.quadrants[i + 1].maxAngle = avg; 
-//		}
-//	}	
-
 	// store in flash
 	lc.calibrated = true;
+	lc.up = up;
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData)/sizeof(uint16_t));
 }

@@ -18,6 +18,7 @@ struct ConfigData
 {
 	int controllerId = 0;
 	QuadrantData quadrants[numQuadrants] = { 0 };
+	bool up = false;
 	bool calibrated = false;
 };
 
