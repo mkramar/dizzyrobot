@@ -134,7 +134,14 @@ void OutputUsartLine() {
 	} while (ch && ch != '\n' && (p - usartInBuffer) < usartBufferSize && (outp - spiOutBuffer) < spiBufferSize);
 }
 void WriteByte(uint8_t byte){
-	*outp++ = '0' + (byte >> 4) & 0x0F;
+	uint8_t b1 = (byte >> 4) & 0x0F;
+	uint8_t b2 = byte & 0x0F;
+	
+	if (b1 <= 9) *outp++ = '0' + b1;
+	else *outp++ = '7' + b1;
+	
+	if (b2 <= 9) *outp++ = '0' + b2;
+	else *outp++ = '7' + b2;
 }
 bool ReadByte(uint8_t* output) {
 	uint8_t b1;
@@ -143,14 +150,14 @@ bool ReadByte(uint8_t* output) {
 	*output = 0;
 	
 	if (*inp >= '0' && *inp <= '9') b1 = *inp - '0';
-	else if (*inp >= 'A' && *inp <= 'F') b1 = *inp - 'A';
+	else if (*inp >= 'A' && *inp <= 'F') b1 = *inp - '7';
 	else if (*inp >= 'a' && *inp <= 'f') b1 = *inp - 'a';
 	else return false;
 	
 	inp++;
 		
 	if (*inp >= '0' && *inp <= '9') b2 = *inp - '0';
-	else if (*inp >= 'A' && *inp <= 'F') b2 = *inp - 'A';
+	else if (*inp >= 'A' && *inp <= 'F') b2 = *inp - '7';
 	else if (*inp >= 'a' && *inp <= 'f') b2 = *inp - 'a';
 	else return false;
 	

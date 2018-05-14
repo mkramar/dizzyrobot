@@ -159,7 +159,7 @@ bool readByte(uint8_t* output) {
 	*output = 0;
 	
 	if (*inp >= '0' && *inp <= '9') b1 = *inp - '0';
-	else if (*inp >= 'A' && *inp <= 'F') b1 = *inp - 'A';
+	else if (*inp >= 'A' && *inp <= 'F') b1 = *inp - '7';
 	else if (*inp >= 'a' && *inp <= 'f') b1 = *inp - 'a';
 	else return false;
 	
@@ -167,7 +167,7 @@ bool readByte(uint8_t* output) {
 	if (inp > recvBufferEnd) inp = (char*)recvBuffer;
 		
 	if (*inp >= '0' && *inp <= '9') b2 = *inp - '0';
-	else if (*inp >= 'A' && *inp <= 'F') b2 = *inp - 'A';
+	else if (*inp >= 'A' && *inp <= 'F') b2 = *inp - '7';
 	else if (*inp >= 'a' && *inp <= 'f') b2 = *inp - 'a';
 	else return false;
 	
@@ -188,24 +188,30 @@ bool writeByte(uint8_t byte) {
 	else *outp++ = '7' + b2;	
 }
 void processUsartCommand(){
-	uint8_t b;
+	uint8_t b1, b2, b3, b4;
 	bool success = false;
 	
-	if (readByte(&b) && b == config->controllerId)
+	// skip noice. todo: why!?
+	if (*inp >= '0' && *inp <= '9' || *inp >= 'A' && *inp <= 'F' || *inp >= 'a' && *inp <= 'f') {}
+	else 
+	{
+		inp++;
+		if (inp > recvBufferEnd) inp = (char*)recvBuffer;
+	}
+	
+	if (readByte(&b1) && b1 == config->controllerId)
 	{
 		// message addressed to this controller
 		
-		if (readByte(&b) && b == 1)
+		if (readByte(&b2) && b2 == 1)
 		{
 			// command is TORQUE
 				
-			if (readByte(&b))
+			if (readByte(&b3))
 			{
-				uint8_t b2;
-					
-				if (readByte(&b2))
+				if (readByte(&b4))
 				{
-					usartTorqueCommandValue = (int)b << 8 | b2;
+					usartTorqueCommandValue = (int)b3 << 8 | b4;
 					usartDmaSendRequested = true;		
 					success = true;
 				}
@@ -227,16 +233,16 @@ void usartSendAngle() {
 	outp = (char*)sendBuffer;
 	writeByte(0);												// to main controller
 	writeByte(config->controllerId);							// id of the sender	
-	writeByte((uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU));
 	writeByte((uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU));
-	*outp++ = '\r';
+	writeByte((uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU));
+	//*outp++ = '\r';
 	*outp++ = '\n';
 	
 	uint32_t cnt = outp - (char*)sendBuffer;
-	if (cnt % 2) {
-		*outp++;
-		cnt++;													// todo: find out why it breaks without alignment
-	}
+//	if (cnt % 2) {
+//		*outp++;
+//		cnt++;													// todo: find out why it breaks without alignment
+//	}
 
 	DMA1_Channel2->CNDTR = cnt;									// transmit size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2

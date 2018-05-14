@@ -19,8 +19,8 @@ void StartSpiDmaRead() {
 	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR);}// clear any pending input
 	//while (SPI1->SR & SPI_SR_BSY) {}
 	
-	DMA1_Channel3->CCR &= ~DMA_CCR_DIR;					// peripheral to memory
-	
+	DMA1_Channel2->CCR &= ~DMA_CCR_EN;					// disable DMA to set registers
+	DMA1_Channel2->CCR &= ~DMA_CCR_DIR;					// peripheral to memory
 	DMA1->IFCR = DMA_FLAG_GL2;							// clear flags
 	DMA1_Channel2->CNDTR = spiBufferSize;				// set buffer size
 	DMA1_Channel2->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
@@ -36,8 +36,8 @@ void StartSpiDmaWrite(uint32_t bufferSize) {
 	while (!(SPI1->SR & SPI_SR_TXE)) {}					// send any pending output
 	//while (SPI1->SR & SPI_SR_BSY) {}
 	
+	DMA1_Channel3->CCR &= ~DMA_CCR_EN;					// disable DMA to set registers	
 	DMA1_Channel3->CCR |= DMA_CCR_DIR;					// memory to peripheral
-	
 	DMA1->IFCR = DMA_FLAG_GL3;							// clear flags
 	DMA1_Channel3->CNDTR = bufferSize;					// set buffer size
 	DMA1_Channel3->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address

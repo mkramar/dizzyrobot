@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
@@ -43,10 +44,10 @@ namespace ComTest
             byte torque = 0;
             byte.TryParse(_texts[motor].Text, out torque);
 
-            if (torque > 40) torque = 40;
+            //if (torque > 40) torque = 40;
             if (torque < 0) torque = 0;
 
-            var command = string.Format("{0:X2}01{1:X4}\n", motor + 1, torque);
+            var command = string.Format("{0:X2}01{1:X4}\r\n", motor + 1, torque);
             var sendData = Encoding.ASCII.GetBytes(command);
 
             _port.Write(sendData, 0, sendData.Length);
@@ -72,6 +73,7 @@ namespace ComTest
                 var state = (TransactionState)ar.AsyncState;
 
                 state.Read += _port.BaseStream.EndRead(ar);
+                Log(state);
 
                 if (state.Canceled) return;
 
@@ -96,7 +98,6 @@ namespace ComTest
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void WorkThread()
         {
             while (true)
@@ -110,6 +111,15 @@ namespace ComTest
 
                 this.PerformSafely(() => btnSend.Enabled = true);
             }
+        }
+        private void Log(TransactionState state)
+        {
+            Debug.Write("log:");
+
+            for (int i = 0; i < state.Read; i++)
+                Debug.Write((char)state.Buffer[i]);
+
+            Debug.WriteLine("");
         }
 
         private void button1_Click(object sender, EventArgs e)
