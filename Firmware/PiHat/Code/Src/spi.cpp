@@ -13,7 +13,8 @@
 
 
 void ScheduleSpiDmaRead() {
-	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
+	SPI1->CR2 |= SPI_CR2_RXDMAEN;
+	SPI1->CR2 |= SPI_CR2_TXDMAEN;
 	
 	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR);}// clear any pending input
 	//while (SPI1->SR & SPI_SR_BSY) {}
@@ -29,8 +30,8 @@ void ScheduleSpiDmaRead() {
 }
 
 void ScheduleSpiDmaWrite(uint32_t bufferSize) {
-	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
-	
+	SPI1->CR2 |= SPI_CR2_RXDMAEN;
+	SPI1->CR2 |= SPI_CR2_TXDMAEN;
 	
 	while (!(SPI1->SR & SPI_SR_TXE)) {}					// send any pending output
 	//while (SPI1->SR & SPI_SR_BSY) {}

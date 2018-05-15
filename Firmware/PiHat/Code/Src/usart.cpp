@@ -173,9 +173,9 @@ void MX_USART1_UART_Init(void){
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
 	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));
 	
-	USART1->CR3 |= USART_CR3_OVRDIS;						// disable overrun error interrupt
-				   //USART_CR3_DMAT |							// enable DMA transmit
-		           //USART_CR3_DMAR;							// enable DMA receive
+	USART1->CR3 |= USART_CR3_OVRDIS |						// disable overrun error interrupt
+				   USART_CR3_DMAT |							// enable DMA transmit
+		           USART_CR3_DMAR;							// enable DMA receive
 	
 	USART1->CR1 |= USART_CR1_TE |							// enable transmitter
 		           USART_CR1_RE |							// enable receiver

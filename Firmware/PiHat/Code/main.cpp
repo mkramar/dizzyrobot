@@ -56,9 +56,12 @@ int main(void)
 	{
 		if (flagSpiFrameReceived)
 		{
-			SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
-			DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable receive DMI
-			DMA1_Channel3->CCR &= ~DMA_CCR_EN;		// disable respond DMI
+			SPI1->CR1 &= ~SPI_CR1_SPE;					// disable SPI
+			SPI1->CR2 &= ~SPI_CR2_RXDMAEN;
+			SPI1->CR2 &= ~SPI_CR2_TXDMAEN;
+			
+			DMA1_Channel2->CCR &= ~DMA_CCR_EN;			// disable receive DMI
+			DMA1_Channel3->CCR &= ~DMA_CCR_EN;			// disable respond DMI
 			
 			if (state == STATE_RECEIVING)
 			{
@@ -169,34 +172,34 @@ void ToEndOfLine(){
 }
 
 void UsartTransaction(uint32_t length) {
-//	USART1->CR1 |= USART_CR1_UE;			// enable USART	
-//	
-//	// send
-//	
-//	ScheduleUsartDmaWrite(length);
-//	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
-//	USART1->ICR |= USART_ICR_TCCF;									// clear transmission complete flag
-//		
-//	// receive
-//	
-//	ScheduleUsartDmaRead();
-//	
-//	uint32_t firstTick = uwTick;
-//	
-//	bool success = true;
-//	while (!usartResponseReceived)
-//	{
-//		if (uwTick - firstTick > usartReadTimeout)
-//		{
-//			success = false;
-//			break;
-//		}
-//	}
-//	
-//	USART1->CR1 &= ~USART_CR1_UE;			// disable USART	
+	USART1->CR1 |= USART_CR1_UE;			// enable USART	
 	
-	BlockingUsartWrite(length);
-	bool success = BlockingUsartRead();
+	// send
+	
+	ScheduleUsartDmaWrite(length);
+	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
+	USART1->ICR |= USART_ICR_TCCF;									// clear transmission complete flag
+		
+	// receive
+	
+	ScheduleUsartDmaRead();
+	
+	uint32_t firstTick = uwTick;
+	
+	bool success = true;
+	while (!usartResponseReceived)
+	{
+		if (uwTick - firstTick > usartReadTimeout)
+		{
+			success = false;
+			break;
+		}
+	}
+	
+	USART1->CR1 &= ~USART_CR1_UE;			// disable USART	
+	
+//	BlockingUsartWrite(length);
+//	bool success = BlockingUsartRead();
 	
 	if (success) OutputUsartLine();
 	else Output("timeout\n");
