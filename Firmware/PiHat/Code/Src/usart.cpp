@@ -5,28 +5,84 @@
 #include "gpio.h"
 #include "dma.h"
 
-volatile bool idleLineReceived;
+volatile bool usartResponseReceived;
+extern __IO uint32_t uwTick;
 
 extern "C"
 void USART1_IRQHandler(void) {
-//	if (USART1->ISR & USART_ISR_IDLE)
-//	{
-//		
-//		
-//	}
-	// idle line
-	
-//	if (USART1->ISR & USART_ISR_IDLE)
-//	{
-//		USART1->ICR |= USART_ICR_IDLECF;		// clear IDLE flag bit
-//		
-//		idleLineReceived = true;
-//	}
+	if (USART1->ISR & USART_ISR_CMF)
+	{
+		USART1->ICR |= USART_ICR_CMCF;			// clear CMF flag bit
+		USART1->CR1 &= ~USART_CR1_RE;			// disable receiver TODO: not needed once RE connected to DE
+		usartResponseReceived = true;
+	}
 }
 
-void StartUsartDmaWrite(uint32_t length) {
-	//USART1->CR1 &= ~USART_CR1_IDLEIE;						// disable IDLE LINE detection interrupt
+void BlockingUsartWrite(uint32_t length) {
+	USART1->CR1 |= USART_CR1_TE;							// enable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 &= ~USART_CR1_RE;							// disable receiver TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_UE;							// enable usart
+	
+	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
+	
+	//
+	
+	char* p = (char*)usartOutBuffer;
+	
+	while (length > 0)
+	{
+		while (!(USART1->ISR & USART_ISR_TXE)) {}			// wait for empty buffer
+		USART1->TDR = *p;
+		
+		p++;
+		length--;
+	}
+	
+	//
+	
+	while (!(USART1->ISR & USART_ISR_TC)) {}				// wait for transfer completion
+	
+	USART1->CR1 &= ~USART_CR1_UE;							// disable usart
+}
+bool BlockingUsartRead(){
+	USART1->ICR |= USART_ICR_CMCF;							// clear CMF flag bit
+	USART1->CR1 &= ~USART_CR1_TE;							// disable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_RE;							// enable receiver TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_UE;							// enable usart	
+	
+	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable	
+	
+	//
+	
+	uint32_t firstTick = uwTick;
+	char* p = (char*)usartInBuffer;
+	
+	for (int i = 0; i < usartBufferSize; i++)
+	{
+		while (!(USART1->ISR & USART_ISR_RXNE)) {			// wait for incoming char
+			if (uwTick - firstTick > usartReadTimeout) return false;
+		}
+		char c = (char)USART1->RDR;							// read char
+		*p++ = c;
+		if (c == '\n') break;
+		if (uwTick - firstTick > usartReadTimeout) return false;
+	}	
+	
+	//
+	
+	USART1->CR1 &= ~USART_CR1_UE;							// disable usart
+	
+	return true;
+}
+	
+void ScheduleUsartDmaWrite(uint32_t length) {
+	USART1->CR1 |= USART_CR1_TE;							// enable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 &= ~USART_CR1_RE;							// disable receiver TODO: not needed once RE connected to DE
 	USART1->CR1 |= USART_CR1_UE;							// enable usart		
+	
+	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
+	
+	DMA1_Channel2->CCR &= ~DMA_CCR_EN;						// disable DMA to set registers	
 	
 	DMA1->IFCR = DMA_FLAG_GL2;								// clear flags
 	DMA1_Channel2->CNDTR = length;							// set buffer size
@@ -43,22 +99,25 @@ void StartUsartDmaWrite(uint32_t length) {
 	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;  						// start DMA
 }
+void ScheduleUsartDmaRead(){
+	usartResponseReceived = false;
+	
+	USART1->ICR |= USART_ICR_CMCF;							// clear CMF flag bit
+	USART1->CR1 &= ~USART_CR1_TE;							// disable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_RE;							// enable receiver TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_UE;							// enable usart		
 
-void StartUsartDmaRead(){
-	READ_REG(USART1->RDR);
-	idleLineReceived = false;
+	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable	
+	while ((USART1->ISR & USART_ISR_RXNE)) READ_REG(USART1->RDR);
 	
-	//USART1->CR1 |= USART_CR1_IDLEIE;						// enanle IDLE LINE detection interrupt
-	
+	DMA1_Channel3->CCR &= ~DMA_CCR_EN;						// disable DMA to set registers	
 	DMA1_Channel3->CCR &= ~DMA_CCR_DIR;						// peripheral to memory	
 	
 	DMA1->IFCR = DMA_FLAG_GL3;								// clear flags
 	DMA1_Channel3->CNDTR = usartBufferSize;					// set buffer size
 	DMA1_Channel3->CPAR = (uint32_t)(&(USART1->RDR));		// USART register address
 	DMA1_Channel3->CMAR = (uint32_t)(usartInBuffer);		// memory address
-	
 	DMA1_Channel3->CCR |= DMA_CCR_EN;  						// start DMA
-	USART1->CR1 |= USART_CR1_UE;							// enable usart		
 }
 
 void MX_USART1_UART_Init(void){
@@ -114,59 +173,28 @@ void MX_USART1_UART_Init(void){
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
 	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));
 	
-	USART1->CR3 |= USART_CR3_OVRDIS |						// disable overrun error interrupt
-				   USART_CR3_DMAT;							// enable DMA transmit
-		           USART_CR3_DMAR;							// enable DMA receive
+	USART1->CR3 |= USART_CR3_OVRDIS;						// disable overrun error interrupt
+				   //USART_CR3_DMAT |							// enable DMA transmit
+		           //USART_CR3_DMAR;							// enable DMA receive
 	
 	USART1->CR1 |= USART_CR1_TE |							// enable transmitter
-		           USART_CR1_RE;							// enable receiver
-		           //USART_CR1_TCIE;							// transmission complete interrupt enable
+		           USART_CR1_RE |							// enable receiver
+		           //USART_CR1_TCIE;						// transmission complete interrupt enable
 				   //USART_CR1_UE;							// enable usart
 				   //USART_CR1_RXNEIE |						// interrupt on receive
 				   //USART_CR1_IDLEIE;						// enable IDLE LINE detection interrupt	
+                   USART_CR1_CMIE;							// char match interrupt enable
 	
 	USART1->CR3 |= USART_CR3_DEM;							// enable automatic DriverEnable mode
 	USART1->CR1 |= (16 << UART_CR1_DEAT_ADDRESS_LSB_POS) |	// 4/16th of a bit assertion time on DriverEnable output
 				   (16 << UART_CR1_DEDT_ADDRESS_LSB_POS);	// 4/16th of a bit de-assertion time on DriverEnable output	
-	
-//	NVIC_EnableIRQ(USART1_IRQn);
-//	NVIC_SetPriority(USART1_IRQn, 1);
-	
-	//USART1->CR1 |= USART_CR1_UE;							// enable usart		
-	
-	// config DMA
-	
-	// transmit channel 4
 
-//	DMA1_Channel4->CPAR = (uint32_t)(&(USART1->TDR));		// USART TDR is destination
-//	//DMA1_Channel4->CMAR = (uint32_t)(sendBuffer);			// source
-//	
-//	DMA1_Channel4->CCR |= DMA_CCR_MINC |					// increment memory
-//		                  DMA_CCR_DIR |						// memory to peripheral
-//		                  //DMA_CCR_TEIE |					// interrupt on error
-//		                  //DMA_CCR_HTIE |					// interrupt on half-transfer
-//		                  //DMA_CCR_TCIE |					// interrupt on full transfer
-//		                  //DMA_CCR_EN |					// enable DMA
-//						  (0b10 << DMA_CCR_PL_Pos);			// priority = high	
-//	
-//	__HAL_DMA_REMAP_CHANNEL_ENABLE(DMA_REMAP_USART1_TX_DMA_CH4);
-
-	// receive channel 5
+	USART1->CR2 |= ('\n' << USART_CR2_ADD_Pos);				// stop char is '\n'
 	
-//	DMA1_Channel5->CPAR = (uint32_t)(&(USART1->RDR));		// USART RDR is source
-//	//DMA1_Channel3->CMAR = (uint32_t)(recvBuffer);			// destination
-//	//DMA1_Channel3->CNDTR = recvBufferSize;					// buffer size	
-//	
-//	DMA1_Channel5->CCR |= DMA_CCR_MINC |					// increment memory
-//						  DMA_CCR_CIRC |					// circular mode
-//						  //								// peripheral to memory
-//		                  //DMA_CCR_TEIE |					// interrupt on error
-//		                  //DMA_CCR_HTIE |					// interrupt on half-transfer
-//		                  //DMA_CCR_TCIE |					// interrupt on full transfer
-//					      DMA_CCR_EN |						// enable DMA
-//					      (0b10 << DMA_CCR_PL_Pos);			// priority = high
-//	
-//	__HAL_DMA_REMAP_CHANNEL_ENABLE(DMA_REMAP_USART1_RX_DMA_CH5);
+	NVIC_EnableIRQ(USART1_IRQn);
+	NVIC_SetPriority(USART1_IRQn, 1);
+	
+
 }
 
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)

@@ -12,9 +12,8 @@
 
 
 
-void StartSpiDmaRead() {
+void ScheduleSpiDmaRead() {
 	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
-	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	
 	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR);}// clear any pending input
 	//while (SPI1->SR & SPI_SR_BSY) {}
@@ -25,13 +24,13 @@ void StartSpiDmaRead() {
 	DMA1_Channel2->CNDTR = spiBufferSize;				// set buffer size
 	DMA1_Channel2->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
 	DMA1_Channel2->CMAR = (uint32_t)(spiInBuffer);		// memory address
-	DMA1_Channel2->CCR |= DMA_CCR_EN;  					// start
+	DMA1_Channel2->CCR |= DMA_CCR_EN;  					// start DMA
+	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 }
 
-void StartSpiDmaWrite(uint32_t bufferSize) {
+void ScheduleSpiDmaWrite(uint32_t bufferSize) {
 	//RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;				// enable SPI clock
 	
-	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	
 	while (!(SPI1->SR & SPI_SR_TXE)) {}					// send any pending output
 	//while (SPI1->SR & SPI_SR_BSY) {}
@@ -42,7 +41,8 @@ void StartSpiDmaWrite(uint32_t bufferSize) {
 	DMA1_Channel3->CNDTR = bufferSize;					// set buffer size
 	DMA1_Channel3->CPAR = (uint32_t)(&(SPI1->DR));		// SPI register address
 	DMA1_Channel3->CMAR = (uint32_t)(spiOutBuffer);		// memory address
-	DMA1_Channel3->CCR |= DMA_CCR_EN;  					// start
+	DMA1_Channel3->CCR |= DMA_CCR_EN;  					// start DMA
+	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 }
 
 /* SPI1 init function */

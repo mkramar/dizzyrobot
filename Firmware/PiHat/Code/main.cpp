@@ -41,29 +41,30 @@ int main(void)
 
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_I2C1_Init();
+	//MX_I2C1_Init();
 	MX_SPI1_Init();
 	MX_USART1_UART_Init();
-	MX_ADC_Init();
+	//MX_ADC_Init();
 
 	GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
 	GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
 	
-	StartSpiDmaRead();
+	ScheduleSpiDmaRead();
 	state = STATE_RECEIVING;
 	
 	while (1)
 	{
 		if (flagSpiFrameReceived)
 		{
+			SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
+			DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable receive DMI
+			DMA1_Channel3->CCR &= ~DMA_CCR_EN;		// disable respond DMI
+			
 			if (state == STATE_RECEIVING)
 			{
 				// master has finished sending command
 				
-				SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
-				DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable receive DMI
-			
-				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// off both flags
+				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// off both LEDs
 				GPIOB->BRR |= PIN_READY_TO_RECEIVE;
 			
 				ProcessIncoming();
@@ -73,7 +74,7 @@ int main(void)
 				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;				
 				//MX_SPI1_Init();
 					
-				StartSpiDmaWrite(outp - spiOutBuffer);
+				ScheduleSpiDmaWrite(outp - spiOutBuffer);
 				
 				GPIOB->BSRR |= PIN_READY_TO_RESPOND;	// signal ready to respond
 				
@@ -83,18 +84,15 @@ int main(void)
 			{
 				// master has finished reading SPI buffer
 								
-				SPI1->CR1 &= ~SPI_CR1_SPE;				// disable SPI
-				DMA1_Channel3->CCR &= ~DMA_CCR_EN;		// disable respond DMI
-				
 				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
 				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
 				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;
 				//MX_SPI1_Init();
 				
-				StartSpiDmaRead();
+				ScheduleSpiDmaRead();
 				
-				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// clear respond flag
-				GPIOB->BSRR |= PIN_READY_TO_RECEIVE;	// raize receive flag
+				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// clear respond LED
+				GPIOB->BSRR |= PIN_READY_TO_RECEIVE;	// raize receive LED
 	
 				state = STATE_RECEIVING;
 			}
@@ -108,7 +106,7 @@ int main(void)
 ////			GPIOB->BRR |= PIN_READY_TO_RESPOND;
 ////			GPIOB->BSRR |= PIN_READY_TO_RECEIVE;
 ////	
-////			StartSpiDmaRead(spiInBuffer, spiBufferSize);
+////			ScheduleSpiDmaRead(spiInBuffer, spiBufferSize);
 ////			state = STATE_RECEIVING;
 //			break;
 //			
@@ -171,30 +169,37 @@ void ToEndOfLine(){
 }
 
 void UsartTransaction(uint32_t length) {
+//	USART1->CR1 |= USART_CR1_UE;			// enable USART	
+//	
+//	// send
+//	
+//	ScheduleUsartDmaWrite(length);
+//	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
+//	USART1->ICR |= USART_ICR_TCCF;									// clear transmission complete flag
+//		
+//	// receive
+//	
+//	ScheduleUsartDmaRead();
+//	
+//	uint32_t firstTick = uwTick;
+//	
+//	bool success = true;
+//	while (!usartResponseReceived)
+//	{
+//		if (uwTick - firstTick > usartReadTimeout)
+//		{
+//			success = false;
+//			break;
+//		}
+//	}
+//	
+//	USART1->CR1 &= ~USART_CR1_UE;			// disable USART	
 	
-	// send
+	BlockingUsartWrite(length);
+	bool success = BlockingUsartRead();
 	
-	StartUsartDmaWrite(length);
-	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}			// wait till end of transmission
-	USART1->ICR |= USART_ICR_TCCF;									// clear transmission complete flag
-		
-	// receive
-	
-	StartUsartDmaRead();
-	
-	uint32_t firstTick = uwTick;
-	
-	while (!idleLineReceived)
-	{
-		if (uwTick - firstTick > usartReadTimeout)
-		{
-			//USART1->CR1 &= ~USART_CR1_UE;							// disable usart	
-			Output("timeout\n");
-			return;
-		}
-	}
-	
-	OutputUsartLine();
+	if (success) OutputUsartLine();
+	else Output("timeout\n");
 }
 
 void ProcessIncoming() {
@@ -217,7 +222,7 @@ void ProcessIncoming() {
 		if (*inp == '\n') 
 		{
 			usartOutBuffer[col++] = '\n';
-			
+
 			UsartTransaction(col);
 			col = 0;
 			

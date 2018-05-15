@@ -11,19 +11,22 @@
 	//extern UART_HandleTypeDef huart1;
 	 
 	#define usartBufferSize		10
-	#define usartReadTimeout	3										// this many ms before give up listening
+	#define usartReadTimeout	100										// this many ms before give up listening
 
 	extern volatile char usartInBuffer[usartBufferSize];
 	extern volatile char usartOutBuffer[usartBufferSize];
 	 
-	 extern volatile bool idleLineReceived;
+	 extern volatile bool usartResponseReceived;
 
 	extern void _Error_Handler(const char *, int);
 
 	void MX_USART1_UART_Init(void);
 	 
-	 void StartUsartDmaWrite(uint32_t length);
-	 void StartUsartDmaRead();
+	 void ScheduleUsartDmaWrite(uint32_t length);
+	 void ScheduleUsartDmaRead();
+	 
+	 void BlockingUsartWrite(uint32_t length);
+	 bool BlockingUsartRead();
 
 #ifdef __cplusplus
 }

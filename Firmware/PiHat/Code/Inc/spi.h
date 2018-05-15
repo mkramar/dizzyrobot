@@ -19,8 +19,8 @@ extern void _Error_Handler(const char *, int);
 
 void HandleSpiRx();
 void MX_SPI1_Init();
-void StartSpiDmaRead();
-void StartSpiDmaWrite(uint32_t bufferSize);
+void ScheduleSpiDmaRead();
+void ScheduleSpiDmaWrite(uint32_t bufferSize);
 
 #ifdef __cplusplus
 }
