@@ -35,7 +35,9 @@ void delay(int ms);
 
 // pwm ------------------------------------------------------------------------
 
-extern const int sin_size;
+#define sin_period		(1 << 15)		// 32K or 0x8000
+#define sin_range		(1 << 13)		//  8K or 0x2000
+
 void initPwm();
 void setPwm(int angle, int power);
 void setPwmTorque();
@@ -58,21 +60,23 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
-//#define AS5048A
-//#ifdef TLE_5012B
+#define SENSOR_MAX 0x8000	// 32K
+
+////#define AS5048A
+////#ifdef TLE_5012B
 #define MA700
-
-#ifdef AS5048A
-	#define SENSOR_MAX 0x2000
-#endif
-
-#ifdef TLE_5012B
-#define SENSOR_MAX 0x4000
-#endif
-
-#ifdef MA700
-#define SENSOR_MAX 0x1000
-#endif
+//
+//#ifdef AS5048A
+//	#define SENSOR_MAX 0x2000
+//#endif
+//
+//#ifdef TLE_5012B
+//#define SENSOR_MAX 0x4000
+//#endif
+//
+//#ifdef MA700
+//#define SENSOR_MAX 0x1000
+//#endif
 
 extern int spiCurrentAngle;
 

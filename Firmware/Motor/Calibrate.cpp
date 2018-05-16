@@ -1,11 +1,11 @@
 #include <main.h>
 
-const int calibPower = 80;
+extern const int maxPoles;
+
+const int calibPower = sin_range / 2 / 3;
 const int quadrantDiv = SENSOR_MAX / numQuadrants;
 	
 ConfigData* config = (ConfigData*)flashPageAddress;
-
-extern const int maxPoles;
 
 int currentPole = 0;
 
@@ -32,6 +32,7 @@ int getElectricDegrees() {
 }
 
 void calibrate() {
+	const int step = 15;
 	int a = 0;
 	int i = 0;
 	int sensor;
@@ -48,16 +49,16 @@ void calibrate() {
 	
 	for (i = 0; i < numQuadrants; i++)
 	{
-		qUp[i].minAngle = 0xFFFF;
-		qDn[i].minAngle = 0xFFFF;
+		qUp[i].minAngle = 0xFFFFFF;
+		qDn[i].minAngle = 0xFFFFFF;
 	}
 
 	// gently set 0 angle
 	
-	for (int p = 0; p < calibPower * 10; p++)
+	for (int p = 0; p < calibPower / 10; p++)
 	{
 		delay(1);
-		setPwm(0, p/10);
+		setPwm(0, p * 10);
 	}
 	
 	// find the edge of the quadrant, detect direction
@@ -77,7 +78,7 @@ void calibrate() {
 		else if (q3 == -1 && q1 != q && q2 != q) q3 = q;
 		else if (q1 != q && q2 != q && q3 != q) break;
 		
-		a++;
+		a += step;
 		delay(1);
 		setPwm(a, calibPower);		
 	}
@@ -137,7 +138,7 @@ void calibrate() {
 		if (qUp[q].minAngle > a) qUp[q].minAngle = a;
 		if (qUp[q].maxAngle < a) qUp[q].maxAngle = a;
 		
-		a+=2;
+		a += step * 2;
 		delay(1);
 		setPwm(a, calibPower);
 	}
@@ -174,7 +175,7 @@ void calibrate() {
 		
 		if (q == qForth) break;
 		
-		a += 2;
+		a += step * 2;
 		delay(1);
 		setPwm(a, calibPower);
 	}
@@ -186,7 +187,7 @@ void calibrate() {
 		
 		if (q == qBack) break;
 		
-		a -= 2;
+		a -= step * 2;
 		delay(1);
 		setPwm(a, calibPower);
 	}
@@ -232,17 +233,17 @@ void calibrate() {
 		if (qDn[q].minAngle > a) qDn[q].minAngle = a;
 		if (qDn[q].maxAngle < a) qDn[q].maxAngle = a;
 		
-		a -= 2;
+		a -= step * 2;
 		delay(1);
 		setPwm(a, calibPower);
 	}
 	
 	// gently release
 	
-	for (int p = calibPower * 10; p > 0; p--)
+	for (int p = calibPower / 10; p > 0; p--)
 	{
 		delay(1);
-		setPwm(0, p / 10);
+		setPwm(0, p * 10);
 	}
 
 	setPwm(0, 0);

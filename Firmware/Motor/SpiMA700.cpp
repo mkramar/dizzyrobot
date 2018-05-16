@@ -66,7 +66,7 @@ int spiReadAngle() {
 	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
 	
 	data = *((__IO uint16_t *)&SPI1->DR);
-	return data >> 4;									// only leave 12 bit because the rest is noice any way
+	return data >> 1;									// leave 15 bit as required by sin
 }
 
 #endif

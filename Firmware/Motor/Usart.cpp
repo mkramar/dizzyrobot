@@ -212,6 +212,7 @@ void processUsartCommand(){
 				if (readByte(&b4))
 				{
 					usartTorqueCommandValue = (int)b3 << 8 | b4;
+					usartTorqueCommandValue *= 32;	// fit +-128 into +-4K as required by SIN
 					usartDmaSendRequested = true;		
 					success = true;
 				}

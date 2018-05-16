@@ -27,7 +27,7 @@ void initClockInternal() {
 				   RCC_AHBENR_GPIOFEN;					// enable clock for GPIOF
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN |				// enable timer 1
-				    //RCC_APB2ENR_ADCEN |					// enable ADC
+				    //RCC_APB2ENR_ADCEN |				// enable ADC
 					RCC_APB2ENR_USART1EN |				// enable USART
 		            RCC_APB2ENR_SPI1EN;					// enable SPI
 }
@@ -38,6 +38,9 @@ void initClockExternal() {
 	RCC->CR |= RCC_CR_HSEON;							// enable external clock	
 	while (!(RCC->CR & RCC_CR_HSERDY)) {}
 	
+	RCC->CFGR |= RCC_CFGR_PLLMUL6;						// PLL input clock x6
+	RCC->CFGR |= RCC_CFGR_PLLSRC_HSE_PREDIV;			// HSE/PREDIV clock selected as PLL entry clock source
+	
 	RCC->CR |= RCC_CR_PLLON;							// enable PLL
 	while (!(RCC->CR & RCC_CR_PLLRDY)) {}
 	
@@ -46,8 +49,6 @@ void initClockExternal() {
 	
 //	RCC->CR2 |= RCC_CR2_HSI14ON;						// enable internal 14-meg clock for ADC
 //	while (!(RCC->CR2 & RCC_CR2_HSI14RDY)) {}
-	
-	RCC->CFGR |= RCC_CFGR_PLLMUL6;						// PLL input clock x6
 	
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN |					// enable clock for GPIOA
 				   RCC_AHBENR_GPIOBEN |					// enable clock for GPIOB

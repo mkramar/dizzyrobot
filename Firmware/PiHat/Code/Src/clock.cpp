@@ -8,6 +8,9 @@ void SystemClock_Config(void)
 	RCC->CR |= RCC_CR_HSEON;							// enable external clock	
 	while (!(RCC->CR & RCC_CR_HSERDY)) {}
 	
+	RCC->CFGR |= RCC_CFGR_PLLMUL6;						// PLL input clock x6
+	RCC->CFGR |= RCC_CFGR_PLLSRC_HSE_PREDIV;			// HSE/PREDIV clock selected as PLL entry clock source
+	
 	RCC->CR |= RCC_CR_PLLON;							// enable PLL
 	while (!(RCC->CR & RCC_CR_PLLRDY)) {}
 	
@@ -16,8 +19,6 @@ void SystemClock_Config(void)
 	
 //	RCC->CR2 |= RCC_CR2_HSI14ON;						// enable internal 14-meg clock for ADC
 //	while (!(RCC->CR2 & RCC_CR2_HSI14RDY)) {}
-	
-	RCC->CFGR |= RCC_CFGR_PLLMUL6;						// PLL input clock x6
 	
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN |					// enable clock for GPIOA
 				   RCC_AHBENR_GPIOBEN |					// enable clock for GPIOB
