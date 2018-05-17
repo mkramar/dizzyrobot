@@ -27,6 +27,9 @@
 	 
 	 void BlockingUsartWrite(uint32_t length);
 	 bool BlockingUsartRead();
+	 
+	 void BlockingUsartDmaWrite(uint32_t length);
+	 bool BlockingUsartDmaRead();
 
 #ifdef __cplusplus
 }

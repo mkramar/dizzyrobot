@@ -38,6 +38,21 @@ void USART1_IRQHandler(void) {
 }
 
 void initUsart() {
+//	UART_HandleTypeDef huart1;
+//	
+//	huart1.Instance = USART1;
+//	huart1.Init.BaudRate = 115200;
+//	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+//	huart1.Init.StopBits = UART_STOPBITS_1;
+//	huart1.Init.Parity = UART_PARITY_NONE;
+//	huart1.Init.Mode = UART_MODE_TX_RX;
+//	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+//	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+//	huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+//	huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+//	HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 0, 0);
+	
+	
 	usartDmaSendRequested = false;
 	usartTorqueCommandValue = 0;
 	usartDmaSendBusy = false;
@@ -57,8 +72,8 @@ void initUsart() {
 		
 	int baud = 115200;
 	
-	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 0x45)
-	//USART1->BRR = (48000000U + baud / 2U) / baud;			// baud rate (should be 0x1A1)
+	//USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 0x45)
+	USART1->BRR = (48000000U + baud / 2U) / baud;			// baud rate (should be 0x1A1)
 	
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
 	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));
@@ -209,13 +224,17 @@ void processUsartCommand(){
 				
 			if (readByte(&b3))
 			{
-				if (readByte(&b4))
+				// successfully read command value
+
+				usartTorqueCommandValue = (int)b3;
+				if (usartTorqueCommandValue & 0x80)
 				{
-					usartTorqueCommandValue = (int)b3 << 8 | b4;
-					usartTorqueCommandValue *= 32;	// fit +-128 into +-4K as required by SIN
-					usartDmaSendRequested = true;		
-					success = true;
+					usartTorqueCommandValue &= ~0x80;					
+					usartTorqueCommandValue = -usartTorqueCommandValue;
 				}
+				usartTorqueCommandValue *= 32;	// fit +-128 into +-4K as required by SIN
+				usartDmaSendRequested = true;		
+				success = true;
 			}				
 		}
 		

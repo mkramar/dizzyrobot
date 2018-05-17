@@ -120,6 +120,42 @@ void ScheduleUsartDmaRead(){
 	DMA1_Channel3->CCR |= DMA_CCR_EN;  						// start DMA
 }
 
+void BlockingUsartDmaWrite(uint32_t length){
+	USART1->CR1 |= USART_CR1_TE;								// enable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 &= ~USART_CR1_RE;								// disable receiver TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_UE;								// enable usart
+	
+	ScheduleUsartDmaWrite(length);
+	while ((USART1->ISR & USART_ISR_TC) != USART_ISR_TC) {}		// wait till end of transmission
+	USART1->ICR |= USART_ICR_TCCF;								// clear transmission complete flag
+		
+	USART1->CR1 &= ~USART_CR1_UE;								// disable USART	
+}
+bool BlockingUsartDmaRead(){
+	USART1->ICR |= USART_ICR_CMCF;								// clear CMF flag bit
+	USART1->CR1 &= ~USART_CR1_TE;								// disable transmitter TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_RE;								// enable receiver TODO: not needed once RE connected to DE
+	USART1->CR1 |= USART_CR1_UE;								// enable usart	
+	
+	ScheduleUsartDmaRead();
+	
+	uint32_t firstTick = uwTick;
+	
+	bool success = true;
+	while (!usartResponseReceived)
+	{
+		if (uwTick - firstTick > usartReadTimeout)
+		{
+			success = false;
+			break;
+		}
+	}
+	
+	USART1->CR1 &= ~USART_CR1_UE;			// disable USART
+	
+	return success;
+}
+
 void MX_USART1_UART_Init(void){
     /**USART1 GPIO Configuration    
     PA1     ------> USART1_DE
@@ -167,8 +203,8 @@ void MX_USART1_UART_Init(void){
 	
 	int baud = 115200;
 	
-	USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 0x45)
-	//USART1->BRR = (48000000U + baud / 2U) / baud;			// baud rate (should be 0x1A1)
+	//USART1->BRR = (8000000U + baud / 2U) / baud;			// baud rate (should be 0x45)
+	USART1->BRR = (48000000U + baud / 2U) / baud;			// baud rate (should be 0x1A1)
 	
 	CLEAR_BIT(USART1->CR2, (USART_CR2_LINEN | USART_CR2_CLKEN));
 	CLEAR_BIT(USART1->CR3, (USART_CR3_SCEN | USART_CR3_HDSEL | USART_CR3_IREN));

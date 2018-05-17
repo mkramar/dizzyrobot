@@ -41,13 +41,15 @@ namespace ComTest
 
         private void MotorTransaction(int motor)
         {
-            byte torque = 0;
-            byte.TryParse(_texts[motor].Text, out torque);
+            int torque = 0;
+            int.TryParse(_texts[motor].Text, out torque);
 
-            //if (torque > 40) torque = 40;
-            if (torque < 0) torque = 0;
+            bool neg = (torque < 0);
+            if (neg) torque = -torque;
+            if (torque > 127) torque = 127;
+            if (neg) torque |= 0x80;
 
-            var command = string.Format("{0:X2}01{1:X4}\r\n", motor + 1, torque);
+            var command = string.Format("{0:X2}01{1:X2}\r\n", motor + 1, torque);
             var sendData = Encoding.ASCII.GetBytes(command);
 
             _port.Write(sendData, 0, sendData.Length);
