@@ -60,23 +60,11 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
-#define SENSOR_MAX 0x8000	// 32K
+#define SENSOR_MAX sin_period	// 32K
 
-////#define AS5048A
-////#ifdef TLE_5012B
-#define MA700
-//
-//#ifdef AS5048A
-//	#define SENSOR_MAX 0x2000
-//#endif
-//
+//#define AS5048A
 //#ifdef TLE_5012B
-//#define SENSOR_MAX 0x4000
-//#endif
-//
-//#ifdef MA700
-//#define SENSOR_MAX 0x1000
-//#endif
+#define MA700
 
 extern int spiCurrentAngle;
 

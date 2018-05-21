@@ -6,7 +6,7 @@ volatile int buttonPressId = 0;
 
 const int BLINK_PERIOD = 0x100;
 const int BLINK_DUTY_CYCLE = 0x40;
-const int BLINK_PRESCALER = 0x1000;
+const int BLINK_PRESCALER = 0x6000;
 
 void stopIdTimer();
 void stopCalibTimer();

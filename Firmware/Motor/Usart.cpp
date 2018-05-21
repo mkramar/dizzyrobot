@@ -38,21 +38,6 @@ void USART1_IRQHandler(void) {
 }
 
 void initUsart() {
-//	UART_HandleTypeDef huart1;
-//	
-//	huart1.Instance = USART1;
-//	huart1.Init.BaudRate = 115200;
-//	huart1.Init.WordLength = UART_WORDLENGTH_8B;
-//	huart1.Init.StopBits = UART_STOPBITS_1;
-//	huart1.Init.Parity = UART_PARITY_NONE;
-//	huart1.Init.Mode = UART_MODE_TX_RX;
-//	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-//	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-//	huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-//	huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-//	HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 0, 0);
-	
-	
 	usartDmaSendRequested = false;
 	usartTorqueCommandValue = 0;
 	usartDmaSendBusy = false;
@@ -84,9 +69,6 @@ void initUsart() {
 	
 	USART1->CR1 |= USART_CR1_TE |							// enable transmitter
 		           USART_CR1_RE |							// enable receiver
-				   //USART_CR1_UE |							// enable usart
-				   //USART_CR1_RXNEIE |						// interrupt on receive
-				   //USART_CR1_IDLEIE |						// enanle IDLE LINE detection interrupt
 		           USART_CR1_CMIE;							// char match interrupt enable
 	
 	USART1->CR2 |= ('\n' << USART_CR2_ADD_Pos);				// stop char is '\n'
@@ -127,10 +109,7 @@ void initUsart() {
 	
 	DMA1_Channel2->CCR |= DMA_CCR_MINC |					// increment memory
 		                  DMA_CCR_DIR |						// memory to peripheral
-		                  //DMA_CCR_TEIE |					// interrupt on error
-		                  //DMA_CCR_HTIE |					// interrupt on half-transfer
 		                  DMA_CCR_TCIE |					// interrupt on full transfer
-		                  //DMA_CCR_EN |					// enable DMA
 						  (0b10 << DMA_CCR_PL_Pos);			// priority = high
 	
 	// receive channel 3
@@ -141,10 +120,6 @@ void initUsart() {
 	
 	DMA1_Channel3->CCR |= DMA_CCR_MINC |					// increment memory
 						  DMA_CCR_CIRC |					// circular mode
-						  //								// peripheral to memory
-		                  //DMA_CCR_TEIE |					// interrupt on error
-		                  //DMA_CCR_HTIE |					// interrupt on half-transfer
-		                  //DMA_CCR_TCIE |					// interrupt on full transfer
 					      DMA_CCR_EN |						// enable DMA
 					      (0b10 << DMA_CCR_PL_Pos);			// priority = high
 	
@@ -161,8 +136,6 @@ void usartSendError(){
 	sendBuffer[4] = 'r';
 	sendBuffer[5] = '\n';
 
-	//USART1->CR1 &= ~USART_CR1_RE;								// disable receiver
-	//USART1->CR1 &= ~USART_CR1_CMIE;								// disable char match interrupt
 	DMA1_Channel2->CNDTR = 6;									// buffer size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
 	usartDmaSendBusy = true;	
@@ -259,10 +232,6 @@ void usartSendAngle() {
 	*outp++ = '\n';
 	
 	uint32_t cnt = outp - (char*)sendBuffer;
-//	if (cnt % 2) {
-//		*outp++;
-//		cnt++;													// todo: find out why it breaks without alignment
-//	}
 
 	DMA1_Channel2->CNDTR = cnt;									// transmit size	
 	DMA1_Channel2->CCR |= DMA_CCR_EN;							// enable DMA channel 2
