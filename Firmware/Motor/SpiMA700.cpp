@@ -2,6 +2,20 @@
 
 #ifdef MA700
 
+uint16_t SpiWriteRead(uint16_t data){
+	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
+	
+	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
+	*((__IO uint16_t *)&SPI1->DR) = data;				// write
+	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
+	
+	while ((SPI1->SR & SPI_SR_RXNE) != SPI_SR_RXNE) {}	// wait for input buffer
+
+	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
+	
+	return *((__IO uint16_t *)&SPI1->DR);	
+}
+
 void initSpi() {
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
@@ -39,33 +53,12 @@ void initSpi() {
 	
 	// send calibration value
 	
-	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
-	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
-	*((__IO uint16_t *)&SPI1->DR) = 0b0010001110100000;	// correction value=165
-	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
-	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
-	
-	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
-	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
-	*((__IO uint16_t *)&SPI1->DR) = 0b0010010100100000;	// correction axis=x
-	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
-	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 	
+	SpiWriteRead(0b0010001110100000);			// correction value=165
+	SpiWriteRead(0b0010010100100000);			// correction axis=x
 }
 
 int spiReadAngle() {
-	uint16_t data = 0;
-	
-	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
-	
-	while ((SPI1->SR & SPI_SR_TXE) != SPI_SR_TXE) {}	// wait till transmit buffer empty
-	*((__IO uint16_t *)&SPI1->DR) = 0xffff;				// write
-	while ((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY) {}	// wait till end of transmission
-	
-	while ((SPI1->SR & SPI_SR_RXNE) != SPI_SR_RXNE) {}	// wait for input buffer
-
-	GPIOA->BSRR |= 1 << 4;								// A-4 up - disable CS 
-	
-	data = *((__IO uint16_t *)&SPI1->DR);
+	uint16_t data = SpiWriteRead(0xffff);
 	return data >> 1;									// leave 15 bit as required by sin
 }
 
