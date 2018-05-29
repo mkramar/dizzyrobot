@@ -15,7 +15,7 @@ namespace ComTest
 {
     public partial class frmMain : Form
     {
-        private const int Motors = 2;
+        private const int Motors = 3;
         private const int ReadTimeout = 100;
 
         private SerialPort _port;
@@ -33,8 +33,8 @@ namespace ComTest
             _port.ReadTimeout = ReadTimeout;
             _port.Open();
 
-            _texts = new[] { txt1, txt2 };
-            _labels = new[] { lbl1, lbl2 };
+            _texts = new[] { txt1, txt2, txt3 };
+            _labels = new[] { lbl1, lbl2, lbl3 };
 
             new Thread(WorkThread) { IsBackground = true }.Start();
         }

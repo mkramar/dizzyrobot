@@ -36,36 +36,6 @@ void calibrate() {
 	int a = 0;
 	int i = 0;
 	int sensor;
-
-	// gently set 0 angle
-	
-	for (int p = 0; p < calibPower / 10; p++)
-	{
-		delay(1);
-		setPwm(0, p * 10);
-	}
-	
-	// find the edge of the quadrant, detect direction
-	
-	int sensorFirst = spiReadAngle();
-	int q1 = -1;
-	int q2 = -1;
-	int q3 = -1;
-	while (true)
-	{
-		sensor = spiReadAngle();
-		
-		a += step;
-		delay(1);
-		setPwm(a, calibPower);		
-	}
-}
-
-void calibrate2() {
-	const int step = 15;
-	int a = 0;
-	int i = 0;
-	int sensor;
 	int prevSensor;
 	
 	bool up;

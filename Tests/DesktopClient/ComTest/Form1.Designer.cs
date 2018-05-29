@@ -35,6 +35,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSend = new System.Windows.Forms.Button();
+            this.txt3 = new System.Windows.Forms.TextBox();
+            this.lbl3xxx = new System.Windows.Forms.Label();
+            this.lbl3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txt1
@@ -44,7 +47,7 @@
             this.txt1.Name = "txt1";
             this.txt1.Size = new System.Drawing.Size(100, 26);
             this.txt1.TabIndex = 0;
-            this.txt1.Text = "100";
+            this.txt1.Text = "50";
             // 
             // txt2
             // 
@@ -53,7 +56,7 @@
             this.txt2.Name = "txt2";
             this.txt2.Size = new System.Drawing.Size(100, 26);
             this.txt2.TabIndex = 1;
-            this.txt2.Text = "100";
+            this.txt2.Text = "50";
             // 
             // lbl1
             // 
@@ -98,7 +101,7 @@
             // btnSend
             // 
             this.btnSend.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSend.Location = new System.Drawing.Point(272, 83);
+            this.btnSend.Location = new System.Drawing.Point(272, 170);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(101, 39);
             this.btnSend.TabIndex = 6;
@@ -106,11 +109,42 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.button1_Click);
             // 
+            // txt3
+            // 
+            this.txt3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt3.Location = new System.Drawing.Point(90, 76);
+            this.txt3.Name = "txt3";
+            this.txt3.Size = new System.Drawing.Size(100, 26);
+            this.txt3.TabIndex = 7;
+            this.txt3.Text = "-50";
+            // 
+            // lbl3xxx
+            // 
+            this.lbl3xxx.AutoSize = true;
+            this.lbl3xxx.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl3xxx.ForeColor = System.Drawing.Color.Blue;
+            this.lbl3xxx.Location = new System.Drawing.Point(12, 82);
+            this.lbl3xxx.Name = "lbl3xxx";
+            this.lbl3xxx.Size = new System.Drawing.Size(29, 20);
+            this.lbl3xxx.TabIndex = 8;
+            this.lbl3xxx.Text = "#3";
+            // 
+            // lbl3
+            // 
+            this.lbl3.AutoSize = true;
+            this.lbl3.Location = new System.Drawing.Point(222, 82);
+            this.lbl3.Name = "lbl3";
+            this.lbl3.Size = new System.Drawing.Size(0, 13);
+            this.lbl3.TabIndex = 9;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(385, 134);
+            this.ClientSize = new System.Drawing.Size(385, 221);
+            this.Controls.Add(this.lbl3);
+            this.Controls.Add(this.lbl3xxx);
+            this.Controls.Add(this.txt3);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -135,6 +169,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.TextBox txt3;
+        private System.Windows.Forms.Label lbl3xxx;
+        private System.Windows.Forms.Label lbl3;
     }
 }
 
