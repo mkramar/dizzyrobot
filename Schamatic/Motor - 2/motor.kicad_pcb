@@ -67,7 +67,7 @@
     (pad_drill 0.25)
     (pad_to_mask_clearance 0)
     (aux_axis_origin 0 0)
-    (visible_elements 7FFCEFFF)
+    (visible_elements 7FFCFFFF)
     (pcbplotparams
       (layerselection 0x010c0_80000001)
       (usegerberextensions false)
@@ -92,7 +92,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory Gerber-External/))
+      (outputdirectory Gerber))
   )
 
   (net 0 "")
