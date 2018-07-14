@@ -122,12 +122,24 @@ void initPwm() {
 	
 #endif
 	
-// AUIRS20302
+// AUIRS20302 startup sequence
 	
 	GPIOA->MODER |= (0x01 << GPIO_MODER_MODER11_Pos) |	// output mode for pin A-11 (EN)
 		            (0x01 << GPIO_MODER_MODER12_Pos);	// output mode for pin A-12 (FRST)
 	
-	GPIOA->BSRR = (1 << 11);							// enable driver
+//	GPIOA->BRR = (1 << 12);								// FRST low
+//	GPIOA->BRR = (1 << 11);								// disable
+//	
+//	delay(10);
+//	
+//	GPIOA->BSRR = (1 << 12);							// FRST high
+//	delay(10);
+//	GPIOA->BRR = (1 << 12);								// FRST low
+//	
+//	delay(10);
+	
+	GPIOA->BSRR = (1 << 11);							// enable
+	GPIOA->BSRR = (1 << 12);							// FRST high
 }
 void setPwm(int angle, int power) {
 	int a1 = angle % sin_period;

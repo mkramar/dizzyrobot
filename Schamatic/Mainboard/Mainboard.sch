@@ -2295,4 +2295,15 @@ F 3 "" H 9800 5550 50  0001 C CNN
 	1    9800 5550
 	1    0    0    -1  
 $EndComp
+$Comp
+L Earth #PWR?
+U 1 1 5B3F6BBE
+P 8700 4250
+F 0 "#PWR?" H 8700 4000 50  0001 C CNN
+F 1 "Earth" H 8700 4100 50  0001 C CNN
+F 2 "" H 8700 4250 50  0001 C CNN
+F 3 "" H 8700 4250 50  0001 C CNN
+	1    8700 4250
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

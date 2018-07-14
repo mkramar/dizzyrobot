@@ -1575,4 +1575,29 @@ Wire Wire Line
 Connection ~ 8050 8050
 Text GLabel 6950 8350 0    60   Input ~ 0
 MISO
+$Comp
+L C_Small C?
+U 1 1 5B4340EB
+P 5850 1850
+F 0 "C?" H 5860 1920 50  0000 L CNN
+F 1 "2.2uF 25V" H 5860 1770 50  0000 L CNN
+F 2 "" H 5850 1850 50  0001 C CNN
+F 3 "" H 5850 1850 50  0001 C CNN
+	1    5850 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR?
+U 1 1 5B434912
+P 5850 1950
+F 0 "#PWR?" H 5850 1700 50  0001 C CNN
+F 1 "Earth" H 5850 1800 50  0001 C CNN
+F 2 "" H 5850 1950 50  0001 C CNN
+F 3 "" H 5850 1950 50  0001 C CNN
+	1    5850 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 1750 5850 1650
+Connection ~ 5850 1650
 $EndSCHEMATC
