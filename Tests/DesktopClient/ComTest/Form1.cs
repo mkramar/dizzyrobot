@@ -29,7 +29,7 @@ namespace ComTest
             InitializeComponent();
 
             string[] ports = SerialPort.GetPortNames();
-            _port = new SerialPort(ports[0], 115200);
+            _port = new SerialPort("COM3", 115200);
             _port.ReadTimeout = ReadTimeout;
             _port.Open();
 
