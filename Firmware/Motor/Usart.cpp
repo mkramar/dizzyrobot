@@ -22,7 +22,7 @@ void DMA1_Channel2_3_IRQHandler(){
 	{
 		DMA1->IFCR |= DMA_IFCR_CTCIF2;			// clear "transfer complete" flag of channel 2
 		DMA1_Channel2->CCR &= ~DMA_CCR_EN;		// disable channel 2
-		//USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
+		USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
 		usartDmaSendBusy = false;
 	}
 }
@@ -32,7 +32,7 @@ void USART1_IRQHandler(void) {
 	if (USART1->ISR & USART_ISR_CMF)
 	{
 		USART1->ICR |= USART_ICR_CMCF;			// clear CMF flag bit
-		//USART1->CR1 &= ~USART_CR1_RE;			// disable receiver TODO: not needed once RE connected to DE
+		USART1->CR1 &= ~USART_CR1_RE;			// disable receiver TODO: not needed once RE connected to DE
 		usartCommandReceived = true;
 	}
 }
@@ -215,7 +215,7 @@ void processUsartCommand(){
 	}
 	else
 	{
-		//USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
+		USART1->CR1 |= USART_CR1_RE;			// enable receiver TODO: not needed once RE connected to DE
 	}
 	
 	uint bufferPosition = recvBufferSize - DMA1_Channel3->CNDTR;

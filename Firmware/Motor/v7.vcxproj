@@ -121,6 +121,7 @@
     <ClCompile Include="..\..\..\..\Users\M\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_tim.c" />
     <ClCompile Include="..\..\..\..\Users\M\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_usart.c" />
     <ClCompile Include="..\..\..\..\Users\M\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F0xxxx\STM32F0xx_HAL_Driver\Src\stm32f0xx_ll_utils.c" />
+    <ClCompile Include="SpiA1335.cpp" />
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Calibrate.cpp" />
     <ClCompile Include="Clock.cpp" />

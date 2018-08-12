@@ -33,7 +33,7 @@
     (46 B.CrtYd user)
     (47 F.CrtYd user)
     (48 B.Fab user)
-    (49 F.Fab user hide)
+    (49 F.Fab user)
   )
 
   (setup
@@ -67,7 +67,7 @@
     (pad_drill 0.25)
     (pad_to_mask_clearance 0.2)
     (aux_axis_origin 0 0)
-    (visible_elements 7FFFFFFF)
+    (visible_elements 7FFFEFFF)
     (pcbplotparams
       (layerselection 0x010f0_80000001)
       (usegerberextensions false)
@@ -1753,7 +1753,7 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
   )
 
-  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5B2CE096)
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 5B619F0E) (tstamp 5B2CE096)
     (at 58.1 148.75 90)
     (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
     (tags "capacitor 0603")
@@ -1762,7 +1762,7 @@
     (fp_text reference C4 (at 0.25 -1.4 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 0.47uF (at 0 1.5 90) (layer F.Fab)
+    (fp_text value 1uF (at 0 1.5 90) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
@@ -1933,7 +1933,7 @@
     )
   )
 
-  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5B2CE0D2)
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 5B619F1B) (tstamp 5B2CE0D2)
     (at 68.6 150.5 90)
     (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
     (tags "capacitor 0603")
@@ -1942,7 +1942,7 @@
     (fp_text reference C14 (at -0.05 1.6 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 0.47uF (at 0 1.5 90) (layer F.Fab)
+    (fp_text value 1uF (at 0 1.5 90) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
@@ -3685,7 +3685,7 @@
     )
   )
 
-  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 5B5C63ED) (tstamp 5B2E2FAE)
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 5B5EE209) (tstamp 5B2E2FAE)
     (at 88.8 105.95 270)
     (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
     (tags "capacitor 0603")
@@ -3694,7 +3694,7 @@
     (fp_text reference C27 (at -0.25 1.5 270) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value 0.47uF (at 0 1.5 270) (layer F.Fab)
+    (fp_text value 0.33uF (at 0 1.5 270) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))

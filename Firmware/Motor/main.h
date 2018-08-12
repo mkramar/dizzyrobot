@@ -5,21 +5,16 @@
 #define MAIN_H
 
 const unsigned int flashPageAddress = 0x08007800;
-const int numQuadrants = 16;
-
-struct QuadrantData
-{
-	unsigned int maxAngle;
-	unsigned int minAngle;
-	unsigned int range;
-};
+const int numLinCoeff = 16;
 
 struct ConfigData
 {
 	int controllerId = 0;
-	QuadrantData quadrants[numQuadrants] = { 0 };
-	bool up = false;
+	int coefficients[numLinCoeff] = { 0 };
+	//bool up = false;
 	bool calibrated = false;
+	int calibZero = 0;
+	int calibRate = 0;	
 };
 
 extern ConfigData* config;
@@ -64,12 +59,14 @@ void incrementIdAndSave();
 
 //#define AS5048A
 //#ifdef TLE_5012B
-#define MA700
+//#define MA700
+#define A1335
 
 extern int spiCurrentAngle;
 
 void initSpi();
 int spiReadAngle();
+void A1335InitFromFlash();
 //void spiUpdateTorque();
 
 // usart ----------------------------------------------------------------------
