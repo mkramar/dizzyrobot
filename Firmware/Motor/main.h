@@ -11,7 +11,8 @@ struct ConfigData
 {
 	int controllerId = 0;
 	int coefficients[numLinCoeff] = { 0 };
-	//bool up = false;
+	bool up = false;
+	int poles = 0;
 	bool calibrated = false;
 	int calibZero = 0;
 	int calibRate = 0;	
@@ -55,7 +56,7 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
-#define SENSOR_MAX sin_period	// 32K
+#define SENSOR_MAX	(1 << 12)			// 12 bit sensor
 
 //#define AS5048A
 //#ifdef TLE_5012B
@@ -66,6 +67,7 @@ extern int spiCurrentAngle;
 
 void initSpi();
 int spiReadAngle();
+void A1335DisableLinearization();
 void A1335InitFromFlash();
 //void spiUpdateTorque();
 

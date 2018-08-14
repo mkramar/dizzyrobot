@@ -10,10 +10,11 @@ int currentPole = 0;
 
 int getElectricDegrees() {
 	int x = (spiCurrentAngle - config->calibZero) % config->calibRate;
-	return x * sin_period / config->calibRate;
+	return x * SENSOR_MAX / config->calibRate;
 }
 
-void getLinCoefficients(int* readings) {
+void findLinCoefficients() {
+	int readings[numLinCoeff] = { 0 };
 	int step = 4;
 	int a = 0;
 	int i = 0;
@@ -51,7 +52,7 @@ void getLinCoefficients(int* readings) {
 	}
 	
 	up = nUp > nDn;
-	if (up) step *= -1;
+	if (!up) step *= -1;
 	
 	// gently set 0 angle
 	
@@ -84,7 +85,7 @@ void getLinCoefficients(int* readings) {
 			a -= sin_period;
 		}
 		
-		if (a < sin_period)
+		if (a < -sin_period)
 		{
 			poles++;
 			a += sin_period;
@@ -141,25 +142,57 @@ void getLinCoefficients(int* readings) {
 		setPwm(a, calibPower);
 		spiReadAngle();	
 	}
+	
+	// sort coefficients
+	
+	bool swap;
+	do
+	{
+		swap = false;
+		
+		for (int i = 0; i < numLinCoeff - 1; i++)
+		{
+			if (readings[i] > readings[i + 1])
+			{
+				int tmp = readings[i];
+				readings[i] = readings[i + 1];
+				readings[i + 1] = tmp;
+				swap = true;
+			}
+		}
+	} while (swap);	
+	
+	// store coeficients in flash
+	
+	ConfigData lc;
+	memcpy(&lc, config, sizeof(ConfigData));
+	
+	for (int i = 0; i < numLinCoeff; i++)
+	{
+		lc.coefficients[i] = readings[i];
+	}	
+	
+	lc.calibrated = true;
+	lc.up = up;
+	lc.poles = poles;
+	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));		
 }
 
-void getElectricZeroAndRate(int* calibZero, int* calibRate) {
+void findElectricZeroAndRate() {
 	int a = 0;
 	int i = 0;
-	int step = 5;
+	int step = 4;
 	int sensor;
 	int zerosUp[maxPoles] = { 0 };
 	int zerosDn[maxPoles] = { 0 };
 	
 	int calibZeros[maxPoles] = { 0 };
 	int calibRates[maxPoles] = { 0 };
-	int calibPoles = 0;
 
 	// gently set 0 angle
 	
 	for (int p = 0; p < calibPower * 10; p++)
 	{
-		delay(1);
 		setPwm(0, p / 10);
 	}
 
@@ -170,43 +203,20 @@ void getElectricZeroAndRate(int* calibZero, int* calibRate) {
 	
 	// full turn up
 		
-	while (true)
+	for (i = 0; i < config->poles; i++)
 	{
-		a = a % sin_period;
-		if (a == 0)
+		for (a = 0; a < sin_period; a += step)
 		{
-			int sensor = spiReadAngle();
-			
-			if (i > 2)
-			{
-				int d1 = zerosUp[1] - zerosUp[0];
-				int d2 = zerosUp[2] - zerosUp[1];
-				int d3 = zerosUp[0] - sensor;
-				
-				if (d1 < 0) d1 = -d1;
-				if (d2 < 0) d2 = -d2;
-				if (d3 < 0) d3 = -d3;
-				
-				if (d1 > d2) d1 = d2;
-				
-				if (d3 < d1 / 4) {
-					break;
-				}
-			}
-			
-			zerosUp[i] = sensor;
-			i++;			
+			sensor = spiReadAngle();
+			setPwm(a, calibPower);
 		}
 		
-		a += step;
-		setPwm(a, calibPower);
+		zerosUp[i] = sensor;
 	}
-	
-	calibPoles = i;
 	
 	// a bit more up then back down
 	
-	for (; a < sin_period; a+=step)
+	for (a = 0; a < sin_period; a+=step)
 	{
 		setPwm(a, calibPower);
 	}
@@ -218,18 +228,15 @@ void getElectricZeroAndRate(int* calibZero, int* calibRate) {
 
 	// full turn down
 	
-	while (i >= 0)
+	for (; i > 0; i--)
 	{
-		if (a == 0)
+		for (a = sin_period; a > 0; a -= step)
 		{
-			int sensor = spiReadAngle();			
-			zerosDn[i] = sensor;
-			i--;
+			sensor = spiReadAngle();
+			setPwm(a, calibPower);
 		}
 		
-		a -= step;
-		if (a < 0) a += sin_period;
-		setPwm(a, calibPower);
+		zerosDn[i] = sensor;
 	}	
 	
 	// gently release
@@ -244,7 +251,7 @@ void getElectricZeroAndRate(int* calibZero, int* calibRate) {
 	
 	// calc average zeros
 	
-	for (i = 0; i < calibPoles; i++)
+	for (i = 0; i < config->poles; i++)
 		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
 	
 	// sort zeros
@@ -254,7 +261,7 @@ void getElectricZeroAndRate(int* calibZero, int* calibRate) {
 	{
 		swap = false;
 		
-		for (int i = 0; i < calibPoles - 1; i++)
+		for (int i = 0; i < config->poles - 1; i++)
 		{
 			if (calibZeros[i] > calibZeros[i + 1])
 			{
@@ -269,43 +276,26 @@ void getElectricZeroAndRate(int* calibZero, int* calibRate) {
 	// calc average zero
 	
 	int sum = 0;
-	for (int i = 0; i < calibPoles; i++)
+	for (int i = 0; i < config->poles; i++)
 	{
-		int delta = calibZeros[i] - sin_period * i / calibPoles;
+		int delta = calibZeros[i] - SENSOR_MAX * i / config->poles;
 		sum += delta;
 	}
 	
-	*calibZero = sum / calibPoles;
-	*calibRate = sin_period / calibPoles;	
+	// store in flash
+	
+	ConfigData lc;
+	memcpy(&lc, config, sizeof(ConfigData));
+	
+	lc.calibZero = sum / config->poles;
+	lc.calibRate = SENSOR_MAX / config->poles;	
+	
+	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));		
 }
 
 void calibrate() {
-	int readings[numLinCoeff] = { 0 };
-	getLinCoefficients(readings);
-	
-	// store coeficients in flash
-	
-	ConfigData lc;
-	lc.controllerId = config->controllerId;	
-	
-	for (int i = 0; i < numLinCoeff; i++)
-	{
-		lc.coefficients[i] = readings[i];
-	}	
-	
-	lc.calibrated = true;
-	//lc.up = up;
-	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));	
-	
-	// write coefficients to sensor
-	
+	A1335DisableLinearization();
+	findLinCoefficients();
 	A1335InitFromFlash();
-	
-	// now that it is linearized, get electrical zero
-	
-	getElectricZeroAndRate(&lc.calibZero, &lc.calibRate);
-
-	// store in flash
-	
-	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));	
+	findElectricZeroAndRate();
 }
