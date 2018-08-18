@@ -10,10 +10,13 @@ int currentPole = 0;
 
 int getElectricDegrees() {
 	int x = (spiCurrentAngle - config->calibZero) % config->calibRate;
-	return x * SENSOR_MAX / config->calibRate;
+	int retval = x * sin_period / config->calibRate;
+	return retval;
 }
 
 void findLinCoefficients() {
+	int readingsUp[numLinCoeff] = { 0 };
+	int readingsDn[numLinCoeff] = { 0 };
 	int readings[numLinCoeff] = { 0 };
 	int step = 4;
 	int a = 0;
@@ -111,15 +114,15 @@ void findLinCoefficients() {
 
 	// gently set 0 angle
 	
-	for (int p = 0; p < calibPower / 10; p++)
+	for (int p = 0; p < calibPower; p++)
 	{
 		delay(1);
-		setPwm(0, p * 10);
+		setPwm(0, p);
 	}
 	
 	a = 0;
 	
-	// move to 16 measurement points
+	// move to 16 measurement points UP
 	
 	spiReadAngle();
 	
@@ -129,13 +132,47 @@ void findLinCoefficients() {
 	{
 		if (up && a >= nextAngle || !up && a <= nextAngle)
 		{
-			readings[nextPoint] = spiReadAngle();
+			readingsUp[nextPoint] = spiReadAngle();
 			
 			nextPoint++;
+			if (nextPoint >= numLinCoeff) break;
+			
 			nextAngle = poles * sin_period * nextPoint / numLinCoeff;
 			if (!up) nextAngle *= -1;
+		}
+		
+		a += step;
+		setPwm(a, calibPower);
+		spiReadAngle();	
+	}
+	
+	// a bit more up
+	
+	if (up)
+		for (int x = 0; x < sin_period; a += step, x += step)
+			setPwm(a, calibPower);
+
+	if (!up)
+		for (int x = sin_period; x >= 0; a += step, x+= step)
+			setPwm(a, calibPower);
+	
+	// move to 16 measurement points DOWN
+	
+	spiReadAngle();
+	
+	step = -step;
+	nextPoint--;
+	while (true)
+	{
+		if (up && a <= nextAngle || !up && a >= nextAngle)
+		{
+			readingsDn[nextPoint] = spiReadAngle();
 			
-			if (nextPoint >= numLinCoeff) break;
+			nextPoint--;
+			if (nextPoint == -1) break;
+			
+			nextAngle = poles * sin_period * nextPoint / numLinCoeff;
+			if (!up) nextAngle *= -1;
 		}
 		
 		a += step;
@@ -152,15 +189,36 @@ void findLinCoefficients() {
 		
 		for (int i = 0; i < numLinCoeff - 1; i++)
 		{
-			if (readings[i] > readings[i + 1])
+			if (readingsUp[i] > readingsUp[i + 1])
 			{
-				int tmp = readings[i];
-				readings[i] = readings[i + 1];
-				readings[i + 1] = tmp;
+				int tmp = readingsUp[i];
+				readingsUp[i] = readingsUp[i + 1];
+				readingsUp[i + 1] = tmp;
 				swap = true;
 			}
 		}
 	} while (swap);	
+	
+	do
+	{
+		swap = false;
+		
+		for (int i = 0; i < numLinCoeff - 1; i++)
+		{
+			if (readingsDn[i] > readingsDn[i + 1])
+			{
+				int tmp = readingsDn[i];
+				readingsDn[i] = readingsDn[i + 1];
+				readingsDn[i + 1] = tmp;
+				swap = true;
+			}
+		}
+	} while (swap);		
+	
+	// average coefficients
+	
+	for (i = 0; i < numLinCoeff; i++)
+		readings[i] = (readingsUp[i] + readingsDn[i]) / 2;
 	
 	// store coeficients in flash
 	
@@ -191,9 +249,9 @@ void findElectricZeroAndRate() {
 
 	// gently set 0 angle
 	
-	for (int p = 0; p < calibPower * 10; p++)
+	for (int p = 0; p < calibPower; p++)
 	{
-		setPwm(0, p / 10);
+		setPwm(0, p);
 	}
 
 	for (a = 0; a < sin_period; a+=step)
@@ -241,10 +299,10 @@ void findElectricZeroAndRate() {
 	
 	// gently release
 	
-	for (int p = calibPower * 10; p > 0; p--)
+	for (int p = calibPower; p > 0; p--)
 	{
 		delay(1);
-		setPwm(0, p / 10);
+		setPwm(0, p);
 	}
 
 	setPwm(0, 0);
@@ -294,8 +352,12 @@ void findElectricZeroAndRate() {
 }
 
 void calibrate() {
+	USART1->CR1 &= ~USART_CR1_UE;							// disable usart	
+	
 	A1335DisableLinearization();
 	findLinCoefficients();
 	A1335InitFromFlash();
 	findElectricZeroAndRate();
+	
+	USART1->CR1 |= USART_CR1_UE;							// enable usart	
 }
