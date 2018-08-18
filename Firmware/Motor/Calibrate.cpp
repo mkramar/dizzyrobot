@@ -246,18 +246,133 @@ void findElectricZeroAndRate() {
 	
 	int calibZeros[maxPoles] = { 0 };
 	int calibRates[maxPoles] = { 0 };
+	int calibPoles = 0;
 
 	// gently set 0 angle
 	
 	for (int p = 0; p < calibPower; p++)
-	{
 		setPwm(0, p);
-	}
 
 	for (a = 0; a < sin_period; a+=step)
+		setPwm(a, calibPower);
+	
+//////////////////////////////////////
+/*	
+	// full turn up
+		
+	spiReadAngle();
+	
+	while (true)
 	{
+		a = a % sin_period;
+		if (a == 0)
+		{
+			int sensor = spiReadAngle();
+			
+			if (i > 2)
+			{
+				int d1 = zerosUp[1] - zerosUp[0];
+				int d2 = zerosUp[2] - zerosUp[1];
+				int d3 = zerosUp[0] - sensor;
+				
+				if (d1 < 0) d1 = -d1;
+				if (d2 < 0) d2 = -d2;
+				if (d3 < 0) d3 = -d3;
+				
+				if (d1 > d2) d1 = d2;
+				
+				if (d3 < d1 / 4) {
+					break;
+				}
+			}
+			
+			zerosUp[i] = sensor;
+			i++;			
+		}
+		
+		a += 2;
 		setPwm(a, calibPower);
 	}
+	
+	calibPoles = i;	
+	
+// a bit more up then back down
+	
+	for (; a < sin_period; a++)
+		setPwm(a, calibPower);
+	
+	for (; a > 0; a--)
+		setPwm(a, calibPower);
+
+	// full turn down
+	
+	while (i >= 0)
+	{
+		if (a == 0)
+		{
+			int sensor = spiReadAngle();			
+			zerosDn[i] = sensor;
+			i--;
+		}
+		
+		a -= 2;
+		if (a < 0) a += sin_period;
+		setPwm(a, calibPower);
+	}	
+	
+	// gently release
+	
+	for (int p = calibPower; p > 0; p--)
+		setPwm(0, p);
+
+	setPwm(0, 0);
+	
+	// calc average zeros
+	
+	for (i = 0; i < calibPoles; i++)
+		calibZeros[i] = (zerosUp[i] + zerosDn[i]) / 2;
+	
+	// sort zeros
+	
+	bool swap;
+	do
+	{
+		swap = false;
+		
+		for (int i = 0; i < calibPoles - 1; i++)
+		{
+			if (calibZeros[i] > calibZeros[i + 1])
+			{
+				int tmp = calibZeros[i];
+				calibZeros[i] = calibZeros[i + 1];
+				calibZeros[i + 1] = tmp;
+				swap = true;
+			}
+		}
+	} while (swap);
+	
+	// calc average zero
+	
+	int sum = 0;
+	for (int i = 0; i < calibPoles; i++)
+	{
+		int delta = calibZeros[i] - SENSOR_MAX * i / calibPoles;
+		sum += delta;
+	}
+	
+	ConfigData lc;
+	memcpy(&lc, config, sizeof(ConfigData));
+	
+	lc.calibZero = sum / calibPoles;
+	lc.calibRate = SENSOR_MAX / calibPoles;
+
+	// store in flash
+	
+	lc.controllerId = config->controllerId;	
+	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));	
+*/
+///////////////////////////////////////
+	
 	
 	// full turn up
 		
