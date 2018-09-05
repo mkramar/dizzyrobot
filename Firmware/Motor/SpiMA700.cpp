@@ -2,6 +2,14 @@
 
 #ifdef MA700
 
+#define CMD_WRITE	(0b0010 << 12)
+#define CMD_READ	(0b0001 << 12)
+#define REG_BCT		(3 << 8)
+#define REG_ZERO	(4 << 8)
+#define REG_AXIS	(5 << 8)
+#define AXIS_X		(1 << 4)
+#define AXIS_Y		(1 << 5)
+
 uint16_t SpiWriteRead(uint16_t data){
 	GPIOA->BRR |= 1 << 4;								// A-4 down - enable CS 
 	
@@ -19,23 +27,26 @@ uint16_t SpiWriteRead(uint16_t data){
 void initSpi() {
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
-					(0x02 << GPIO_MODER_MODER6_Pos) |	// alt func mode for pin A-6 (MISO)
-		            (0x02 << GPIO_MODER_MODER7_Pos);	// alt func mode for pin A-7 (MOSI)
+					(0x02 << GPIO_MODER_MODER6_Pos);	// alt func mode for pin A-6 (MISO)
 		
 	GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR4 |			// high speed for pin A-4 (SC)
 					  GPIO_OSPEEDR_OSPEEDR5 |			// high speed for pin A-5 (SCK)
-					  GPIO_OSPEEDR_OSPEEDR6 |			// high speed for pin A-6 (MISO)
-				      GPIO_OSPEEDR_OSPEEDR7;			// high speed for pin A-7 (MOSI)
+					  GPIO_OSPEEDR_OSPEEDR6;			// high speed for pin A-6 (MISO)
 	
 	GPIOA->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL5_Pos) |	// alternative funciton 0 for pin A-5
-					 (0x00 << GPIO_AFRL_AFSEL6_Pos) |	// alternative funciton 0 for pin A-6
-		             (0x00 << GPIO_AFRL_AFSEL7_Pos);	// alternative funciton 0 for pin A-7
+					 (0x00 << GPIO_AFRL_AFSEL6_Pos);	// alternative funciton 0 for pin A-6
 	
+	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER5_Pos);	// alt func mode for pin B-5 (MOSI)
+		
+	GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR5;			// high speed for pin B-5 (MOSI)
+	
+	GPIOB->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL5_Pos);	// alternative funciton 0 for pin B-5
+
 	GPIOA->BSRR |= 1 << 4;								// CS high (disable)
 	
 	//
 	
-	SPI1->CR1 |= //SPI_CR1_BIDIMODE |				// half-duplex mode
+	SPI1->CR1 |= //SPI_CR1_BIDIMODE |			// half-duplex mode
 		         //SPI_CR1_BIDIOE |				// output mode
 				 SPI_CR1_SSM |					// software slave management
 		         SPI_CR1_SSI |					// internal slave select
@@ -53,8 +64,8 @@ void initSpi() {
 	
 	// send calibration value
 	
-	SpiWriteRead(0b0010001110100000);			// correction value=165
-	SpiWriteRead(0b0010010100100000);			// correction axis=x
+	SpiWriteRead(CMD_WRITE | REG_BCT | 160);	// correction value=165
+	SpiWriteRead(CMD_WRITE | REG_AXIS | AXIS_Y);// correction axis=Y
 }
 
 int spiReadAngle() {

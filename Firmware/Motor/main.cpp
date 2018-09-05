@@ -44,7 +44,7 @@ int main(void) {
 	delay(2000);
 	
 	ensureConfigured();
-	A1335InitFromFlash();
+	//A1335InitFromFlash();
 	
 	//usartTorqueCommandValue = -250;	
 	

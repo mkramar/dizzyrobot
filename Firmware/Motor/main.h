@@ -5,18 +5,23 @@
 #define MAIN_H
 
 const unsigned int flashPageAddress = 0x08007800;
-const int numLinCoeff = 16;
+const int numQuadrants = 16;
+
+struct QuadrantData
+{
+	unsigned int maxAngle;
+	unsigned int minAngle;
+	unsigned int range;
+};
 
 struct ConfigData
 {
 	int controllerId = 0;
-	int coefficients[numLinCoeff] = { 0 };
+	QuadrantData quadrants[numQuadrants] = { 0 };
 	bool up = false;
-	int poles = 0;
 	bool calibrated = false;
-	int calibZero = 0;
-	int calibRate = 0;	
 };
+
 
 extern ConfigData* config;
 
@@ -56,12 +61,12 @@ void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
-#define SENSOR_MAX	(1 << 12)			// 12 bit sensor
+#define SENSOR_MAX sin_period	// 32K
 
 //#define AS5048A
 //#ifdef TLE_5012B
-//#define MA700
-#define A1335
+#define MA700
+//#define A1335
 
 extern int spiCurrentAngle;
 
