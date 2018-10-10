@@ -49,15 +49,11 @@ void initPwm() {
 					(0x02 << GPIO_MODER_MODER8_Pos) |	// alternative function for pin A-8 (pwm channel 1, positive)
 					(0x02 << GPIO_MODER_MODER9_Pos) |	// alternative function for pin A-9 (pwm channel 2, positive)
 				    (0x02 << GPIO_MODER_MODER10_Pos);	// alternative function for pin A-10 (pwm channel 3, positive)
-		
-					//(0x01 << GPIO_MODER_MODER11_Pos);	// output for pin A-11 (overcurrent control)
 	
 	GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR7 |			// high speed for pin A-7 (pwm channel 1, negative)
 				      GPIO_OSPEEDR_OSPEEDR8 |			// high speed for pin A-8 (pwm channel 1, positive)
 				      GPIO_OSPEEDR_OSPEEDR9 |			// high speed for pin A-9 (pwm channel 2, positive)
 		              GPIO_OSPEEDR_OSPEEDR10;			// high speed for pin A-10 (pwm channel 3, positive)
-		
-					  //(0x01 << GPIO_OSPEEDR_OSPEEDR11_Pos);	// medium speed for pin A-11 (overcurrent control)
 	
 	GPIOA->AFR[0] |= (0x02 << GPIO_AFRL_AFSEL7_Pos);	// for pin A-7 alternative funciton 2
 	

@@ -32,7 +32,7 @@ int getElectricDegrees() {
 }
 
 void calibrate() {
-	const int step = 15;
+	const int step = 5;
 	int a = 0;
 	int i = 0;
 	int sensor;
@@ -243,7 +243,7 @@ void calibrate() {
 	for (int p = calibPower / 10; p > 0; p--)
 	{
 		delay(1);
-		setPwm(0, p * 10);
+		setPwm(a, p * 10);
 	}
 
 	setPwm(0, 0);
