@@ -1,6 +1,12 @@
 #include <main.h>
 
-#ifdef MA700
+int spiCurrentAngle = 0;
+int spiUpdateSequence = 0;
+
+extern "C"
+void SPI1_IRQHandler() {
+	// should be empty
+}
 
 #define CMD_WRITE	(0b0010 << 12)
 #define CMD_READ	(0b0001 << 12)
@@ -72,5 +78,3 @@ int spiReadAngle() {
 	uint16_t data = SpiWriteRead(0xffff);
 	return data >> 1;									// leave 15 bit as required by sin
 }
-
-#endif

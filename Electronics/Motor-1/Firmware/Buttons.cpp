@@ -21,9 +21,9 @@ void EXTI2_3_IRQHandler(void) {
 		if (GPIOA->IDR & GPIO_IDR_2) {
 			stopIdTimer();
 			
-			GPIOB->BSRR |= 0x10;								// set pin B-4
+			GPIOB->BSRR |= 0x02;								// set pin B-1
 			delay(50);
-			GPIOB->BRR |= 0x10;									// reset pin B-4
+			GPIOB->BRR |= 0x02;									// reset pin B-1
 			
 			buttonIdPressed = true;
 		}
@@ -37,9 +37,9 @@ void EXTI2_3_IRQHandler(void) {
 		if (GPIOA->IDR & GPIO_IDR_3){
 			stopCalibTimer();
 			
-			GPIOB->BSRR |= 0x08;								// set pin B-3
+			GPIOA->BSRR |= 0x01;								// set pin A-0
 			delay(50);
-			GPIOB->BRR |= 0x08;									// reset pin B-3
+			GPIOA->BRR |= 0x01;									// reset pin A-0
 			
 			buttonCalibPressed = true;			
 		}
@@ -75,19 +75,19 @@ void blinkId(bool onOff) {
 		TIM3->PSC = BLINK_PRESCALER;						// prescaler
 
 		// tim3 config channel
-		
-		TIM3->CCMR1 |= TIM_CCMR1_OC1PE |					// Output compare 1 preload enable
-					   (0x06 << TIM_CCMR1_OC1M_Pos);		// Output compare 1 mode = 110
+
+		TIM3->CCMR2 |= TIM_CCMR2_OC4PE |					// Output compare 4 preload enable
+					   (0x06 << TIM_CCMR2_OC4M_Pos);		// Output compare 4 mode = 110
 
 		// GPIOB
+	
+		GPIOB->MODER &= ~GPIO_MODER_MODER1_Msk;		
+		GPIOB->MODER |= (0x02 << GPIO_MODER_MODER1_Pos);	// alternative function for pin B-1
+		GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR1;			// high speed for pin B-1
+		GPIOB->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL1_Pos);	// alternative funciton 1 for pin B-1
 
-		GPIOB->MODER &= ~GPIO_MODER_MODER4_Msk;		
-		GPIOB->MODER |= (0x02 << GPIO_MODER_MODER4_Pos);	// alternative function for pin B-4
-		GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR4;			// high speed for pin B-4
-		GPIOB->AFR[0] |= (0x01 << GPIO_AFRL_AFSEL4_Pos);	// alternative funciton 1 for pin B-4
-
-		TIM3->CCR1 = BLINK_DUTY_CYCLE;						// duty cycle of tim3 channel 1
-		TIM3->CCER |= TIM_CCER_CC1E;						// enable tim3 channel 1, positive
+		TIM3->CCR4 = BLINK_DUTY_CYCLE;						// duty cycle of tim3 channel 4
+		TIM3->CCER |= TIM_CCER_CC4E;						// enable tim3 channel 4, positive
 		TIM3->CR1 |= TIM_CR1_CEN;							// enable timer 3
 	}
 	else
@@ -101,26 +101,26 @@ void blinkCalib(bool onOff){
 	{
 		// pin 11 - PA-0 configure as led timer 2 blinker
 		
-		RCC->AHBENR |= RCC_AHBENR_GPIOBEN;					// enable clock for GPIOB
+		RCC->AHBENR |= RCC_AHBENR_GPIOAEN;					// enable clock for GPIOA
 		RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;					// enable timer 2
 	
 		TIM2->ARR = BLINK_PERIOD;							// tim2 period
 		TIM2->PSC = BLINK_PRESCALER;						// prescaler
 
 		// tim2 config channel
-		
-		TIM2->CCMR1 |= TIM_CCMR1_OC2PE |					// Output compare 1 preload enable
-					   (0x06 << TIM_CCMR1_OC2M_Pos);		// Output compare 1 mode = 110
 
-		// GPIOB
-		
-		GPIOB->MODER &= ~GPIO_MODER_MODER3_Msk;
-		GPIOB->MODER |= (0x02 << GPIO_MODER_MODER3_Pos);	// alternative function for pin B-3
-		GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR3;			// high speed for pin B-3
-		GPIOB->AFR[0] |= (0x02 << GPIO_AFRL_AFSEL3_Pos);	// alternative funciton 2 for pin B-3
+		TIM2->CCMR1 |= TIM_CCMR1_OC1PE |					// Output compare 1 preload enable
+					   (0x06 << TIM_CCMR1_OC1M_Pos);		// Output compare 1 mode = 110
 
-		TIM2->CCR2 = BLINK_DUTY_CYCLE;						// duty cycle of tim2 channel 2
-		TIM2->CCER |= TIM_CCER_CC2E;						// enable tim2 channel 2, positive
+		// GPIOA
+	
+		GPIOA->MODER &= ~GPIO_MODER_MODER0_Msk;
+		GPIOA->MODER |= (0x02 << GPIO_MODER_MODER0_Pos);	// alternative function for pin A-0
+		GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR0;			// high speed for pin A-0
+		GPIOA->AFR[0] |= (0x02 << GPIO_AFRL_AFSEL0_Pos);	// alternative funciton 2 for pin A-0
+
+		TIM2->CCR1 = BLINK_DUTY_CYCLE;						// duty cycle of tim2 channel 1
+		TIM2->CCER |= TIM_CCER_CC1E;						// enable tim2 channel 1, positive
 		TIM2->CR1 |= TIM_CR1_CEN;							// enable timer 2
 	}
 	else

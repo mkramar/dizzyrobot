@@ -63,18 +63,11 @@ void incrementIdAndSave();
 
 #define SENSOR_MAX sin_period	// 32K
 
-//#define AS5048A
-//#ifdef TLE_5012B
-#define MA700
-//#define A1335
-
 extern int spiCurrentAngle;
 
 void initSpi();
 int spiReadAngle();
-void A1335DisableLinearization();
-void A1335InitFromFlash();
-//void spiUpdateTorque();
+
 
 // usart ----------------------------------------------------------------------
 

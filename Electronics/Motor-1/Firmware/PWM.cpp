@@ -105,8 +105,6 @@ void initPwm() {
 	
 	TIM1->CR1 |= TIM_CR1_CEN;							// enable timer 1
 	
-#ifdef STSPIN32
-	
 	// GPIOF - turn MOSFET driver on
 	
 	GPIOF->MODER |= (0x01 << GPIO_MODER_MODER6_Pos) |	// output mode for pin F-6 (standby mode)
@@ -119,27 +117,6 @@ void initPwm() {
 
 	GPIOA->BRR = (1 << 11);								// reset pin 11 (overcurrent does not effect gate driver directly)
 	GPIOF->BSRR = (1 << 7);								// disable stand-by mode	
-	
-#endif
-	
-// AUIRS20302 startup sequence
-	
-	GPIOA->MODER |= (0x01 << GPIO_MODER_MODER11_Pos) |	// output mode for pin A-11 (EN)
-		            (0x01 << GPIO_MODER_MODER12_Pos);	// output mode for pin A-12 (FRST)
-	
-//	GPIOA->BRR = (1 << 12);								// FRST low
-//	GPIOA->BRR = (1 << 11);								// disable
-//	
-//	delay(10);
-//	
-//	GPIOA->BSRR = (1 << 12);							// FRST high
-//	delay(10);
-//	GPIOA->BRR = (1 << 12);								// FRST low
-//	
-//	delay(10);
-	
-	GPIOA->BSRR = (1 << 11);							// enable
-	GPIOA->BSRR = (1 << 12);							// FRST high
 }
 void setPwm(int angle, int power) {
 	while (angle < 0) angle += sin_period;
