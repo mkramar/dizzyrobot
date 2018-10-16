@@ -1,0 +1,180 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:Dizzy
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MA700 U1
+U 1 1 5BC2E305
+P 5550 2850
+F 0 "U1" H 5550 3800 60  0000 C CNN
+F 1 "MA700" H 5500 2450 60  0000 C CNN
+F 2 "Housings_DFN_QFN:QFN-16-1EP_3x3mm_Pitch0.5mm" H 5550 2850 60  0001 C CNN
+F 3 "" H 5550 2850 60  0001 C CNN
+	1    5550 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X06 J1
+U 1 1 5BC2E3A6
+P 3250 2600
+F 0 "J1" H 3250 2950 50  0000 C CNN
+F 1 "CONN_01X06" V 3350 2600 50  0000 C CNN
+F 2 "Dizzy:SPI_CONN" H 3250 2600 50  0001 C CNN
+F 3 "" H 3250 2600 50  0001 C CNN
+	1    3250 2600
+	1    0    0    -1  
+$EndComp
+Text GLabel 6300 2500 2    60   Input ~ 0
+SCLK
+$Comp
+L +3.3V #PWR01
+U 1 1 5BC2E44C
+P 6550 2650
+F 0 "#PWR01" H 6550 2500 50  0001 C CNN
+F 1 "+3.3V" H 6550 2790 50  0000 C CNN
+F 2 "" H 6550 2650 50  0001 C CNN
+F 3 "" H 6550 2650 50  0001 C CNN
+	1    6550 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L C_Small C1
+U 1 1 5BC2E464
+P 6500 2800
+F 0 "C1" H 6510 2870 50  0000 L CNN
+F 1 "C_Small" H 6510 2720 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0603" H 6500 2800 50  0001 C CNN
+F 3 "" H 6500 2800 50  0001 C CNN
+	1    6500 2800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6550 2650 6000 2650
+Wire Wire Line
+	6400 2800 6250 2800
+Wire Wire Line
+	6250 2800 6250 2650
+Connection ~ 6250 2650
+$Comp
+L Earth #PWR02
+U 1 1 5BC2E4B9
+P 6600 2800
+F 0 "#PWR02" H 6600 2550 50  0001 C CNN
+F 1 "Earth" H 6600 2650 50  0001 C CNN
+F 2 "" H 6600 2800 50  0001 C CNN
+F 3 "" H 6600 2800 50  0001 C CNN
+	1    6600 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Earth #PWR03
+U 1 1 5BC2E4EC
+P 5500 3350
+F 0 "#PWR03" H 5500 3100 50  0001 C CNN
+F 1 "Earth" H 5500 3200 50  0001 C CNN
+F 2 "" H 5500 3350 50  0001 C CNN
+F 3 "" H 5500 3350 50  0001 C CNN
+	1    5500 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Earth #PWR04
+U 1 1 5BC2E524
+P 5050 3100
+F 0 "#PWR04" H 5050 2850 50  0001 C CNN
+F 1 "Earth" H 5050 2950 50  0001 C CNN
+F 2 "" H 5050 3100 50  0001 C CNN
+F 3 "" H 5050 3100 50  0001 C CNN
+	1    5050 3100
+	0    1    1    0   
+$EndComp
+Text GLabel 5050 2950 0    60   Input ~ 0
+MISO
+Text GLabel 5050 2500 0    60   Input ~ 0
+MOSI
+Text GLabel 5050 2650 0    60   Input ~ 0
+CS
+NoConn ~ 5050 2050
+NoConn ~ 5050 2200
+NoConn ~ 5050 2350
+NoConn ~ 5050 2800
+NoConn ~ 6000 2050
+NoConn ~ 6000 2200
+NoConn ~ 6000 2350
+NoConn ~ 6000 2800
+NoConn ~ 6000 2950
+NoConn ~ 6000 3100
+Text GLabel 3050 2350 0    60   Input ~ 0
+CS
+Text GLabel 3050 2450 0    60   Input ~ 0
+MOSI
+Text GLabel 3050 2550 0    60   Input ~ 0
+MISO
+Wire Wire Line
+	6000 2500 6300 2500
+Text GLabel 3050 2650 0    60   Input ~ 0
+SCLK
+$Comp
+L +3.3V #PWR05
+U 1 1 5BC2E65E
+P 3050 2750
+F 0 "#PWR05" H 3050 2600 50  0001 C CNN
+F 1 "+3.3V" H 3050 2890 50  0000 C CNN
+F 2 "" H 3050 2750 50  0001 C CNN
+F 3 "" H 3050 2750 50  0001 C CNN
+	1    3050 2750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Earth #PWR06
+U 1 1 5BC2E69C
+P 3050 2850
+F 0 "#PWR06" H 3050 2600 50  0001 C CNN
+F 1 "Earth" H 3050 2700 50  0001 C CNN
+F 2 "" H 3050 2850 50  0001 C CNN
+F 3 "" H 3050 2850 50  0001 C CNN
+	1    3050 2850
+	0    1    1    0   
+$EndComp
+$EndSCHEMATC
