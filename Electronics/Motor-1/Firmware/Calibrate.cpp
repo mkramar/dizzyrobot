@@ -258,11 +258,17 @@ void calibrate() {
 	
 	// calc average quadrants
 	
+	int minRange;
+	int maxRange;
 	for (int i = 0; i < numQuadrants; i++)
 	{
 		lc.quadrants[i].minAngle = (qUp[i].minAngle + qDn[i].minAngle) / 2;
 		lc.quadrants[i].maxAngle = (qUp[i].maxAngle + qDn[i].maxAngle) / 2;
-		lc.quadrants[i].range = lc.quadrants[i].maxAngle - lc.quadrants[i].minAngle;
+		int range = lc.quadrants[i].maxAngle - lc.quadrants[i].minAngle;
+		lc.quadrants[i].range = range;
+		
+		if (i == 0 || minRange > range) minRange = range;
+		if (i == 0 || maxRange < range) maxRange = range;
 	}
 	
 	// store in flash
