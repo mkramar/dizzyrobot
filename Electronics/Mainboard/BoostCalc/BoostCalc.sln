@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinTest", "SinTest.csproj", "{47CB38D2-A90F-4FCB-8B7A-C51B1840D71B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoostCalc", "BoostCalc.csproj", "{47CB38D2-A90F-4FCB-8B7A-C51B1840D71B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
