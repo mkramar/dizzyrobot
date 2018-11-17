@@ -505,13 +505,13 @@
     <None Include="debug.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="v7-Debug.vgdbsettings">
+    <None Include="DizzyMotor-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="release.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="v7-Release.vgdbsettings">
+    <None Include="DizzyMotor-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="stm32.mak">

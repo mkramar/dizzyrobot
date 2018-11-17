@@ -1,7 +1,11 @@
 #include <main.h>
 
+int spiPrevSensor = 0;
+int spiCorrection = 0;
 int spiCurrentAngle = 0;
-int spiUpdateSequence = 0;
+long firValue = 0;
+
+//#define DO_FILTERING
 
 extern "C"
 void SPI1_IRQHandler() {
@@ -33,20 +37,17 @@ uint16_t SpiWriteRead(uint16_t data){
 void initSpi() {
 	GPIOA->MODER |= (0b01 << GPIO_MODER_MODER4_Pos) |	// output for pin A-4 (CS)
 		            (0x02 << GPIO_MODER_MODER5_Pos) |	// alt func mode for pin A-5 (SCK)
-					(0x02 << GPIO_MODER_MODER6_Pos);	// alt func mode for pin A-6 (MISO)
+					(0x02 << GPIO_MODER_MODER6_Pos) |	// alt func mode for pin A-6 (MISO)
+		            (0x02 << GPIO_MODER_MODER7_Pos);	// alt func mode for pin A-7 (MOSI)
 		
 	GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR4 |			// high speed for pin A-4 (SC)
 					  GPIO_OSPEEDR_OSPEEDR5 |			// high speed for pin A-5 (SCK)
-					  GPIO_OSPEEDR_OSPEEDR6;			// high speed for pin A-6 (MISO)
+					  GPIO_OSPEEDR_OSPEEDR6 |			// high speed for pin A-6 (MISO)
+				      GPIO_OSPEEDR_OSPEEDR7;			// high speed for pin A-7 (MOSI)
 	
 	GPIOA->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL5_Pos) |	// alternative funciton 0 for pin A-5
-					 (0x00 << GPIO_AFRL_AFSEL6_Pos);	// alternative funciton 0 for pin A-6
-	
-	GPIOB->MODER |= (0x02 << GPIO_MODER_MODER5_Pos);	// alt func mode for pin B-5 (MOSI)
-		
-	GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEEDR5;			// high speed for pin B-5 (MOSI)
-	
-	GPIOB->AFR[0] |= (0x00 << GPIO_AFRL_AFSEL5_Pos);	// alternative funciton 0 for pin B-5
+					 (0x00 << GPIO_AFRL_AFSEL6_Pos) |	// alternative funciton 0 for pin A-6
+		             (0x00 << GPIO_AFRL_AFSEL7_Pos);	// alternative funciton 0 for pin A-7
 
 	GPIOA->BSRR |= 1 << 4;								// CS high (disable)
 	
@@ -70,11 +71,33 @@ void initSpi() {
 	
 	// send calibration value
 	
-	SpiWriteRead(CMD_WRITE | REG_BCT | 160);	// correction value=165
+	SpiWriteRead(CMD_WRITE | REG_BCT | 160);	// correction value=160
 	SpiWriteRead(CMD_WRITE | REG_AXIS | AXIS_Y);// correction axis=Y
+	
+	int readBct = SpiWriteRead(CMD_READ | REG_BCT) & 0xFF;
+	int readAxis = SpiWriteRead(CMD_READ | REG_AXIS) & 0xFF;
 }
 
 int spiReadAngle() {
 	uint16_t data = SpiWriteRead(0xffff);
 	return data >> 1;									// leave 15 bit as required by sin
+}
+void spiReadAngleFiltered() {
+	int a = spiReadAngle();
+	
+#ifdef DO_FILTERING	
+	
+	if (a - spiPrevSensor > 16384) spiCorrection -= 32786;
+	else if (a - spiPrevSensor < -16384) spiCorrection += 32786;
+	
+	spiPrevSensor = a;
+	
+	a += spiCorrection;
+	
+	long sample = (long)a * 0x800;
+	firValue += (sample - firValue) / 0x80;
+	spiCurrentAngle = (int)((firValue + 0x400) / 0x800);
+#else
+	spiCurrentAngle = a;						// no filtering
+#endif
 }

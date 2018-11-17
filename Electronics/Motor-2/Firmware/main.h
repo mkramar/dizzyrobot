@@ -4,8 +4,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#define POSITIVE_MODULO(A, B)	((A % B + B) %B)
+
 const unsigned int flashPageAddress = 0x08007800;
-const int numQuadrants = 16;
+const int numQuadrants = 32;
 
 struct QuadrantData
 {
@@ -67,7 +69,7 @@ extern int spiCurrentAngle;
 
 void initSpi();
 int spiReadAngle();
-
+void spiReadAngleFiltered();
 
 // usart ----------------------------------------------------------------------
 
