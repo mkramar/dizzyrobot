@@ -6,8 +6,13 @@
 
 #define POSITIVE_MODULO(A, B)	((A % B + B) %B)
 
+const int sin_period = (1 << 15);		// 32K or 0x8000
+const int sin_range = (1 << 13);		//  8K or 0x2000
+
 const unsigned int flashPageAddress = 0x08007800;
-const int numQuadrants = 32;
+const int numInternalQuadrants = 32;
+const int numExternalQuadrants = 16;
+const int externalQuadrantSize = sin_period / numExternalQuadrants;
 
 struct QuadrantData
 {
@@ -19,9 +24,10 @@ struct QuadrantData
 struct ConfigData
 {
 	int controllerId = 0;
-	QuadrantData quadrants[numQuadrants] = { 0 };
+	QuadrantData internalQuadrants[numInternalQuadrants] = { 0 };
+	QuadrantData externalQuadrants[numExternalQuadrants] = { 0 };
 	bool up = false;
-	bool calibrated = false;
+	int calibrated = 0;
 };
 
 
@@ -37,9 +43,6 @@ void initSysTick();
 void delay(int ms);
 
 // pwm ------------------------------------------------------------------------
-
-#define sin_period		(1 << 15)		// 32K or 0x8000
-#define sin_range		(1 << 13)		//  8K or 0x2000
 
 void initPwm();
 void setPwm(int angle, int power);
@@ -58,18 +61,18 @@ extern volatile int buttonPressId;
 
 void initButtons();
 void blinkId(bool onOff);
-void blinkCalib(bool onOff);
 void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 
 #define SENSOR_MAX sin_period	// 32K
 
-extern int spiCurrentAngle;
+extern int spiCurrentAngleInternal;
+extern int spiCurrentAngleExternal;
 
 void initSpi();
-int spiReadAngle();
-void spiReadAngleFiltered();
+int spiReadAngleInternal();
+int spiReadAngleExternal();
 
 // usart ----------------------------------------------------------------------
 

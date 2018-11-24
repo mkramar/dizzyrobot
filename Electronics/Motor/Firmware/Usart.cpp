@@ -229,11 +229,6 @@ bool processIdentity() {
 	
 	return true;	
 }
-bool processCalibrate(){
-	calibrate();
-	blinkCalib(false);
-	return true;
-}
 
 void processUsartCommand(){
 	uint8_t b1, b2, b3, b4;
@@ -275,13 +270,6 @@ void processUsartCommand(){
 				}
 				break;
 				
-			case 'C': if (!processCalibrate())
-				{
-					success = false;
-					goto _done;
-				}
-				break;
-				
 			case 'a':
 				usartDmaSendRequested = true;
 				break;
@@ -313,8 +301,8 @@ void usartSendAngle() {
 	outp = (char*)sendBuffer;
 	writeByte(0);												// to main controller
 	writeByte(config->controllerId);							// id of the sender	
-	writeByte((uint8_t)((spiCurrentAngle >> 8) & (uint8_t)0x00FFU));
-	writeByte((uint8_t)(spiCurrentAngle & (uint8_t)0x00FFU));
+	writeByte((uint8_t)((spiCurrentAngleInternal >> 8) & (uint8_t)0x00FFU));
+	writeByte((uint8_t)(spiCurrentAngleInternal & (uint8_t)0x00FFU));
 	*outp++ = '\r';
 	*outp++ = '\n';
 	

@@ -1,10 +1,10 @@
 #include <main.h>
 
 int ensureConfigured() {
-	bool calibConfigured = config->calibrated;
+	bool calibConfigured = config->calibrated == 1;
 	bool idConfigured = config->controllerId != 0 && config->controllerId != -1;
 	
-	if (!calibConfigured) blinkCalib(true);
+	if (!calibConfigured) calibrate();
 	if (!idConfigured) blinkId(true);
 }
 
@@ -31,7 +31,8 @@ int main(void) {
 	buttonCalibPressed = false;
 
 	while (true){
-		spiReadAngleFiltered();
+		spiCurrentAngleInternal = spiReadAngleInternal();
+		spiCurrentAngleExternal = spiReadAngleExternal();
 		setPwmTorque();
 		
 		if (usartDmaSendRequested && !usartDmaSendBusy)

@@ -31,18 +31,7 @@
     </FavoriteEmbeddedRegisters>
     <LiveVariables>
       <LiveVariable>
-        <Expression>spiCurrentAngle</Expression>
-        <Type>SInt32</Type>
-        <Enabled>true</Enabled>
-        <Breakpoint>
-          <ComparisonMode>Equals</ComparisonMode>
-          <Enabled>false</Enabled>
-        </Breakpoint>
-        <Plot>true</Plot>
-        <IsCollapsed>false</IsCollapsed>
-      </LiveVariable>
-      <LiveVariable>
-        <Expression>spiCorrection</Expression>
+        <Expression>spiCurrentAngleExternal</Expression>
         <Type>SInt32</Type>
         <Enabled>true</Enabled>
         <Breakpoint>
