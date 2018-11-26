@@ -1,32 +1,34 @@
 #include <main.h>
 
-const int maxPoles = 5;
+const int maxPoles = 21;
 
 const int calibPower = sin_range/2;
-const int quadrantDiv = SENSOR_MAX / numInternalQuadrants;
+const int quadrantDiv = SENSOR_MAX / numExternalQuadrants;
 	
 ConfigData* config = (ConfigData*)flashPageAddress;
 
 int currentPole = 0;
 
 int getElectricDegrees() {
-	int angle = spiCurrentAngleInternal % sin_period;
-	if (angle < 0) angle += sin_period;
+	//int angle = spiCurrentAngleExternal % SENSOR_MAX;
+	//if (angle < 0) angle += SENSOR_MAX;
+	
+	int angle = spiCurrentAngleExternal;
 	
 	int a;
 	int q = angle / quadrantDiv;
-	int range = config->internalQuadrants[q].range;
+	int range = config->externalQuadrants[q].range;
 	int qstart;
 	
 	if (config->up)
 	{
-		int min = config->internalQuadrants[q].minAngle;
+		int min = config->externalQuadrants[q].minAngle;
 		qstart = q * quadrantDiv;
 		a = min + (angle - qstart) * range / quadrantDiv;
 	}
 	else
 	{
-		int max = config->internalQuadrants[q].maxAngle;
+		int max = config->externalQuadrants[q].maxAngle;
 		qstart = q * quadrantDiv;
 		a = max - (angle - qstart) * range / quadrantDiv;
 	}
@@ -104,7 +106,10 @@ void calibrate() {
 	{
 		external = spiReadAngleExternal();
 		
-		if (a / sin_period != (a - step) / sin_period) pole++;
+		if (a / sin_period != (a - step) / sin_period) 
+		{
+			pole++;
+		}
 		if (a / externalQuadrantSize != (a - step) / externalQuadrantSize)
 		{
 			int aq = a % sin_period;
@@ -296,13 +301,17 @@ void calibrate() {
 
 	setPwm(0, 0);
 	
+	ConfigData lc;
+	lc.controllerId = config->controllerId;	
+		
 	// prepare external data
 	
+	int poles = pole + 1;
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
 		// see if this quadrant is split
 		
-		for (int p = 1; p < pole; p++)
+		for (int p = 1; p < poles; p++)
 		{
 			int interPoleDiff = qExt[q][0] - qExt[q][p];
 			if (interPoleDiff > SENSOR_MAX / 2)
@@ -316,30 +325,32 @@ void calibrate() {
 		}
 	}
 	
-//	for (int p = 0; i < actualPoles; p++)
-//	{
-//		// see if this pole is split
-//		
-//		for (i = 0; i < numExternalQuadrants; i++)
-//			qExt[i].minAngle /= nExt[i];
-//
-//	}
-//	
-//	for (i = 0; i < numExternalQuadrants; i++)
-//		qExt[i].minAngle /= nExt[i];
-//		
-//	for (i = 0; i < numExternalQuadrants - 1; i++)
-//		qExt[i].maxAngle = qExt[i + 1].minAngle;
-//	
-//	qExt[i].maxAngle = qExt[0].minAngle + sin_period;
-//	
-//	for (i = 0; i < numExternalQuadrants; i++)
-//		qExt[i].range = qExt[i].maxAngle - qExt[i].minAngle;
+	// average over all poles
+	
+	for (q = 0; q < numExternalQuadrants; q++)
+	{
+		for (int p = 1; p < poles; p++)
+			qExt[q][0] += qExt[q][p];
+
+		qExt[q][0] /= poles;
+	}	
+	
+	for (q = 0; q < numExternalQuadrants; q++)
+	{
+		int qThis = qExt[q][0];
+		int qNext = qExt[(q + 1) % numExternalQuadrants][0];
+		
+		lc.externalQuadrants[q].minAngle = qThis;
+		
+		if (qNext < qThis)
+			lc.externalQuadrants[q].maxAngle = qNext + SENSOR_MAX;
+		else
+			lc.externalQuadrants[q].maxAngle = qNext;
+		
+		lc.externalQuadrants[q].range = lc.externalQuadrants[q].maxAngle - lc.externalQuadrants[q].minAngle;
+	}
 	
 	// prepare internal data
-	
-	ConfigData lc;
-	lc.controllerId = config->controllerId;	
 	
 	for (int i = 0; i < numInternalQuadrants; i++)
 	{
