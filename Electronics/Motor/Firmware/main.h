@@ -11,7 +11,7 @@ const int sin_range = (1 << 13);		//  8K or 0x2000
 
 const unsigned int flashPageAddress = 0x08007800;
 const int numInternalQuadrants = 32;
-const int numExternalQuadrants = 5;
+const int numExternalQuadrants = 6;
 const int externalQuadrantSize = sin_period / numExternalQuadrants;
 
 struct QuadrantData

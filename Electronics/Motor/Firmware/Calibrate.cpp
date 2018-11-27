@@ -46,10 +46,12 @@ void calibrate() {
 	
 	bool up;
 	int q = 0;
+	int poles;
 	int q1;
-	int pole = 0;
+	int p = 0;
 	int prevQ = -1;
 	int firstQ = -1;
+	int targetA;
 	int quadrantsLeft = numInternalQuadrants;
 	
 	// init arrays
@@ -73,61 +75,81 @@ void calibrate() {
 		setPwm(0, p * 10);
 	}
 	
-	// find the edge of the quadrant, detect direction
+	delay(500);
 	
-	int internalFirst = spiReadAngleInternal();
-	int prevExternal = -1;
-	while (pole < maxPoles)
-	{
-		external = spiReadAngleExternal();
-		
-		if (a / externalQuadrantSize != (a + step) / externalQuadrantSize)
-		{
-			int aq = a % sin_period;
-			int n = aq / externalQuadrantSize;
-			
-//			if (n == 13)
-//			{
-//				int test = 0;
-//				test += 34 - a;
-//			}
-			
-			qExt[n][pole] = external;
-		}
-		if (a / sin_period != (a + step) / sin_period) pole++;
-		
+	// find the edge of the pole
+	
+	while (a < sin_period)
+	{		
 		a += step;
 		delay(1);
-		setPwm(a, calibPower);		
+		setPwm(a, calibPower);				
+	}
+	a = 0;
+	
+	// full turn up
+	
+	for (p = 0; p < maxPoles; p++)
+	{
+		for (q = 0; q < numExternalQuadrants; q++)
+		{
+			targetA = a + externalQuadrantSize;
+			
+			while (a < targetA)
+			{
+				a += step;
+				delay(1);
+				setPwm(a, calibPower);				
+			}
+			
+			external = spiReadAngleExternal();
+			qExt[q][p] = external;
+		}
+		
+		a = p * sin_period;
 	}
 	
-	pole--;
-	while (a >= 0)
-	{
-		external = spiReadAngleExternal();
-		
-		if (a / sin_period != (a - step) / sin_period) 
-		{
-			pole++;
-		}
-		if (a / externalQuadrantSize != (a - step) / externalQuadrantSize)
-		{
-			int aq = a % sin_period;
-			int n = aq / externalQuadrantSize;
-			
-//			if (n == 13)
-//			{
-//				int test = 0;
-//				test += 34 - a;
-//			}
-			
-			qExt[n][pole] = external;
-		}
-		
+	poles = p;
+	
+	// slightly up and down
+	
+	targetA = a + sin_period;
+	while (a < targetA)
+	{		
+		a += step;
+		delay(1);
+		setPwm(a, calibPower);				
+	}
+	targetA = a - sin_period;
+	while (a > targetA)
+	{		
 		a -= step;
 		delay(1);
-		setPwm(a, calibPower);		
+		setPwm(a, calibPower);				
+	}
+	
+	// full turn down
+	
+	for (; p < maxPoles * 2; p++)
+	{
+		for (q = numExternalQuadrants - 1; q >= 0; q--)
+		{
+			external = spiReadAngleExternal();
+			qExt[q][p] = external;
+			
+			targetA = a - externalQuadrantSize;
+			
+			while (a > targetA)
+			{
+				a -= step;
+				delay(1);
+				setPwm(a, calibPower);				
+			}
+		}
+		
+		a = ((poles - 1) * 2 - p) * sin_period;
 	}	
+	
 /*	
 	if (internal > internalFirst)
 	{
@@ -306,7 +328,6 @@ void calibrate() {
 		
 	// prepare external data
 	
-	int poles = pole + 1;
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
 		// see if this quadrant is split
