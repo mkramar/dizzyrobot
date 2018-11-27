@@ -53,15 +53,13 @@ void setPwmTorque();
 void calibrate();
 int getElectricDegrees();
 	
-// buttons --------------------------------------------------------------------
+// temperature ----------------------------------------------------------------
 
-extern volatile bool buttonIdPressed;
-extern volatile bool buttonCalibPressed;
-extern volatile int buttonPressId;
+void initTemperature();
 
-void initButtons();
+// status ---------------------------------------------------------------------
+
 void blinkId(bool onOff);
-void incrementIdAndSave();
 
 // spi ------------------------------------------------------------------------
 

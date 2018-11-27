@@ -215,9 +215,6 @@
     <ClCompile Include="Usart.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Buttons.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="Clock.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -231,6 +228,12 @@
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="SpiMA700.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Status.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Temperature.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -28,6 +28,7 @@
       <string>DMA1_Channel3</string>
       <string>TIM1</string>
       <string>RCC</string>
+      <string>TIM3</string>
     </FavoriteEmbeddedRegisters>
     <LiveVariables>
       <LiveVariable>
