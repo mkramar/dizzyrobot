@@ -32,8 +32,19 @@
     </FavoriteEmbeddedRegisters>
     <LiveVariables>
       <LiveVariable>
-        <Expression>spiCurrentAngleExternal</Expression>
+        <Expression>spiCurrentAngleInternal</Expression>
         <Type>SInt32</Type>
+        <Enabled>true</Enabled>
+        <Breakpoint>
+          <ComparisonMode>Equals</ComparisonMode>
+          <Enabled>false</Enabled>
+        </Breakpoint>
+        <Plot>false</Plot>
+        <IsCollapsed>false</IsCollapsed>
+      </LiveVariable>
+      <LiveVariable>
+        <Expression>temperature</Expression>
+        <Type>UInt32</Type>
         <Enabled>true</Enabled>
         <Breakpoint>
           <ComparisonMode>Equals</ComparisonMode>
