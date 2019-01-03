@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 	 
 extern I2C_HandleTypeDef hi2c1;
-extern uint8_t giroBuffer[6];
-extern uint8_t accelBuffer[6];	 
+extern uint8_t gyroBuffer[12]; 
 
 void initGiro(void);
 void readGyro();

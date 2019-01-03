@@ -32,6 +32,8 @@ volatile char* outp;
 int state = STATE_INITIAL;
 bool flagSpiFrameReceived = false;
 void ProcessIncoming();
+void ProcessGyro();
+void ProcessAdc();
 
 int main(void)
 {
@@ -42,9 +44,9 @@ int main(void)
 	MX_GPIO_Init();
 	MX_DMA_Init();
 	initGiro();
-	//MX_SPI1_Init();
-	//MX_USART1_UART_Init();
-	//MX_ADC_Init();
+	MX_SPI1_Init();
+	MX_USART1_UART_Init();
+	initAdc();
 
 	GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
 	GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
@@ -71,6 +73,8 @@ int main(void)
 				GPIOB->BRR |= PIN_READY_TO_RECEIVE;
 			
 				ProcessIncoming();
+				ProcessGyro();
+				ProcessAdc();
 			
 				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
 				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
@@ -103,6 +107,10 @@ int main(void)
 			flagSpiFrameReceived = false;
 		}
 		
+		// check status of ADC on each loop
+		// if conversion is ready, save it in either current or voltage variable
+		readAdc();
+		
 //		switch (state)
 //		{
 //		case STATE_INITIAL:
@@ -134,15 +142,19 @@ void OutputUsartLine() {
 		*outp++ = ch = *p++;
 	} while (ch && ch != '\n' && (p - usartInBuffer) < usartBufferSize && (outp - spiOutBuffer) < spiBufferSize);
 }
-void WriteByte(uint8_t byte){
-	uint8_t b1 = (byte >> 4) & 0x0F;
-	uint8_t b2 = byte & 0x0F;
+void WriteByte(uint8_t value) {
+	uint8_t b1 = (value >> 4) & 0x0F;
+	uint8_t b2 = value & 0x0F;
 	
 	if (b1 <= 9) *outp++ = '0' + b1;
 	else *outp++ = '7' + b1;
 	
 	if (b2 <= 9) *outp++ = '0' + b2;
 	else *outp++ = '7' + b2;
+}
+void WriteShort(uint16_t value) {
+	WriteByte((uint8_t)(value >> 8));
+	WriteByte((uint8_t)(value & 0xFF));
 }
 bool ReadByte(uint8_t* output) {
 	uint8_t b1;
@@ -209,6 +221,20 @@ void ProcessIncoming() {
 			continue;
 		}		
 	}
+}
+void ProcessGyro(){
+	readGyro();
+	
+	for (int i = 0; i < 12; i++)
+		WriteByte(gyroBuffer[i]);
+	
+	*outp++ = '\n';
+}
+void ProcessAdc(){
+	WriteShort(adcCurrent);
+	WriteShort(adcVoltage);
+	
+	*outp++ = '\n';
 }
 
 void _Error_Handler(const char * file, int line){

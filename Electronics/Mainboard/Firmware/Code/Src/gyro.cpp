@@ -9,15 +9,15 @@ DMA_HandleTypeDef hdma_i2c1_rx;
 
 // timer frequency for giro reading
 
-const uint32_t GIRO_PERIOD = 1000;
-const uint32_t GIRO_PRESCALER = 48000;
+//const uint32_t GIRO_PERIOD = 1000;
+//const uint32_t GIRO_PRESCALER = 48000;
 
-extern "C"
-void TIM3_IRQHandler(void) {
-	TIM3->SR &= ~TIM_SR_UIF;
-	
-	readGyro();
-}
+//extern "C"
+//void TIM3_IRQHandler(void) {
+//	TIM3->SR &= ~TIM_SR_UIF;
+//	
+//	readGyro();
+//}
 
 void initDevice(){
 	uint8_t reg;
@@ -72,18 +72,18 @@ void initGiro(void) {
 	
 	initDevice();
 
-	// timer
-	
-	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;					// enable timer 3
-	
-	TIM3->ARR = GIRO_PERIOD;							// tim3 period
-	TIM3->PSC = GIRO_PRESCALER;							// prescaler
-
-	TIM3->DIER |= TIM_DIER_UIE;							// enable update interrupt
-	TIM3->CR1 |= TIM_CR1_CEN;							// enable timer 3	
-	
-	HAL_NVIC_SetPriority(TIM3_IRQn, 1, 1);
-	HAL_NVIC_EnableIRQ(TIM3_IRQn);
+//	// timer
+//	
+//	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;					// enable timer 3
+//	
+//	TIM3->ARR = GIRO_PERIOD;							// tim3 period
+//	TIM3->PSC = GIRO_PRESCALER;							// prescaler
+//
+//	TIM3->DIER |= TIM_DIER_UIE;							// enable update interrupt
+//	TIM3->CR1 |= TIM_CR1_CEN;							// enable timer 3	
+//	
+//	HAL_NVIC_SetPriority(TIM3_IRQn, 1, 1);
+//	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle) {
 
