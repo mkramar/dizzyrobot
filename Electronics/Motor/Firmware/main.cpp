@@ -30,7 +30,8 @@ int main(void) {
 	while (true){
 		spiCurrentAngleInternal = spiReadAngleInternal();
 		spiCurrentAngleExternal = spiReadAngleExternal();
-		setPwmTorque();
+		if (tempShutdown) setPwm(0, 0);
+		else setPwmTorque();
 		
 		if (usartDmaSendRequested && !usartDmaSendBusy)
 		{

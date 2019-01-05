@@ -3,11 +3,17 @@
 
 const uint32_t TEMP_PERIOD = 1000;
 const uint32_t TEMP_PRESCALER = 48000;
+const uint8_t	TEMP_CUTOFF = 60;
+const uint8_t	TEMP_RELEASE = 55;
+const uint8_t	TEMP_READINGS = 5;
 
 #define TEMP110_CAL_ADDR TEMPSENSOR_CAL2_ADDR
 #define TEMP30_CAL_ADDR TEMPSENSOR_CAL1_ADDR
 
-int32_t temperature; // temperature in degrees Celsius
+int temperature; // temperature in degrees Celsius
+bool tempShutdown = false;
+int readingsAbove = 0;
+int readingsBelow = 0;
 
 extern "C"
 void TIM3_IRQHandler(void) {
@@ -20,6 +26,24 @@ void TIM3_IRQHandler(void) {
 	int calib110 = (int) *TEMP110_CAL_ADDR;
 	
 	temperature = (sensor - calib30) * (110 - 30) / (calib110 - calib30) + 30;
+	
+	if (temperature > TEMP_CUTOFF)
+	{
+		readingsAbove++;
+		if (readingsAbove > TEMP_READINGS) 
+		{
+			tempShutdown = true;
+			usartTorqueCommandValue = 0;
+		}
+	}
+	else readingsAbove = 0;
+	
+	if (temperature < TEMP_RELEASE)
+	{
+		readingsBelow++;
+		if (readingsBelow > TEMP_READINGS) tempShutdown = false;
+	}
+	else readingsBelow = 0;
 }
 
 void initTemperature(){

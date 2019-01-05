@@ -56,6 +56,8 @@ int getElectricDegrees();
 // temperature ----------------------------------------------------------------
 
 void initTemperature();
+extern int temperature;
+extern bool tempShutdown;
 
 // status ---------------------------------------------------------------------
 
