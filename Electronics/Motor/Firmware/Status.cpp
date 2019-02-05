@@ -17,8 +17,8 @@ void stopIdTimer()
 }
 
 
-void blinkId(bool onOff) {
-	if (onOff)
+void setStatus(bool blink) {
+	if (blink)
 	{
 		// PA-0 configure as led timer 2 blinker
 		

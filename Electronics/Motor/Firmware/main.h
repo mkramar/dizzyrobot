@@ -61,7 +61,7 @@ extern bool tempShutdown;
 
 // status ---------------------------------------------------------------------
 
-void blinkId(bool onOff);
+void setStatus(bool blink);
 
 // spi ------------------------------------------------------------------------
 

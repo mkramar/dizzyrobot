@@ -85,8 +85,8 @@ void initSpi() {
 	
 	// send calibration value
 	
-	SpiWriteReadInternal(CMD_WRITE | REG_BCT | 160);	// correction value=160
-	SpiWriteReadInternal(CMD_WRITE | REG_AXIS | AXIS_Y);// correction axis=Y
+	SpiWriteReadInternal(CMD_WRITE | REG_BCT | 255);
+	SpiWriteReadInternal(CMD_WRITE | REG_AXIS | AXIS_X);
 	
 	int readBct = SpiWriteReadInternal(CMD_READ | REG_BCT) & 0xFF;
 	int readAxis = SpiWriteReadInternal(CMD_READ | REG_AXIS) & 0xFF;

@@ -5,7 +5,8 @@ int ensureConfigured() {
 	bool idConfigured = config->controllerId != 0 && config->controllerId != -1;
 	
 	if (!calibConfigured) calibrate();
-	if (!idConfigured) blinkId(true);
+	
+	setStatus(!idConfigured);
 }
 
 //

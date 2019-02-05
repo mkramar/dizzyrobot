@@ -225,7 +225,7 @@ bool processIdentity() {
 	lc.controllerId = value;
 	
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
-	blinkId(false);
+	setStatus(false);
 	
 	return true;	
 }
