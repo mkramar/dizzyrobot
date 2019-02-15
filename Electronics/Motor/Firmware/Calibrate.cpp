@@ -178,12 +178,32 @@ void calibrateExternal() {
 			qExt[q][0] += qExt[q][p];
 
 		qExt[q][0] /= poles;
-	}	
+	}
+	
+	// up or down?
+	int nUp = 0;
+	int nDn = 0;
+	
+	for (q = 0; q < numExternalQuadrants - 1; q++)
+	{
+		int d = qExt[q + 1][0] - qExt[q][0];
+		if (d > 0 && d < SENSOR_MAX / 2) nUp++;
+		else nDn++;
+	}
+	
+	up = nUp > nDn;
 	
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
 		int qThis = qExt[q][0];
 		int qNext = qExt[(q + 1) % numExternalQuadrants][0];
+		
+		if (!up)
+		{
+			int tmp = qThis;
+			qThis = qNext;
+			qNext = tmp;
+		}
 		
 		lc.externalQuadrants[q].minAngle = qThis;
 		
@@ -443,7 +463,7 @@ void calibrateInternal() {
 	
 	// store in flash
 	lc.calibrated = 1;
-	lc.up = up;
+	//lc.up = up;
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
 }
 
