@@ -37,6 +37,93 @@ int getElectricDegrees() {
 	return a;
 }
 
+int detectQuadrant(int sensor) {
+	static int prevSensor = -1;
+	static int prevQuadrant = -1;
+	
+	int q = sensor / quadrantDivExternal;
+	
+	if (q == numExternalQuadrants) return -1;
+	
+	if (q != prevQuadrant && (sensor - prevSensor > 1000 || sensor - prevSensor < -1000))
+	{
+//		if (prevQuadrant != -1 && 
+//			(q - prevQuadrant < -1 || q - prevQuadrant > 1) &&
+//			q - prevQuadrant != numExternalQuadrants - 1 &&
+//			q - prevQuadrant != -(numExternalQuadrants - 1))
+//		{
+//			int a = q * sensor;	
+//		}
+		
+		prevQuadrant = q;
+		prevSensor = sensor;
+		return q;
+	}
+	
+	return -1;
+}
+
+int average(int a, int b){
+	int diff = a - b;
+			
+	if (diff > SENSOR_MAX / 2) b += SENSOR_MAX;
+	if (diff < -SENSOR_MAX / 2) b -= SENSOR_MAX;
+	
+	return (a + b) / 2;
+}
+void average(int data[numExternalQuadrants][maxPoles]){
+	int q;
+	int p;
+	
+	for (q = 0; q < numExternalQuadrants; q++)
+	{
+		// make sure no negatives
+		
+		for (p = 0; p < maxPoles; p++)
+			if (data[q][p] < 0) data[q][p] += SENSOR_MAX;
+		
+		// save first element because others are compared against it
+		
+		if (data[q][0] == 0 && data[q][1] != 0) data[q][0] = data[q][1];
+		
+		// fix overflows
+		
+		for (p = 1; p < maxPoles; p++)
+		{
+			if (data[q][p] != 0)
+			{
+				int interPoleDiff = data[q][0] - data[q][p];
+			
+				if (interPoleDiff > SENSOR_MAX / 2) data[q][p] += SENSOR_MAX;
+				if (interPoleDiff < -SENSOR_MAX / 2) data[q][p] -= SENSOR_MAX;
+			}
+		}	
+	}
+	
+	// average non-zeros
+	
+	for (q = 0; q < numExternalQuadrants; q++)
+	{
+		int n = 1;
+		
+		for (int p = 1; p < maxPoles; p++)
+		{
+			if (data[q][p] > 0)
+			{
+				data[q][0] += data[q][p];
+				n++;
+			}
+		}
+
+		data[q][0] /= n;
+	}	
+	
+	for (q = 0; q < numExternalQuadrants; q++)
+	{
+		if (data[q][0] < 0) data[q][0] += SENSOR_MAX;
+	}	
+}
+
 void calibrateExternal() {
 	const int step = 5;
 	int a = 0;
@@ -52,20 +139,21 @@ void calibrateExternal() {
 	int firstQ = -1;
 	int targetA;
 	
-	int qExt[numExternalQuadrants][maxPoles * 2] = { 0 };
+	int qExtUp[numExternalQuadrants][maxPoles] = { 0 };
+	int qExtDn[numExternalQuadrants][maxPoles] = { 0 };
 
 	// gently set 0 angle
-	
+
 	for (int p = 0; p < calibPower / 10; p++)
 	{
 		delay(1);
 		setPwm(0, p * 10);
 	}
-	
+
 	delay(500);
-	
-	// find the edge of the pole
-	
+
+	// find the edge of the quadrant
+
 	while (a < sin_period)
 	{		
 		a += step;
@@ -73,33 +161,40 @@ void calibrateExternal() {
 		setPwm(a, calibPower);				
 	}
 	a = 0;
+
+	external = spiReadAngleExternal();
+	while (detectQuadrant(external) == -1)
+	{
+		external = spiReadAngleExternal();
+		a += step;
+		delay(1);
+		setPwm(a, calibPower);		
+	}
 	
 	// full turn up
 	
 	for (p = 0; p < maxPoles; p++)
 	{
-		for (q = 0; q < numExternalQuadrants; q++)
+		for (i = 0; i < numExternalQuadrants;)
 		{
-			targetA = a + externalQuadrantSize;
-			
-			while (a < targetA)
+			external = spiReadAngleExternal();
+			q = detectQuadrant(external);
+			if (q != -1)
 			{
-				a += step;
-				delay(1);
-				setPwm(a, calibPower);				
+				qExtUp[q][p] = a % sin_period;
+				i++;
 			}
 			
-			external = spiReadAngleExternal();
-			qExt[q][p] = external;
+			a += step;
+			delay(1);
+			setPwm(a, calibPower);				
 		}
-		
-		a = p * sin_period;
 	}
-	
+
 	poles = p;
 	
 	// slightly up and down
-	
+
 	targetA = a + sin_period;
 	while (a < targetA)
 	{		
@@ -114,31 +209,36 @@ void calibrateExternal() {
 		delay(1);
 		setPwm(a, calibPower);				
 	}
-	
-	// full turn down
-	
-	for (; p < maxPoles * 2; p++)
+	while (detectQuadrant(external) == -1)
 	{
-		for (q = numExternalQuadrants - 1; q >= 0; q--)
+		external = spiReadAngleExternal();
+		a -= step;
+		delay(1);
+		setPwm(a, calibPower);		
+	}
+
+	// full turn down
+
+	for (p = 0; p < maxPoles; p++)
+	{
+		for (i = numExternalQuadrants - 1; i >= 0;)
 		{
 			external = spiReadAngleExternal();
-			qExt[q][p] = external;
-			
-			targetA = a - externalQuadrantSize;
-			
-			while (a > targetA)
+			q = detectQuadrant(external);
+			if (q != -1)
 			{
-				a -= step;
-				delay(1);
-				setPwm(a, calibPower);				
+				qExtDn[q][p] = a % sin_period;
+				i--;
 			}
+			
+			a -= step;
+			delay(1);
+			setPwm(a, calibPower);
 		}
-		
-		a = ((poles - 1) * 2 - p) * sin_period;
 	}	
-	
+
 	// gently release
-	
+
 	for (int p = calibPower / 10; p > 0; p--)
 	{
 		delay(1);
@@ -149,36 +249,6 @@ void calibrateExternal() {
 	
 	ConfigData lc;
 	lc.controllerId = config->controllerId;	
-		
-	// prepare external data
-	
-	for (q = 0; q < numExternalQuadrants; q++)
-	{
-		// see if this quadrant is split
-		
-		for (int p = 1; p < poles; p++)
-		{
-			int interPoleDiff = qExt[q][0] - qExt[q][p];
-			if (interPoleDiff > SENSOR_MAX / 2)
-			{
-				qExt[q][p] += SENSOR_MAX;
-			}
-			if (interPoleDiff < - SENSOR_MAX / 2)
-			{
-				qExt[q][p] -= SENSOR_MAX;
-			}
-		}
-	}
-	
-	// average over all poles
-	
-	for (q = 0; q < numExternalQuadrants; q++)
-	{
-		for (int p = 1; p < poles; p++)
-			qExt[q][0] += qExt[q][p];
-
-		qExt[q][0] /= poles;
-	}
 	
 	// up or down?
 	int nUp = 0;
@@ -186,25 +256,37 @@ void calibrateExternal() {
 	
 	for (q = 0; q < numExternalQuadrants - 1; q++)
 	{
-		int d = qExt[q + 1][0] - qExt[q][0];
+		int d = qExtUp[q + 1][0] - qExtUp[q][0];
 		if (d > 0 && d < SENSOR_MAX / 2) nUp++;
 		else nDn++;
 	}
 	
 	up = nUp > nDn;
 	
+	// correct overflows and average
+	
+	average(qExtUp);
+	average(qExtDn);
+	
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
-		int qThis = qExt[q][0];
-		int qNext = qExt[(q + 1) % numExternalQuadrants][0];
+		int a1 = q;
+		int a2 = (q - 1);
+		if (a2 < 0) a2 = numExternalQuadrants - 1;
 		
-		if (!up)
-		{
-			int tmp = qThis;
-			qThis = qNext;
-			qNext = tmp;
-		}
+		int b1 = (q + 1) % numExternalQuadrants;
+		int b2 = q;
 		
+		int qThis = average(qExtUp[a1][0], qExtDn[a2][0]);
+		int qNext = average(qExtUp[b1][0], qExtDn[b2][0]);
+		
+//		if (!up)
+//		{
+//			int tmp = qThis;
+//			qThis = qNext;
+//			qNext = tmp;
+//		}
+//		
 		lc.externalQuadrants[q].minAngle = qThis;
 		
 		if (qNext < qThis)
@@ -216,7 +298,6 @@ void calibrateExternal() {
 	}
 	
 	// store in flash
-	lc.calibrated = 1;
 	lc.up = up;
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
 }
@@ -463,7 +544,6 @@ void calibrateInternal() {
 	
 	// store in flash
 	lc.calibrated = 1;
-	//lc.up = up;
 	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
 }
 
