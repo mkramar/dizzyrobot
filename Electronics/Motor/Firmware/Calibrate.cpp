@@ -5,7 +5,9 @@ const int maxPoles = 21;
 const int calibPower = sin_range/2;
 const int quadrantDivExternal = SENSOR_MAX / numExternalQuadrants;
 const int quadrantDivInternal = SENSOR_MAX / numInternalQuadrants;
-	
+int q1 = -1;
+int q2 = -1;
+
 ConfigData* config = (ConfigData*)flashPageAddress;
 
 int currentPole = 0;
@@ -37,30 +39,39 @@ int getElectricDegrees() {
 	return a;
 }
 
+bool above(int a, int b) {
+	if (a > b) return true;
+	if (a == 0 && b == numExternalQuadrants - 1) return true;
+	return false;
+}
+
+bool below(int a, int b) {
+	return above(b, a);
+}
+
 int detectQuadrant(int sensor) {
-	static int prevSensor = -1;
-	static int prevQuadrant = -1;
-	
 	int q = sensor / quadrantDivExternal;
+	bool ready = q1 != -1 && q2 != -1;
+	bool good = false;
 	
 	if (q == numExternalQuadrants) return -1;
+	//q %= numExternalQuadrants;
 	
-	if (q != prevQuadrant && (sensor - prevSensor > 1000 || sensor - prevSensor < -1000))
+	if (q != q1)
 	{
-//		if (prevQuadrant != -1 && 
-//			(q - prevQuadrant < -1 || q - prevQuadrant > 1) &&
-//			q - prevQuadrant != numExternalQuadrants - 1 &&
-//			q - prevQuadrant != -(numExternalQuadrants - 1))
-//		{
-//			int a = q * sensor;	
-//		}
-		
-		prevQuadrant = q;
-		prevSensor = sensor;
-		return q;
+		if (q != q2)
+		{
+			if (q2 == -1 || above(q, q1) && above(q1, q2) || below(q, q1) && below(q1, q2))
+			{
+				q2 = q1;
+				q1 = q;
+				good = true;
+			}
+		}
 	}
 	
-	return -1;
+	if (good && ready) return q;
+	else return -1;
 }
 
 int average(int a, int b){
@@ -71,57 +82,46 @@ int average(int a, int b){
 	
 	return (a + b) / 2;
 }
-void average(int data[numExternalQuadrants][maxPoles]){
-	int q;
+void average(int data[maxPoles]){
 	int p;
-	
-	for (q = 0; q < numExternalQuadrants; q++)
+
+	// make sure no negatives
+		
+	for (p = 0; p < maxPoles; p++)
+		if (data[p] < 0) data[p] += SENSOR_MAX;
+		
+	// save first element because others are compared against it
+		
+	if (data[0] == 0 && data[1] != 0) data[0] = data[1];
+		
+	// fix overflows
+		
+	for (p = 1; p < maxPoles; p++)
 	{
-		// make sure no negatives
-		
-		for (p = 0; p < maxPoles; p++)
-			if (data[q][p] < 0) data[q][p] += SENSOR_MAX;
-		
-		// save first element because others are compared against it
-		
-		if (data[q][0] == 0 && data[q][1] != 0) data[q][0] = data[q][1];
-		
-		// fix overflows
-		
-		for (p = 1; p < maxPoles; p++)
+		if (data[p] != 0)
 		{
-			if (data[q][p] != 0)
-			{
-				int interPoleDiff = data[q][0] - data[q][p];
+			int interPoleDiff = data[0] - data[p];
 			
-				if (interPoleDiff > SENSOR_MAX / 2) data[q][p] += SENSOR_MAX;
-				if (interPoleDiff < -SENSOR_MAX / 2) data[q][p] -= SENSOR_MAX;
-			}
-		}	
+			if (interPoleDiff > SENSOR_MAX / 2) data[p] += SENSOR_MAX;
+			if (interPoleDiff < -SENSOR_MAX / 2) data[p] -= SENSOR_MAX;
+		}
 	}
 	
 	// average non-zeros
-	
-	for (q = 0; q < numExternalQuadrants; q++)
-	{
-		int n = 1;
-		
-		for (int p = 1; p < maxPoles; p++)
-		{
-			if (data[q][p] > 0)
-			{
-				data[q][0] += data[q][p];
-				n++;
-			}
-		}
 
-		data[q][0] /= n;
-	}	
-	
-	for (q = 0; q < numExternalQuadrants; q++)
+	int n = 1;
+		
+	for (int p = 1; p < maxPoles; p++)
 	{
-		if (data[q][0] < 0) data[q][0] += SENSOR_MAX;
-	}	
+		if (data[p] > 0)
+		{
+			data[0] += data[p];
+			n++;
+		}
+	}
+
+	data[0] /= n;
+	if (data[0] < 0) data[0] += SENSOR_MAX;
 }
 
 void calibrateExternal() {
@@ -209,6 +209,10 @@ void calibrateExternal() {
 		delay(1);
 		setPwm(a, calibPower);				
 	}
+	
+	q1 = -1;
+	q2 = -1;
+	
 	while (detectQuadrant(external) == -1)
 	{
 		external = spiReadAngleExternal();
@@ -265,28 +269,41 @@ void calibrateExternal() {
 	
 	// correct overflows and average
 	
-	average(qExtUp);
-	average(qExtDn);
+	for (q = 0; q < numExternalQuadrants; q++) average(qExtUp[q]);
+	for (q = 0; q < numExternalQuadrants; q++) average(qExtDn[q]);
 	
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
-		int a1 = q;
-		int a2 = (q - 1);
-		if (a2 < 0) a2 = numExternalQuadrants - 1;
+		int a1, a2, b1, b2;
 		
-		int b1 = (q + 1) % numExternalQuadrants;
-		int b2 = q;
+		if (up)
+		{
+			a1 = q;
+			a2 = (q - 1);
+			if (a2 < 0) a2 = numExternalQuadrants - 1;
+		
+			b1 = (q + 1) % numExternalQuadrants;
+			b2 = q;
+		}
+		else
+		{
+			a1 = q;
+			a2 = (q + 1) % numExternalQuadrants;
+			
+			b1 = (q + 1) % numExternalQuadrants;
+			b2 = (q + 2) % numExternalQuadrants;			
+		}
 		
 		int qThis = average(qExtUp[a1][0], qExtDn[a2][0]);
 		int qNext = average(qExtUp[b1][0], qExtDn[b2][0]);
 		
-//		if (!up)
-//		{
-//			int tmp = qThis;
-//			qThis = qNext;
-//			qNext = tmp;
-//		}
-//		
+		if (!up)
+		{
+			int tmp = qThis;
+			qThis = qNext;
+			qNext = tmp;
+		}
+		
 		lc.externalQuadrants[q].minAngle = qThis;
 		
 		if (qNext < qThis)
