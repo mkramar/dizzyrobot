@@ -18,13 +18,10 @@ int main(void) {
 	initSysTick();
 	initTemperature();
 	initPwm();
-	
-	//calibrate();
-	delay(2000);
+
+	//delay(2000);
 	
 	ensureConfigured();
-	
-	//usartTorqueCommandValue = -250;	
 	
 	usartDmaSendRequested = false;
 

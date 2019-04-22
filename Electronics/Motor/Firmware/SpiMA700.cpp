@@ -83,13 +83,26 @@ void initSpi() {
 //		
 	SPI1->CR1 |= SPI_CR1_SPE;					// SPI enable
 	
-	// send calibration value
+	for (int i = 0; i < 4; i++)					// not sure why but once does not seem to be enough
+	{
+		// calibrate internal sensor
+		// same calibration value for big and small motor because geometry is the same
 	
-	SpiWriteReadInternal(CMD_WRITE | REG_BCT | 255);
-	SpiWriteReadInternal(CMD_WRITE | REG_AXIS | AXIS_X);
+		SpiWriteReadInternal(CMD_WRITE | REG_AXIS | AXIS_X);
+		SpiWriteReadInternal(CMD_WRITE | REG_BCT | 255);
 	
-	int readBct = SpiWriteReadInternal(CMD_READ | REG_BCT) & 0xFF;
-	int readAxis = SpiWriteReadInternal(CMD_READ | REG_AXIS) & 0xFF;
+		int readBct = SpiWriteReadInternal(CMD_READ | REG_BCT) & 0xFF;
+		int readAxis = SpiWriteReadInternal(CMD_READ | REG_AXIS) & 0xFF;
+	
+		// calibrate external sensor
+		// small motor's optimal value is 165, big motor's is ???
+	
+		SpiWriteReadExternal(CMD_WRITE | REG_AXIS | AXIS_X);
+		SpiWriteReadExternal(CMD_WRITE | REG_BCT | 165);
+	
+		readBct = SpiWriteReadExternal(CMD_READ | REG_BCT) & 0xFF;
+		readAxis = SpiWriteReadExternal(CMD_READ | REG_AXIS) & 0xFF;
+	}
 }
 
 int spiReadAngleInternal() {
