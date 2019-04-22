@@ -74,6 +74,22 @@ int detectQuadrant(int sensor) {
 	else return -1;
 }
 
+void prepareToReverse(){
+	int nq2 = -1;
+	
+	if (above(q1, q2))
+	{
+		nq2 = (q1 + 1) % numExternalQuadrants;
+	}
+	else
+	{
+		nq2 = q1 - 1;
+		if (nq2 < 0) nq2 += numExternalQuadrants;
+	}
+	
+	q2 = nq2;
+}
+
 int average(int a, int b){
 	int diff = a - b;
 			
@@ -132,7 +148,6 @@ void calibrateExternal() {
 	
 	bool up;
 	int q = 0;
-	int poles;
 	int q1;
 	int p = 0;
 	int prevQ = -1;
@@ -173,7 +188,7 @@ void calibrateExternal() {
 	
 	// full turn up
 	
-	for (p = 0; p < maxPoles; p++)
+	for (p = 0; ; p++)
 	{
 		for (i = 0; i < numExternalQuadrants;)
 		{
@@ -181,6 +196,7 @@ void calibrateExternal() {
 			q = detectQuadrant(external);
 			if (q != -1)
 			{
+				if (p == maxPoles) goto reverse;
 				qExtUp[q][p] = a % sin_period;
 				i++;
 			}
@@ -190,40 +206,13 @@ void calibrateExternal() {
 			setPwm(a, calibPower);				
 		}
 	}
-
-	poles = p;
 	
-	// slightly up and down
-
-	targetA = a + sin_period;
-	while (a < targetA)
-	{		
-		a += step;
-		delay(1);
-		setPwm(a, calibPower);				
-	}
-	targetA = a - sin_period;
-	while (a > targetA)
-	{		
-		a -= step;
-		delay(1);
-		setPwm(a, calibPower);				
-	}
+reverse:	
+	prepareToReverse();
 	
-	q1 = -1;
-	q2 = -1;
-	
-	while (detectQuadrant(external) == -1)
-	{
-		external = spiReadAngleExternal();
-		a -= step;
-		delay(1);
-		setPwm(a, calibPower);		
-	}
-
 	// full turn down
 
-	for (p = 0; p < maxPoles; p++)
+	for (p = 0; ; p++)
 	{
 		for (i = numExternalQuadrants - 1; i >= 0;)
 		{
@@ -231,6 +220,7 @@ void calibrateExternal() {
 			q = detectQuadrant(external);
 			if (q != -1)
 			{
+				if (p == maxPoles) goto release;
 				qExtDn[q][p] = a % sin_period;
 				i--;
 			}
@@ -241,6 +231,7 @@ void calibrateExternal() {
 		}
 	}	
 
+release:
 	// gently release
 
 	for (int p = calibPower / 10; p > 0; p--)
