@@ -180,7 +180,7 @@ void calibrateExternal() {
 	{
 		external = spiReadAngleExternal();
 		a += step;
-		delay(1);
+		//delay(1);
 		setPwm(a, calibPower);		
 	}
 	
@@ -200,7 +200,7 @@ void calibrateExternal() {
 			}
 			
 			a += step;
-			delay(1);
+			//delay(1);
 			setPwm(a, calibPower);				
 		}
 	}
@@ -224,7 +224,7 @@ reverse:
 			}
 			
 			a -= step;
-			delay(1);
+			//delay(1);
 			setPwm(a, calibPower);
 		}
 	}	
@@ -263,26 +263,12 @@ release:
 	
 	for (q = 0; q < numExternalQuadrants; q++)
 	{
-		int a1, a2, b1, b2;
+		int a1 = q;
+		int a2 = (q - 1);
+		if (a2 < 0) a2 = numExternalQuadrants - 1;
 		
-//		if (up)
-//		{
-//			a1 = q + 1;
-//			a2 = (q + 2) % numExternalQuadrants;
-//			
-//			b1 = (q + 2) % numExternalQuadrants;
-//			b2 = (q + 3) % numExternalQuadrants;			
-//		}
-//		else
-		{
-			// good
-			a1 = q;
-			a2 = (q - 1);
-			if (a2 < 0) a2 = numExternalQuadrants - 1;
-		
-			b1 = (q + 1) % numExternalQuadrants;
-			b2 = q;
-		}
+		int b1 = (q + 1) % numExternalQuadrants;
+		int b2 = q;
 		
 		int qThis = average(qExtUp[a1][0], qExtDn[a2][0]);
 		int qNext = average(qExtUp[b1][0], qExtDn[b2][0]);

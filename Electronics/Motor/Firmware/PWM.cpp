@@ -145,12 +145,12 @@ void setPwmTorque() {
 	
 	if (usartTorqueCommandValue > 0)
 	{
-		a += ninetyDeg;
+		a += config->up ? ninetyDeg : -ninetyDeg;
 		setPwm(a, usartTorqueCommandValue);
 	}
 	else
 	{
-		a -= ninetyDeg;
+		a -= config->up ? ninetyDeg : -ninetyDeg;
 		setPwm(a, -usartTorqueCommandValue);
 	}
 }
