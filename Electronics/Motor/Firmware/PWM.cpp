@@ -4,7 +4,7 @@ const int timer_scale = 7;
 const int sin_zero = sin_range / 2;
 const int phase2 = sin_period / 3;
 const int phase3 = sin_period * 2 / 3;
-const int ninetyDeg = sin_period / 4/* + sin_period / 8*/;
+const int ninetyDeg = sin_period / 4/* + sin_period / 6*/;
 
 /// A sine approximation via a third-order approx.
 /// @param x    Angle (with 2^15 units/circle)

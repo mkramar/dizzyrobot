@@ -21,18 +21,16 @@ int getElectricDegrees() {
 	int a;
 	int q = angle / quadrantDivExternal;
 	int range = config->externalQuadrants[q].range;
-	int qstart;
+	int qstart = q * quadrantDivExternal;
 	
 	if (config->up)
 	{
 		int min = config->externalQuadrants[q].minAngle;
-		qstart = q * quadrantDivExternal;
 		a = min + (angle - qstart) * range / quadrantDivExternal;
 	}
 	else
 	{
 		int max = config->externalQuadrants[q].maxAngle;
-		qstart = q * quadrantDivExternal;
 		a = max - (angle - qstart) * range / quadrantDivExternal;
 	}
 	
@@ -70,7 +68,7 @@ int detectQuadrant(int sensor) {
 		}
 	}
 	
-	if (good && ready) return q;
+	if (good && ready) return q1;
 	else return -1;
 }
 
@@ -267,22 +265,23 @@ release:
 	{
 		int a1, a2, b1, b2;
 		
-		if (up)
+//		if (up)
+//		{
+//			a1 = q + 1;
+//			a2 = (q + 2) % numExternalQuadrants;
+//			
+//			b1 = (q + 2) % numExternalQuadrants;
+//			b2 = (q + 3) % numExternalQuadrants;			
+//		}
+//		else
 		{
+			// good
 			a1 = q;
 			a2 = (q - 1);
 			if (a2 < 0) a2 = numExternalQuadrants - 1;
 		
 			b1 = (q + 1) % numExternalQuadrants;
 			b2 = q;
-		}
-		else
-		{
-			a1 = q;
-			a2 = (q + 1) % numExternalQuadrants;
-			
-			b1 = (q + 1) % numExternalQuadrants;
-			b2 = (q + 2) % numExternalQuadrants;			
 		}
 		
 		int qThis = average(qExtUp[a1][0], qExtDn[a2][0]);
