@@ -44,14 +44,22 @@ void writeFlash(uint16_t* data, int count) {
 		else
 		{
 			// todo: something went wrong
+			for (;;) {}
 		}		
 	}
 	
 	FLASH->CR &= ~FLASH_CR_PG;										// disable programming
 }
+void saveControllerId(int id) {
+	ConfigData lc;
+	memcpy(&lc, config, sizeof(ConfigData));
+	lc.controllerId = id;
+	
+	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
+	setStatus(false); 
+}
 
-void memcpy(void *dst, const void *src, int count)
-{
+void memcpy(void *dst, const void *src, int count) {
 	char *d = (char*)dst;
 	const char *s = (const char*)src;
 

@@ -220,12 +220,7 @@ bool processIdentity() {
 	if (!readByte(&value)) return false;
 	if (value == mainboardId || value == broadcastId) return false;
 	
-	ConfigData lc;
-	memcpy(&lc, config, sizeof(ConfigData));
-	lc.controllerId = value;
-	
-	writeFlash((uint16_t*)&lc, sizeof(ConfigData) / sizeof(uint16_t));
-	setStatus(false);
+	saveControllerId(value);
 	
 	return true;	
 }

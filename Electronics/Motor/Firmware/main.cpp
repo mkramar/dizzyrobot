@@ -22,6 +22,7 @@ int main(void) {
 	//delay(2000);
 	
 	ensureConfigured();
+	//saveControllerId(1);
 	
 	usartDmaSendRequested = false;
 

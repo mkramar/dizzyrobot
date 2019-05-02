@@ -124,6 +124,8 @@ void setPwm(int angle, int power) {
 //	int a2 = POSITIVE_MODULO((angle + phase2), sin_period);
 //	int a3 = POSITIVE_MODULO((angle + phase3), sin_period);
 	
+	//if (power != 0) GPIOF->BSRR = (1 << 7);				// disable stand-by mode	
+	
 	int a1 = angle % sin_period;
 	int a2 = (angle + phase2) % sin_period;
 	int a3 = (angle + phase3) % sin_period;

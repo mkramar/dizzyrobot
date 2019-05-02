@@ -9,7 +9,8 @@
 const int sin_period = (1 << 15);		// 32K or 0x8000
 const int sin_range = (1 << 13);		//  8K or 0x2000
 
-const unsigned int flashPageAddress = 0x08007800;
+//const unsigned int flashPageAddress = 0x08007800; //Page 30
+const unsigned int flashPageAddress = 0x08007C00; //Page 31
 const int numInternalQuadrants = 32;
 const int numExternalQuadrants = 6;
 const int externalQuadrantSize = sin_period / numExternalQuadrants;
@@ -89,5 +90,6 @@ void processUsartCommand();
 
 void writeFlash(uint16_t* data, int count);
 void memcpy(void *dst, const void *src, int count);
+void saveControllerId(int id);
 
 #endif
