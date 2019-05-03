@@ -48,92 +48,44 @@ int main(void)
 	MX_USART1_UART_Init();
 	initAdc();
 
-	GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
-	GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
+//	GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
+//	GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
 	
-	ScheduleSpiDmaRead();
-	state = STATE_RECEIVING;
+	//BlockingSpiRead();
+	//ScheduleSpiDmaRead();
+	//state = STATE_RECEIVING;
 	
 	while (1)
 	{
-		if (flagSpiFrameReceived)
-		{
-			SPI1->CR1 &= ~SPI_CR1_SPE;					// disable SPI
-			SPI1->CR2 &= ~SPI_CR2_RXDMAEN;
-			SPI1->CR2 &= ~SPI_CR2_TXDMAEN;
-			
-			DMA1_Channel2->CCR &= ~DMA_CCR_EN;			// disable receive DMI
-			DMA1_Channel3->CCR &= ~DMA_CCR_EN;			// disable respond DMI
-			
-			if (state == STATE_RECEIVING)
-			{
-				// master has finished sending command
-				
-				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// off both LEDs
-				GPIOB->BRR |= PIN_READY_TO_RECEIVE;
-			
-				ProcessIncoming();
-				ProcessGyro();
-				ProcessAdc();
-			
-				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
-				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
-				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;				
-				//MX_SPI1_Init();
-					
-				ScheduleSpiDmaWrite(outp - spiOutBuffer);
-				
-				GPIOB->BSRR |= PIN_READY_TO_RESPOND;	// signal ready to respond
-				
-				state = STATE_RESPONDING;
-			}
-			else
-			{
-				// master has finished reading SPI buffer
-								
-				//RCC->APB2ENR &= ~RCC_APB2ENR_SPI1EN;	// disable SPI clock
-				//RCC->APB2ENR |= RCC_APB2RSTR_SPI1RST;
-				//RCC->APB2ENR &= ~RCC_APB2RSTR_SPI1RST;
-				//MX_SPI1_Init();
-				
-				ScheduleSpiDmaRead();
-				
-				GPIOB->BRR |= PIN_READY_TO_RESPOND;		// clear respond LED
-				GPIOB->BSRR |= PIN_READY_TO_RECEIVE;	// raize receive LED
+		GPIOB->BRR |= PIN_READY_TO_RESPOND;					// clear respond flag
+		GPIOB->BSRR |= PIN_READY_TO_RECEIVE;				// raize receive flag
 	
-				state = STATE_RECEIVING;
-			}
+		SpiBlockingRead();									// read from master
+		
+		GPIOB->BRR |= PIN_READY_TO_RESPOND;					// off both LEDs
+		GPIOB->BRR |= PIN_READY_TO_RECEIVE;
 			
-			flagSpiFrameReceived = false;
-		}
+		ProcessIncoming();
+		ProcessGyro();
+		ProcessAdc();
+		
+		GPIOB->BRR |= PIN_READY_TO_RECEIVE;					// clear receive flag
+		GPIOB->BSRR |= PIN_READY_TO_RESPOND;				// raize respond flag
+		
+		SpiBlockingWrite(outp - spiOutBuffer);				// write to master
+		SpiFlushBuffers();
 		
 		// check status of ADC on each loop
 		// if conversion is ready, save it in either current or voltage variable
 		readAdc();
-		
-//		switch (state)
-//		{
-//		case STATE_INITIAL:
-////			GPIOB->BRR |= PIN_READY_TO_RESPOND;
-////			GPIOB->BSRR |= PIN_READY_TO_RECEIVE;
-////	
-////			ScheduleSpiDmaRead(spiInBuffer, spiBufferSize);
-////			state = STATE_RECEIVING;
-//			break;
-//			
-//		case STATE_RECEIVING:
-//			// nothing. DMA is doing its job.
-//			break;
-//		}
 	}
 }
 
 void Output(const char *src){
-	const char *p = src;
-	char ch;
-	do {
-		*outp++ = ch = *p++;
-	} while (ch && (outp - spiOutBuffer) < spiBufferSize);
+	while (*src && (outp - spiOutBuffer) < spiBufferSize)
+	{
+		*outp++ = *src++;
+	}
 }
 void OutputUsartLine() {
 	const char *p = (const char*)usartInBuffer;

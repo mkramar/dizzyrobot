@@ -21,6 +21,10 @@ void HandleSpiRx();
 void MX_SPI1_Init();
 void ScheduleSpiDmaRead();
 void ScheduleSpiDmaWrite(uint32_t bufferSize);
+	 
+void SpiBlockingRead();
+void SpiBlockingWrite(uint32_t bufferSize);
+void SpiFlushBuffers();
 
 #ifdef __cplusplus
 }
