@@ -236,6 +236,15 @@
     <ClCompile Include="Temperature.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Calibrate.External.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibrate.Internal.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadrantDetector.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stm32f0xx_hal_conf.h">
@@ -500,6 +509,9 @@
       <Filter>Header files\Device-specific files\HAL</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadrantDetector.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

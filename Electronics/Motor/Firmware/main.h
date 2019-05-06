@@ -11,7 +11,7 @@ const int sin_range = (1 << 13);		//  8K or 0x2000
 
 //const unsigned int flashPageAddress = 0x08007800; //Page 30
 const unsigned int flashPageAddress = 0x08007C00; //Page 31
-const int numInternalQuadrants = 32;
+const int numInternalQuadrants = 16;
 const int numExternalQuadrants = 6;
 const int externalQuadrantSize = sin_period / numExternalQuadrants;
 
@@ -49,11 +49,6 @@ void initPwm();
 void setPwm(int angle, int power);
 void setPwmTorque();
 
-// calibrate ------------------------------------------------------------------
-
-void calibrate();
-int getElectricDegrees();
-	
 // temperature ----------------------------------------------------------------
 
 void initTemperature();
@@ -74,6 +69,15 @@ extern int spiCurrentAngleExternal;
 void initSpi();
 int spiReadAngleInternal();
 int spiReadAngleExternal();
+
+// calibrate ------------------------------------------------------------------
+
+const int quadrantDivExternal = SENSOR_MAX / numExternalQuadrants;
+
+void calibrate();
+void calibrateExternal();
+void calibrateInternal();
+int getElectricDegrees();
 
 // usart ----------------------------------------------------------------------
 

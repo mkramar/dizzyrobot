@@ -293,11 +293,13 @@ _done:
 }
 
 void usartSendAngle() {
+	int linearized = 0;//LinearizeInternal(spiCurrentAngleInternal);
+	
 	outp = (char*)sendBuffer;
 	writeByte(0);												// to main controller
 	writeByte(config->controllerId);							// id of the sender	
-	writeByte((uint8_t)((spiCurrentAngleInternal >> 8) & (uint8_t)0x00FFU));
-	writeByte((uint8_t)(spiCurrentAngleInternal & (uint8_t)0x00FFU));
+	writeByte((uint8_t)((linearized >> 8) & (uint8_t)0x00FFU));
+	writeByte((uint8_t)(linearized & (uint8_t)0x00FFU));
 	*outp++ = '\r';
 	*outp++ = '\n';
 	
