@@ -24,8 +24,31 @@ int getElectricDegrees() {
 	
 	return a;
 }
+int getLinearisedAngle() {
+	int angle = spiCurrentAngleInternal;
+	
+	int a;
+	int q = angle / quadrantDivInternal;
+	int range = config->internalQuadrants[q].range;
+	int qstart = q * quadrantDivInternal;
+	
+	if (config->up)
+	{
+		int min = config->internalQuadrants[q].minAngle;
+		a = min + (angle - qstart) * range / quadrantDivInternal;
+	}
+	else
+	{
+		int max = config->internalQuadrants[q].maxAngle;
+		a = max - (angle - qstart) * range / quadrantDivInternal;
+		a = SENSOR_MAX - a;
+		if (a < 0) a += SENSOR_MAX;
+	}
+	
+	return a % SENSOR_MAX;
+}
 
 void calibrate() {
-	//calibrateExternal();
+	calibrateExternal();
 	calibrateInternal();
 }

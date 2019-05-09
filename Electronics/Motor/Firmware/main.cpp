@@ -11,6 +11,8 @@ int ensureConfigured() {
 
 //
 
+//int volatile lin;
+
 int main(void) {
 	initClockExternal();
 	initUsart();
@@ -29,6 +31,8 @@ int main(void) {
 	while (true){
 		spiCurrentAngleInternal = spiReadAngleInternal();
 		spiCurrentAngleExternal = spiReadAngleExternal();
+		//lin = getLinearisedAngle();
+		
 		if (tempShutdown) setPwm(0, 0);
 		else setPwmTorque();
 		

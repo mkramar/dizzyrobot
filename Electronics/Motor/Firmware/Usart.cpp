@@ -293,7 +293,7 @@ _done:
 }
 
 void usartSendAngle() {
-	int linearized = 0;//LinearizeInternal(spiCurrentAngleInternal);
+	int linearized = getLinearisedAngle();
 	
 	outp = (char*)sendBuffer;
 	writeByte(0);												// to main controller

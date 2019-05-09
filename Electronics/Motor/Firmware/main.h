@@ -73,11 +73,13 @@ int spiReadAngleExternal();
 // calibrate ------------------------------------------------------------------
 
 const int quadrantDivExternal = SENSOR_MAX / numExternalQuadrants;
+const int quadrantDivInternal = SENSOR_MAX / numInternalQuadrants;
 
 void calibrate();
 void calibrateExternal();
 void calibrateInternal();
 int getElectricDegrees();
+int getLinearisedAngle();
 
 // usart ----------------------------------------------------------------------
 

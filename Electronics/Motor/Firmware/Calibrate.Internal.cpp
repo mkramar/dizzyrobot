@@ -2,7 +2,6 @@
 #include <QuadrantDetector.h>
 
 const int calibPower = sin_range / 2;
-const int quadrantDivInternal = SENSOR_MAX / numInternalQuadrants;
 
 int getNumPoles() {
 	const int step = 5;
@@ -54,7 +53,7 @@ int getNumPoles() {
 }
 
 void calibrateInternal() {
-	const int step = 5;
+	const int step = 5;// config->up ? 5 : -5;
 	int a = 0;
 	int i = 0;
 	int q;
@@ -123,6 +122,19 @@ void calibrateInternal() {
 
 	setPwm(0, 0);
 	
+	// up or down?
+	int nUp = 0;
+	int nDn = 0;
+	
+	for (q = 0; q < numInternalQuadrants - 1; q++)
+	{
+		int d = qUp[q + 1] - qUp[q];
+		if (d > 0 && d < SENSOR_MAX / 2) nUp++;
+		else nDn++;
+	}
+	
+	bool up = nUp > nDn;
+	
 	//
 	
 	ConfigData lc;
@@ -135,6 +147,13 @@ void calibrateInternal() {
 		
 		int qThis = qUp[a1];
 		int qNext = qUp[b1];
+		
+		if (!up)
+		{
+			int tmp = qThis;
+			qThis = qNext;
+			qNext = tmp;
+		}
 		
 		lc.internalQuadrants[q].minAngle = qThis;
 		
