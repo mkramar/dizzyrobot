@@ -39,11 +39,17 @@ int getLinearisedAngle() {
 	}
 	else
 	{
-		int max = config->internalQuadrants[q].maxAngle;
-		a = max - (angle - qstart) * range / quadrantDivInternal;
-		a = SENSOR_MAX - a;
-		if (a < 0) a += SENSOR_MAX;
+		//THIS IS WRONG! TODO
+//		int min = config->internalQuadrants[q].minAngle;
+//		a = min + (qend - angle) * range / quadrantDivInternal;
+		
+//		int max = config->internalQuadrants[q].maxAngle;
+//		a = max - (angle - qend) * range / quadrantDivInternal;
+//		a = SENSOR_MAX - a;
+//		if (a < 0) a += SENSOR_MAX;
 	}
+	
+	//a = SENSOR_MAX - config->internalQuadrants[q].maxAngle;
 	
 	return a % SENSOR_MAX;
 }

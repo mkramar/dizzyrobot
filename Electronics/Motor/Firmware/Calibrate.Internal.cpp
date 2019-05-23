@@ -77,14 +77,12 @@ void calibrateInternal() {
 	
 	int numPoles = getNumPoles();
 
+	// since we know correct answers
+	if (numPoles > 60) numPoles = 82;// 84;
+	else numPoles = 40;// 48;
+
 //	// find the edge of the quadrant
-//
-//	while (a < sin_period)
-//	{		
-//		a += step;
-//		delay(1);
-//		setPwm(a, calibPower);				
-//	}
+
 	a = 0;
 
 	internal = spiReadAngleInternal();
@@ -97,20 +95,23 @@ void calibrateInternal() {
 	
 	// full turn up
 	
+	int aFirst = a;
+	//a = 0;
+	
 	for (i = 0; i < numInternalQuadrants;)
 	{
 		internal = spiReadAngleInternal();
 		q = detector.detectQuadrant(internal);
 		if (q != -1)
 		{
-			int trueAngle = a / numPoles;
+			int trueAngle = (a - aFirst) / numPoles;
 			qUp[q] = trueAngle;
 			i++;
 		}
 			
 		a += step;
 		setPwm(a, calibPower);				
-	}	
+	}
 	
 	// gently release
 	
@@ -121,20 +122,7 @@ void calibrateInternal() {
 	}
 
 	setPwm(0, 0);
-	
-	// up or down?
-	int nUp = 0;
-	int nDn = 0;
-	
-	for (q = 0; q < numInternalQuadrants - 1; q++)
-	{
-		int d = qUp[q + 1] - qUp[q];
-		if (d > 0 && d < SENSOR_MAX / 2) nUp++;
-		else nDn++;
-	}
-	
-	bool up = nUp > nDn;
-	
+
 	//
 	
 	ConfigData lc;
@@ -148,7 +136,7 @@ void calibrateInternal() {
 		int qThis = qUp[a1];
 		int qNext = qUp[b1];
 		
-		if (!up)
+		if (!config->up)
 		{
 			int tmp = qThis;
 			qThis = qNext;
