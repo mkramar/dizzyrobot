@@ -50,22 +50,11 @@
           <ComparisonMode>Equals</ComparisonMode>
           <Enabled>false</Enabled>
         </Breakpoint>
-        <Plot>true</Plot>
-        <IsCollapsed>false</IsCollapsed>
-      </LiveVariable>
-      <LiveVariable>
-        <Expression>spiCurrentAngleExternal</Expression>
-        <Type>SInt32</Type>
-        <Enabled>true</Enabled>
-        <Breakpoint>
-          <ComparisonMode>Equals</ComparisonMode>
-          <Enabled>false</Enabled>
-        </Breakpoint>
         <Plot>false</Plot>
         <IsCollapsed>false</IsCollapsed>
       </LiveVariable>
       <LiveVariable>
-        <Expression>lin</Expression>
+        <Expression>spiCurrentAngleExternal</Expression>
         <Type>SInt32</Type>
         <Enabled>true</Enabled>
         <Breakpoint>

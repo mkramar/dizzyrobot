@@ -27,6 +27,7 @@ int isin_S3(int x)
 
 	x = x >> (30 - qN);
 
+
 	return x * ((3 << qP) - (x*x >> qR)) >> qS;
 }
 

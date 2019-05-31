@@ -136,14 +136,25 @@ void ToEndOfLine(){
 }
 
 void UsartTransaction(uint32_t length) {
-//	BlockingUsartDmaWrite(length);
-//	bool success = BlockingUsartDmaRead();	
+	for (int i = 0; i < usartBufferSize; i++) usartInBuffer[i] = 0;
+
+	USART1->CR1 |= USART_CR1_TE;							// enable transmitter
+	USART1->CR1 |= USART_CR1_RE;							// enable receiver
+	USART1->CR1 |= USART_CR1_UE;							// enable usart	
+	USART1->ICR |= USART_ICR_CMCF;							// clear CMF flag bit
+	USART1->ICR |= USART_ICR_TCCF;							// clear transmission complete flag
+	
+	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable
+	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
+	while ((USART1->ISR & USART_ISR_BUSY) != 0) {}			// wait for busy
 	
 	BlockingUsartWrite(length);
 	bool success = BlockingUsartRead();
 	
 	if (success) OutputUsartLine();
 	else Output("timeout\n");
+	
+	//USART1->CR1 &= ~USART_CR1_UE;							// disable usart
 }
 
 void ProcessIncoming() {
@@ -153,15 +164,16 @@ void ProcessIncoming() {
 	int col = 0;
 	uint8_t b = 0;
 	
+	for (int i = 0; i < 10; i++)							// todo: why?! sometimes starts with zeros
+	{
+		if (*inp) break;
+		inp++;
+	}
+	
 	while (*inp && (inp - spiInBuffer < spiBufferSize) && (col < usartBufferSize - 1))
 	{
-		if (*inp == '\r') 
-		{
-			inp++;
-			continue;
-		}
-		
-		usartOutBuffer[col++] = *inp++;
+		if (*inp == '\r') inp++;
+		else usartOutBuffer[col++] = *inp++;
 		
 		if (*inp == '\n') 
 		{

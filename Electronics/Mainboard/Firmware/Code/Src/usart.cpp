@@ -19,11 +19,11 @@ void USART1_IRQHandler(void) {
 }
 
 void BlockingUsartWrite(uint32_t length) {
-	USART1->CR1 |= USART_CR1_TE;							// enable transmitter TODO: not needed once RE connected to DE
-	USART1->CR1 &= ~USART_CR1_RE;							// disable receiver TODO: not needed once RE connected to DE
-	USART1->CR1 |= USART_CR1_UE;							// enable usart
+	//USART1->CR1 |= USART_CR1_TE;							// enable transmitter TODO: not needed once RE connected to DE
+	//USART1->CR1 &= ~USART_CR1_RE;							// disable receiver TODO: not needed once RE connected to DE
+	//USART1->CR1 |= USART_CR1_UE;							// enable usart
 	
-	while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
+	//while ((USART1->ISR & USART_ISR_TEACK) == 0) {}			// wait for transmitter to enable
 	
 	//
 	
@@ -42,15 +42,15 @@ void BlockingUsartWrite(uint32_t length) {
 	
 	while (!(USART1->ISR & USART_ISR_TC)) {}				// wait for transfer completion
 	
-	USART1->CR1 &= ~USART_CR1_UE;							// disable usart
+	//USART1->CR1 &= ~USART_CR1_UE;							// disable usart
 }
 bool BlockingUsartRead(){
-	USART1->ICR |= USART_ICR_CMCF;							// clear CMF flag bit
-	USART1->CR1 &= ~USART_CR1_TE;							// disable transmitter TODO: not needed once RE connected to DE
-	USART1->CR1 |= USART_CR1_RE;							// enable receiver TODO: not needed once RE connected to DE
-	USART1->CR1 |= USART_CR1_UE;							// enable usart	
+	//USART1->ICR |= USART_ICR_CMCF;							// clear CMF flag bit
+	//USART1->CR1 &= ~USART_CR1_TE;							// disable transmitter TODO: not needed once RE connected to DE
+	//USART1->CR1 |= USART_CR1_RE;							// enable receiver TODO: not needed once RE connected to DE
+	//USART1->CR1 |= USART_CR1_UE;							// enable usart	
 	
-	while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable	
+	//while ((USART1->ISR & USART_ISR_REACK) == 0) {}			// wait for receiver to enable	
 	
 	//
 	
@@ -59,18 +59,25 @@ bool BlockingUsartRead(){
 	
 	for (int i = 0; i < usartBufferSize; i++)
 	{
-		while (!(USART1->ISR & USART_ISR_RXNE)) {			// wait for incoming char
-			if (uwTick - firstTick > usartReadTimeout) return false;
+		while (!(USART1->ISR & USART_ISR_RXNE)) 			// wait for incoming char
+		{
+			if (uwTick - firstTick > usartReadTimeout) 
+			{
+				return false;
+			}
 		}
 		char c = (char)USART1->RDR;							// read char
 		*p++ = c;
 		if (c == '\n') break;
-		if (uwTick - firstTick > usartReadTimeout) return false;
+		if (uwTick - firstTick > usartReadTimeout) 
+		{
+			return false;
+		}
 	}	
 	
 	//
 	
-	USART1->CR1 &= ~USART_CR1_UE;							// disable usart
+	//USART1->CR1 &= ~USART_CR1_UE;							// disable usart
 	
 	return true;
 }
@@ -227,14 +234,10 @@ void MX_USART1_UART_Init(void){
 
 	USART1->CR2 |= ('\n' << USART_CR2_ADD_Pos);				// stop char is '\n'
 	
-	NVIC_EnableIRQ(USART1_IRQn);
-	NVIC_SetPriority(USART1_IRQn, 1);
-	
-
+	//NVIC_EnableIRQ(USART1_IRQn);							// don't enable interrupt because not using DMA
+	//NVIC_SetPriority(USART1_IRQn, 1);
 }
-
-void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
-{
+void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle){
 
   GPIO_InitTypeDef GPIO_InitStruct;
   if(uartHandle->Instance==USART1)
@@ -306,9 +309,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   /* USER CODE END USART1_MspInit 1 */
   }
 }
-
-void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
-{
+void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle){
 
 //  if(uartHandle->Instance==USART1)
 //  {

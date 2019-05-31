@@ -4,6 +4,8 @@
 #include "dma.h"
 
 void SpiBlockingRead() {
+	for (int i = 0; i < spiBufferSize; i++) spiInBuffer[i] = 0;
+	
 	SPI1->CR1 |= SPI_CR1_SPE;							// enable SPI
 	while (GPIOA->IDR & 0b00010000) {}					// wait for slave chip select
 	
@@ -39,7 +41,8 @@ void SpiBlockingWrite(uint32_t bufferSize) {
 }
 void SpiFlushBuffers(){
 	while (SPI1->SR & SPI_SR_RXNE) {READ_REG(SPI1->DR); }	// clear any pending input
-	while (!(SPI1->SR & SPI_SR_TXE)) {}						// send any pending output
+	//while (!(SPI1->SR & SPI_SR_TXE)) {}						// send any pending output
+	// also try RCC_APB1RSTR -> SPI1RST
 }
 
 void ScheduleSpiDmaRead() {
