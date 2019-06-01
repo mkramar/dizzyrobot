@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Driver
 {
+    public class Motor
+    {
+        public int? Torque;
+        public int Angle;
+        public bool Success;
+
+        public override string ToString()
+        {
+            return $"T={Torque} A={Angle} {Success}";
+        }
+    }
+
     class Frame
     {
-        public class Motor
-        {
-            public int? Torque;
-            public int Angle;
-            public bool Success;
-
-            public override string ToString()
-            {
-                return $"T={Torque} A={Angle} {Success}";
-            }
-        }
-
         public Frame()
         {
             this.Motors = new Motor[12];

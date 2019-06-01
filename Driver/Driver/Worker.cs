@@ -11,10 +11,14 @@ namespace Driver
     class Worker
     {
         private Bridge _bridge = new Bridge();
-        public readonly Frame CurrentFrame = new Frame();
-        //public AutoResetEvent FrameDone = new AutoResetEvent(false);
+        public readonly Frame CurrentFrame;
 
-        public EventHandler FrameDone;
+        public EventHandler<Frame> FrameDone;
+
+        public Worker(Frame frame)
+        {
+            this.CurrentFrame = frame;
+        }
 
         public void Run()
         {
@@ -28,9 +32,7 @@ namespace Driver
             while (true)
             {
                 _bridge.Process(this.CurrentFrame);
-                //this.FrameDone.Set();
-
-                this.FrameDone?.Invoke(this, null);
+                this.FrameDone?.Invoke(this, this.CurrentFrame);
             }
         }
     }

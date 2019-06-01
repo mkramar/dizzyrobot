@@ -13,59 +13,45 @@ namespace Driver
     public partial class MainForm : Form
     {
         private Worker _worker;
+        private Frame _frame;
+        private List<MotorRow> _table;
 
         public MainForm()
         {
             InitializeComponent();
-            _worker = new Worker();
+            _frame = new Frame();
+            _worker = new Worker(_frame);
+
+            CreateLabels();
+        }
+
+        private void CreateLabels()
+        {
+            _table = new List<MotorRow>();
+
+            for (int i = 0; i < _frame.Motors.Length; i++)
+            {
+                var row = new MotorRow(this, _frame.Motors[i], i * 25 + 25,i + 1);
+                _table.Add(row);
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs args)
         {
-            _worker.FrameDone += (o, e) => OnFrameDone();
+            _worker.FrameDone += (o, e) => UpdateControls(e);
             _worker.Run();
         }
 
-        private void OnFrameDone()
+        private void UpdateControls(Frame frame)
         {
             this.InvokeIfRequired(() => {
-                var frame = _worker.CurrentFrame;
+                for (int i = 0; i < frame.Motors.Length; i++)
+                {
+                    if (frame.Motors[i].Success) _table[i].Error.Text = "";
+                    else _table[i].Error.Text = "error";
 
-                if (frame.Motors[0].Success) this.lbl1.Text = frame.Motors[0].Angle.ToString();
-                else this.lbl1.Text = "error";
-
-                if (frame.Motors[1].Success) this.lbl2.Text = frame.Motors[1].Angle.ToString();
-                else this.lbl2.Text = "error";
-
-                if (frame.Motors[2].Success) this.lbl3.Text = frame.Motors[2].Angle.ToString();
-                else this.lbl3.Text = "error";
-
-                if (frame.Motors[3].Success) this.lbl4.Text = frame.Motors[3].Angle.ToString();
-                else this.lbl4.Text = "error";
-
-                if (frame.Motors[4].Success) this.lbl5.Text = frame.Motors[4].Angle.ToString();
-                else this.lbl5.Text = "error";
-
-                if (frame.Motors[5].Success) this.lbl6.Text = frame.Motors[5].Angle.ToString();
-                else this.lbl6.Text = "error";
-
-                if (frame.Motors[6].Success) this.lbl7.Text = frame.Motors[6].Angle.ToString();
-                else this.lbl7.Text = "error";
-
-                if (frame.Motors[7].Success) this.lbl8.Text = frame.Motors[7].Angle.ToString();
-                else this.lbl8.Text = "error";
-
-                if (frame.Motors[8].Success) this.lbl9.Text = frame.Motors[8].Angle.ToString();
-                else this.lbl9.Text = "error";
-
-                if (frame.Motors[9].Success) this.lbl10.Text = frame.Motors[9].Angle.ToString();
-                else this.lbl10.Text = "error";
-
-                if (frame.Motors[10].Success) this.lbl11.Text = frame.Motors[10].Angle.ToString();
-                else this.lbl11.Text = "error";
-
-                if (frame.Motors[11].Success) this.lbl12.Text = frame.Motors[11].Angle.ToString();
-                else this.lbl12.Text = "error";
+                    _table[i].Angle.Text = frame.Motors[i].Angle.ToString();
+                }
             });
         }
     }
@@ -83,5 +69,38 @@ namespace Driver
                 action();
             }
         }
+    }
+
+    class MotorRow
+    {
+        public MotorRow(Form parent, Motor motor, int top, int index)
+        {
+            this.Motor = motor;
+            this.Id = new Label();
+            this.Error = new Label();
+            this.Angle = new Label();
+
+            this.Id.Text = index.ToString();
+            this.Id.Location = new Point(20, top);
+            this.Id.Size = new Size(40, 20);
+            this.Id.Font = new Font(this.Id.Font, FontStyle.Bold);
+
+            this.Error.Location = new Point(60, top);
+            this.Error.Size = new Size(40, 20);
+            this.Error.ForeColor = Color.Red;
+
+            this.Angle.Location = new Point(100, top);
+            this.Angle.Size = new Size(150, 20);
+            this.Angle.Font = new Font(this.Angle.Font, FontStyle.Bold);
+
+            parent.Controls.Add(this.Id);
+            parent.Controls.Add(this.Error);
+            parent.Controls.Add(this.Angle);
+        }
+
+        public Motor Motor { get; set; }
+        public Label Id { get; set; }
+        public Label Error { get; set; }
+        public Label Angle { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Driver
 {
     class Bridge
     {
-        private const string Url = "http://192.168.2.3/spibridge";
+        private const string Url = "http://192.168.2.2/spibridge";
         private StringBuilder _commandBuilder = new StringBuilder();
         private HttpClient _client = new HttpClient();
 
