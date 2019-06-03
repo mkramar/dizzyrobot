@@ -8,8 +8,15 @@ namespace Driver
 {
     public static class Circle
     {
-        private const int Limit = 32 * 1024;
+        public const int Limit = 32 * 1024;
 
+        public static int Angle(int angle)
+        {
+            if (angle < 0) angle += Limit;
+            if (angle > Limit) angle -= Limit;
+
+            return angle;
+        }
         public static int Fraction(int startAngle, int targetAngle, bool direction, float fraction)
         {
             if (startAngle < 0 || startAngle >= Limit) throw new ArgumentException();
@@ -19,12 +26,9 @@ namespace Driver
             if (!direction && targetAngle > startAngle) targetAngle -= Limit;
 
             int retval = startAngle + (int)((targetAngle - startAngle) * fraction);
-            if (retval < 0) retval += Limit;
-            if (retval > Limit) retval -= Limit;
 
-            return retval;
+            return Angle(retval);
         }
-
         public static int Distance(int fromAngle, int toAngle, bool direction)
         {
             if (fromAngle < 0 || fromAngle >= Limit) throw new ArgumentException();
@@ -38,6 +42,37 @@ namespace Driver
             if (retval > Limit) retval -= Limit;
 
             if (retval >= Limit) throw new Exception();
+
+            return retval;
+        }
+        public static int Distance2(int fromAngle, int toAngle)
+        {
+            if (fromAngle < 0 || fromAngle >= Limit) throw new ArgumentException();
+            if (toAngle < 0 || toAngle >= Limit) throw new ArgumentException();
+
+            int retval = Limit;
+            int retvalAbs = Limit;
+
+            var tests = new List<Func<int>>
+            {
+                () => toAngle - fromAngle,
+                () => toAngle - fromAngle + Limit,
+                () => toAngle - fromAngle - Limit,
+                //() => fromAngle - toAngle,
+                //() => fromAngle - toAngle + Limit,
+            };
+
+            foreach (var test in tests)
+            {
+                int d = test();
+                int dAbs = Math.Abs(d);
+
+                if (retvalAbs > dAbs)
+                {
+                    retvalAbs = dAbs;
+                    retval = d;
+                }
+            }
 
             return retval;
         }

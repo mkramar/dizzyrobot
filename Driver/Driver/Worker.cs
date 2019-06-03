@@ -22,7 +22,7 @@ namespace Driver
 
         public void Run()
         {
-            new Thread(WorkerThread).Start();
+            new Thread(WorkerThread) { IsBackground = true }.Start();
         }
 
         //

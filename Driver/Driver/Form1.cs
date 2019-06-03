@@ -14,6 +14,8 @@ namespace Driver
     {
         private Worker _worker;
         private Frame _frame;
+        private Servos _servos;
+
         private List<MotorRow> _table;
 
         public MainForm()
@@ -21,6 +23,7 @@ namespace Driver
             InitializeComponent();
             _frame = new Frame();
             _worker = new Worker(_frame);
+            _servos = new Servos(_worker);
 
             CreateLabels();
         }
@@ -54,20 +57,12 @@ namespace Driver
                 }
             });
         }
-    }
 
-    static class InvokeHelper
-    {
-        public static void InvokeIfRequired(this Control control, MethodInvoker action)
+        private void btnStand_Click(object sender, EventArgs e)
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
+            var targetAngle = Circle.Angle(0 - Circle.Limit *4/10);
+
+            _servos.LeftFrontKnee.SetTarget(false, targetAngle, 500, 200, 0.05f, 0.0000f, 0.02f);
         }
     }
 

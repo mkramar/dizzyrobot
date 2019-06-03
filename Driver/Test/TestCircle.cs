@@ -47,5 +47,15 @@ namespace Test
             result = Circle.Distance(1000, 30000, false);
             Assert.AreEqual(-3768, result);
         }
+
+        [TestMethod]
+        public void TestDistance2()
+        {
+            var result = Circle.Distance2(Circle.Limit - 1, 1);
+            Assert.AreEqual(2, result);
+
+            result = Circle.Distance2(Circle.Limit - 1, 1);
+            Assert.AreEqual(-2, result);
+        }
     }
 }

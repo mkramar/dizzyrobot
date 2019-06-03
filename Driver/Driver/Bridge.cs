@@ -16,23 +16,30 @@ namespace Driver
         private StringBuilder _commandBuilder = new StringBuilder();
         private HttpClient _client = new HttpClient();
 
-        public async void Process(Frame frame)
+        public void Process(Frame frame)
         {
-            while (true)
+            var command = FrameToCommand(frame);
+
+            var request = (HttpWebRequest)WebRequest.Create(Url);
+            request.Method = "POST";
+            request.ContentLength = command.Length;
+
+            using (var stream = request.GetRequestStream())
             {
-                var command = FrameToCommand(frame);
-                var content = new StringContent(command);
-                content.Headers.ContentLength = command.Length;
-                try
+                using (var writer = new StreamWriter(stream))
+                    writer.Write(command);
+            }
+
+            using (var response = request.GetResponse())
+            {
+                using (var stream = response.GetResponseStream())
                 {
-                    using (var result = await _client.PostAsync(Url, content))
+                    using (var reader = new StreamReader(stream))
                     {
-                        var body = await result.Content.ReadAsStringAsync();
+                        var body = reader.ReadToEnd();
                         ResponseToFrame(body, frame);
                     }
                 }
-                catch (WebException) { }
-                catch (HttpRequestException) { }
             }
         }
 
@@ -73,19 +80,21 @@ namespace Driver
 
             for (int i = 0; i < 12; i++)
             {
-                if (frame.Motors[i].Torque == null)
+                var t = frame.Motors[i].Torque;
+
+                if (t == null)
                 {
                     // request angle
-                    _commandBuilder.AppendFormat("{0:X2}a", i+ 1);
+                    _commandBuilder.AppendFormat("{0:X2}a", i + 1);
                 }
                 else
                 {
                     _commandBuilder.AppendFormat("{0:X2}T", i + 1);
 
-                    if (frame.Motors[i].Torque > 0) _commandBuilder.Append("+");
+                    if (t > 0) _commandBuilder.Append("+");
                     else _commandBuilder.Append("-");
 
-                    _commandBuilder.AppendFormat("{0:X2}", frame.Motors[i].Torque);
+                    _commandBuilder.AppendFormat("{0:X2}a", t > 0 ? t : -t);
                 }
                 _commandBuilder.AppendLine();
             }
