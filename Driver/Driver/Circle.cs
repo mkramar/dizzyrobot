@@ -13,7 +13,7 @@ namespace Driver
         public static int Angle(int angle)
         {
             if (angle < 0) angle += Limit;
-            if (angle > Limit) angle -= Limit;
+            if (angle >= Limit) angle -= Limit;
 
             return angle;
         }

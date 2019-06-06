@@ -60,9 +60,91 @@ namespace Driver
 
         private void btnStand_Click(object sender, EventArgs e)
         {
-            var targetAngle = Circle.Angle(0 - Circle.Limit *4/10);
+            int speed = 3000;
+            int kneeTorque = 150;
+            int shoulderTorque = 255;
 
-            _servos.LeftFrontKnee.SetTarget(false, targetAngle, 500, 200, 0.05f, 0.0000f, 0.02f);
+            float p = 0.1f;
+            float i = 0.0015f;
+            float d = -0.5f;
+
+            int a = 0;
+            int knee = Circle.Limit * 4 / 10;
+            int body = Circle.Limit * 4 / 5;
+
+            // left front
+
+            a = Circle.Angle(0 - knee);
+            _servos.LeftFrontKnee.SetTarget(false, a, speed, kneeTorque, p, i, d);
+
+            a = Circle.Angle(0 - body);
+            _servos.LeftFrontBody.SetTarget(true, a, speed, kneeTorque, p, i, d);
+
+            a = 0;
+            _servos.LeftFrontShoulder.SetTarget(true, a, speed, shoulderTorque, p, i, d);
+
+            // left back
+
+            a = Circle.Angle(0 - knee);
+            _servos.LeftBackKnee.SetTarget(false, a, speed, kneeTorque, p, i, d);
+
+            a = Circle.Angle(0 - body);
+            _servos.LeftBackBody.SetTarget(true, a, speed, kneeTorque, p, i, d);
+
+            a = 0;
+            _servos.LeftBackShoulder.SetTarget(true, a, speed, shoulderTorque, p, i, d);
+
+            // right front
+
+            a = Circle.Angle(0 + knee);
+            _servos.RightFrontKnee.SetTarget(true, a, speed, kneeTorque, p, i, d);
+
+            a = Circle.Angle(0 + body);
+            _servos.RightFrontBody.SetTarget(false, a, speed, kneeTorque, p, i, d);
+
+            a = 0;
+            _servos.RightFrontShoulder.SetTarget(true, a, speed, shoulderTorque, p, i, d);
+
+            // right back
+
+            a = Circle.Angle(0 + knee);
+            _servos.RightBackKnee.SetTarget(true, a, speed, kneeTorque, p, i, d);
+
+            a = Circle.Angle(0 + body);
+            _servos.RightBackBody.SetTarget(false, a, speed, kneeTorque, p, i, d);
+
+            a = 0;
+            _servos.RightBackShoulder.SetTarget(true, a, speed, shoulderTorque, p, i, d);
+        }
+
+        private void btnOff_Click(object sender, EventArgs e)
+        {
+            _servos.RightFrontKnee.Off();
+            _servos.RightFrontBody.Off();
+            _servos.RightFrontShoulder.Off();
+
+            _servos.RightBackKnee.Off();
+            _servos.RightBackBody.Off();
+            _servos.RightBackShoulder.Off();
+
+            _servos.LeftFrontKnee.Off();
+            _servos.LeftFrontBody.Off();
+            _servos.LeftFrontShoulder.Off();
+
+            _servos.LeftBackKnee.Off();
+            _servos.LeftBackBody.Off();
+            _servos.LeftBackShoulder.Off();
+        }
+
+        private void btnLeftFrontUp_Click(object sender, EventArgs e)
+        {
+            //_servos.LeftFrontShoulder.SetTarget(true, Circle.Limit/4, 1000, 255, 0.06f, 0.003f, -1f);
+            _servos.LeftFrontShoulder.SetTarget(true, Circle.Limit / 4, 1000, 255, 0.1f, 0.0015f, -0.5f);
+        }
+
+        private void btnRightFrontUp_Click(object sender, EventArgs e)
+        {
+            _servos.RightFrontBody.SetTarget(false, Circle.Angle(-Circle.Limit / 2), 1000, 255, 0.1f, 0, 0);
         }
     }
 

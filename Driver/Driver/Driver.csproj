@@ -57,6 +57,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecentBuffer.cs" />
     <Compile Include="Servo.cs" />
     <Compile Include="Servos.cs" />
     <Compile Include="Worker.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Driver
     {
         private int _zero;
 
+        private RecentBuffer _recentBuffer;
         private bool _direction;
         private int _startAngle;
         private int _targetAngle;
@@ -20,12 +22,15 @@ namespace Driver
         private int _targetTime;
         private int _startTime;
         private int _integralError;
-        private int _maxIntegralError;
+        private bool _on;
+        private bool _debug;
 
-        public Servo(Motor motor, int zero)
+        public Servo(Motor motor, int zero, bool debug = false)
         {
+            _recentBuffer = new RecentBuffer(5);
             this.Motor = motor;
             _zero = zero;
+            _debug = debug;
         }
 
         public Motor Motor { get; }
@@ -36,7 +41,7 @@ namespace Driver
             if (time <= 0) throw new ArgumentException();
             if (p < 0) throw new ArgumentException();
             if (i < 0) throw new ArgumentException();
-            if (d < 0) throw new ArgumentException();
+            //if (d < 0) throw new ArgumentException();
             if (targetAngle < 0 || targetAngle >= Circle.Limit) throw new ArgumentException();
             if (maxTorque < 0 || maxTorque > 255) throw new ArgumentException();
 
@@ -50,12 +55,23 @@ namespace Driver
             _startTime = Environment.TickCount;
             _targetTime = _startTime + time;
             _integralError = 0;
-            _maxIntegralError = (int)(maxTorque / i);
+
+            _on = true;
+        }
+        public void Off()
+        {
+            _on = false;
         }
 
         public void Tick()
         {
-            if (_startTime == 0) return;
+            _recentBuffer.Add(this.Angle);
+
+            if (!_on)
+            {
+                this.Motor.Torque = 0;
+                return;
+            }
 
             int now = Environment.TickCount;
             float fraction = (float)(now - _startTime) / (_targetTime - _startTime);
@@ -64,19 +80,32 @@ namespace Driver
             var desiredAngle = Circle.Fraction(_startAngle, _targetAngle, _direction, fraction);
 
             var error = Circle.Distance2(this.Angle, desiredAngle);
-            //var d1 = Circle.Distance(_startAngle, this.Angle, _direction);
-            //var d2 = Circle.Distance(_startAngle, _targetAngle, _direction);
 
-            //if (d1 > d2)
-            //    error *= -1;
+            // proportional
 
+            var proportionalTorque = error * _power;
+
+            // integral
+
+            var maxError = (int)((_maxTorque - proportionalTorque) / _integral);
             _integralError += error;
-            if (_integralError > _maxIntegralError) _integralError = _maxIntegralError;
-            if (_integralError < -_maxIntegralError) _integralError = -_maxIntegralError;
+            if (_integralError > maxError) _integralError = maxError;
+            if (_integralError < -maxError) _integralError = -maxError;
+            var integralTorque = _integralError * _integral;
 
-            var torque = (int)(error * _power + _integralError * _integral);
-            if (torque < -100) torque = -100;
-            if (torque > 100) torque = 100;
+            // derivative
+
+            var ago = _recentBuffer.Get(2);
+            var d = (float)(this.Angle - ago.Angle) / (now - ago.TickCount);
+            var derivativeTorque = d * _derivative;
+
+            //
+
+            if (_debug) Debug.WriteLine("prop={0}, int={1}, der={2} | err={3}, int-err={4}", proportionalTorque, integralTorque, derivativeTorque, error, _integralError);
+            var torque = (int)(proportionalTorque + integralTorque + derivativeTorque);
+
+            if (torque < -_maxTorque) torque = -_maxTorque;
+            if (torque > _maxTorque) torque = _maxTorque;
 
             this.Motor.Torque = torque;
         }

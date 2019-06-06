@@ -12,6 +12,7 @@ namespace Driver
 {
     class Bridge
     {
+        private int _offset = 0;
         private const string Url = "http://192.168.2.2/spibridge";
         private StringBuilder _commandBuilder = new StringBuilder();
         private HttpClient _client = new HttpClient();
@@ -78,8 +79,9 @@ namespace Driver
 
             _commandBuilder.AppendLine("0Fa"); // todo: remove this
 
-            for (int i = 0; i < 12; i++)
+            for (int cnt = 0; cnt < 12; cnt++)
             {
+                int i = (cnt + _offset) % 12;
                 var t = frame.Motors[i].Torque;
 
                 if (t == null)
@@ -101,6 +103,7 @@ namespace Driver
 
             _commandBuilder.AppendLine("0Fa"); // todo: remove this
 
+            _offset++;
             return _commandBuilder.ToString();
         }
     }
