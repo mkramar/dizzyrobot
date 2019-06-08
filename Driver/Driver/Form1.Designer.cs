@@ -32,6 +32,7 @@
             this.btnOff = new System.Windows.Forms.Button();
             this.btnLeftFrontUp = new System.Windows.Forms.Button();
             this.btnRightFrontUp = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStand
@@ -74,11 +75,22 @@
             this.btnRightFrontUp.UseVisualStyleBackColor = true;
             this.btnRightFrontUp.Click += new System.EventHandler(this.btnRightFrontUp_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(278, 131);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(112, 23);
+            this.btnTest.TabIndex = 4;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(411, 408);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnRightFrontUp);
             this.Controls.Add(this.btnLeftFrontUp);
             this.Controls.Add(this.btnOff);
@@ -96,6 +108,7 @@
         private System.Windows.Forms.Button btnOff;
         private System.Windows.Forms.Button btnLeftFrontUp;
         private System.Windows.Forms.Button btnRightFrontUp;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

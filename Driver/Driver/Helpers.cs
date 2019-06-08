@@ -11,14 +11,18 @@ namespace Driver
     {
         public static void InvokeIfRequired(this Control control, MethodInvoker action)
         {
-            if (control.InvokeRequired)
+            try
             {
-                control.Invoke(action);
+                if (control.InvokeRequired)
+                {
+                    control.Invoke(action);
+                }
+                else
+                {
+                    action();
+                }
             }
-            else
-            {
-                action();
-            }
+            catch { }
         }
     }
 

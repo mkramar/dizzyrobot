@@ -29,6 +29,12 @@ namespace Driver
 
             return Angle(retval);
         }
+        public static int Fraction(int startAngle, int targetAngle, float fraction)
+        {
+            var d = Distance2(startAngle, targetAngle);
+            int retval = startAngle + (int)(d * fraction);
+            return Angle(retval);
+        }
         public static int Distance(int fromAngle, int toAngle, bool direction)
         {
             if (fromAngle < 0 || fromAngle >= Limit) throw new ArgumentException();
@@ -47,8 +53,11 @@ namespace Driver
         }
         public static int Distance2(int fromAngle, int toAngle)
         {
-            if (fromAngle < 0 || fromAngle >= Limit) throw new ArgumentException();
-            if (toAngle < 0 || toAngle >= Limit) throw new ArgumentException();
+            fromAngle = Angle(fromAngle);
+            toAngle = Angle(toAngle);
+
+            //if (fromAngle < 0 || fromAngle >= Limit) throw new ArgumentException();
+            //if (toAngle < 0 || toAngle >= Limit) throw new ArgumentException();
 
             int retval = Limit;
             int retvalAbs = Limit;
