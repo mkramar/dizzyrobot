@@ -6,6 +6,16 @@ K N-Channel MOSFET
 F http://www.vishay.com/docs/70215/70215.pdf
 $ENDCMP
 #
+$CMP CONN_02X40
+D Connector, double row, 02x40, pin header
+K connector
+$ENDCMP
+#
+$CMP CONN_02X50
+D Connector, double row, 02x40, pin header
+K connector
+$ENDCMP
+#
 $CMP PSMN3R3-40YS
 D 50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23
 K N-Channel MOSFET Logic Level
