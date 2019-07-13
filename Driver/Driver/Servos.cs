@@ -8,6 +8,8 @@ namespace Driver
 {
     class Servos
     {
+        public event EventHandler MotorsUpdated;
+
         private List<Servo> _servos;
         private Worker _worker;
 
@@ -79,6 +81,8 @@ namespace Driver
         {
             foreach (var t in _servos)
                 t.Tick();
+
+            if (this.MotorsUpdated != null) MotorsUpdated(this, null);
         }
     }
 }

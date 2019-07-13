@@ -37,7 +37,10 @@ namespace Driver
         }
 
         public Motor Motor { get; }
+
         public int Angle { get; private set; }
+        public int Torque => this.Motor.Torque;
+        public float Speed { get; private set; }
 
         public void SetTarget(bool direction, int targetAngle, int time, int maxTorque, float p, float i, float d)
         {

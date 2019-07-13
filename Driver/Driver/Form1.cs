@@ -15,6 +15,7 @@ namespace Driver
         private Worker _worker;
         private Frame _frame;
         private Servos _servos;
+        private Logger _logger;
 
         private List<MotorRow> _table;
 
@@ -24,6 +25,7 @@ namespace Driver
             _frame = new Frame();
             _worker = new Worker(_frame);
             _servos = new Servos(_worker);
+            _logger = new Logger(_servos);
 
             CreateLabels();
         }
@@ -61,8 +63,9 @@ namespace Driver
 
         private void btnStand_Click(object sender, EventArgs e)
         {
-            Stand1();
-            //Stand2();
+            //Stand1();
+            Stand();
+            //StandUpOnly();
         }
 
         private void btnOff_Click(object sender, EventArgs e)
@@ -195,7 +198,7 @@ namespace Driver
             //a = 0;
             //_servos.RightBackShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
         }
-        private void Stand2()
+        private void Stand()
         {
             int speed = 3000;
             int kneeTorque = 150;
@@ -214,8 +217,8 @@ namespace Driver
             float kd = -4f;
 
             int a = 0;
-            int knee = Circle.Limit * 4 / 10;
-            int body = Circle.Limit * 4 / 5;
+            int knee = Circle.Limit * 2 / 10;
+            int body = Circle.Limit * 9 / 10;
 
             // left front
 
@@ -260,6 +263,72 @@ namespace Driver
 
             a = 0;
             _servos.RightBackShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
+        }
+        private void StandUpOnly()
+        {
+            int speed = 3000;
+            int kneeTorque = 150;
+            int shoulderTorque = 255;
+
+            //float sp = 0.06f;
+            //float si = 0.001f;
+            //float sd = 0f;
+
+            float sp = 0.3f;
+            float si = 0.1f;
+            float sd = 0f;
+
+            float kp = 0.06f;
+            float ki = 0.002f;
+            float kd = -4f;
+
+            int a = 0;
+            int knee = Circle.Limit * 4 / 10;
+            int body = Circle.Limit * 4 / 5;
+
+            // left front
+
+            a = Circle.Angle(0 - knee);
+            _servos.LeftFrontKnee.SetTarget(false, a, speed, kneeTorque, kp, ki, kd);
+
+            a = Circle.Angle(0 - body);
+            _servos.LeftFrontBody.SetTarget(false, a, speed, kneeTorque, kp, ki, kd);
+
+            a = 0;
+            //_servos.LeftFrontShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
+
+            // left back
+
+            a = Circle.Angle(0 - knee);
+            _servos.LeftBackKnee.SetTarget(false, a, speed, kneeTorque, kp, ki, kd);
+
+            a = Circle.Angle(0 - body);
+            _servos.LeftBackBody.SetTarget(true, a, speed, kneeTorque, kp, ki, kd);
+
+            a = 0;
+            //_servos.LeftBackShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
+
+            // right front
+
+            a = Circle.Angle(0 + knee);
+            _servos.RightFrontKnee.SetTarget(true, a, speed, kneeTorque, kp, ki, kd);
+
+            a = Circle.Angle(0 + body);
+            _servos.RightFrontBody.SetTarget(false, a, speed, kneeTorque, kp, ki, kd);
+
+            a = 0;
+            //_servos.RightFrontShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
+
+            // right back
+
+            a = Circle.Angle(0 + knee);
+            _servos.RightBackKnee.SetTarget(true, a, speed, kneeTorque, kp, ki, kd);
+
+            a = Circle.Angle(0 + body);
+            _servos.RightBackBody.SetTarget(false, a, speed, kneeTorque, kp, ki, kd);
+
+            a = 0;
+            //_servos.RightBackShoulder.SetTarget(true, a, speed, shoulderTorque, sp, si, sd);
         }
     }
 

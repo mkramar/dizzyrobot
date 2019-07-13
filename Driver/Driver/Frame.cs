@@ -8,7 +8,7 @@ namespace Driver
 {
     public class Motor
     {
-        public int? Torque;
+        public int Torque;
         public int Angle;
         public bool Success;
 

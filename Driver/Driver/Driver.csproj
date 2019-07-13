@@ -56,10 +56,12 @@
     </Compile>
     <Compile Include="Frame.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quadratic.cs" />
     <Compile Include="RecentBuffer.cs" />
+    <Compile Include="Servo3.cs" />
     <Compile Include="Servo.cs" />
     <Compile Include="Servo2.cs" />
     <Compile Include="Servos.cs" />

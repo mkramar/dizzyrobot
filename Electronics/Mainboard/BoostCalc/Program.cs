@@ -15,7 +15,7 @@ namespace BoostCalc
         const double Vin_startup = 9;
         const double Vin_typ = 15;          // input voltage
         const double Vin_max = 24;
-        const double Vout = 40;
+        const double Vout = 23;
         const double Wout = 500;            // output power
         const double CurrentSenseMargin = 0.2;
 
