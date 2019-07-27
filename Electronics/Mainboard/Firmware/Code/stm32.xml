@@ -2,7 +2,7 @@
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
   <BspID>com.sysprogs.arm.stm32</BspID>
-  <BspVersion>4.6R3</BspVersion>
+  <BspVersion>2019.06</BspVersion>
   <McuID>STM32F031G4</McuID>
   <MCUDefinitionFile>STM32F0xxxx/DeviceDefinitions/stm32f031x6.xml</MCUDefinitionFile>
   <MCUProperties>
