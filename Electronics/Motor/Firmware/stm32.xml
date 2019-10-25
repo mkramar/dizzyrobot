@@ -1,19 +1,22 @@
 <?xml version="1.0"?>
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
+  <ToolchainVersion>
+    <Revision>0</Revision>
+  </ToolchainVersion>
   <BspID>com.sysprogs.arm.stm32</BspID>
-  <BspVersion>4.3</BspVersion>
+  <BspVersion>2019.06</BspVersion>
   <McuID>STM32F031C6</McuID>
   <MCUDefinitionFile>STM32F0xxxx/DeviceDefinitions/stm32f031x6.xml</MCUDefinitionFile>
   <MCUProperties>
     <Entries>
       <KeyValue>
-        <Key>com.sysprogs.toolchainoptions.arm.libctype</Key>
-        <Value>--specs=nano.specs</Value>
+        <Key>com.sysprogs.mcuoptions.ignore_startup_file</Key>
+        <Value />
       </KeyValue>
       <KeyValue>
-        <Key>com.sysprogs.toolchainoptions.arm.compactcpp</Key>
-        <Value>compactcpp</Value>
+        <Key>com.sysprogs.toolchainoptions.arm.libctype</Key>
+        <Value>--specs=nano.specs</Value>
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.toolchainoptions.arm.libnosys</Key>

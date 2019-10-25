@@ -230,7 +230,7 @@ void processUsartCommand(){
 	bool success = true;
 	
 	// skip noice. todo: why!?
-	if (*inp >= '0' && *inp <= '9' || *inp >= 'A' && *inp <= 'F' || *inp >= 'a' && *inp <= 'f') {}
+	if ((*inp >= '0' && *inp <= '9') || (*inp >= 'A' && *inp <= 'F') || (*inp >= 'a' && *inp <= 'f')) {}
 	else 
 	{
 		inp++;
